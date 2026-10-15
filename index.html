@@ -17,10 +17,10 @@
 </head>
 <body class="bg-gray-950 text-white min-h-screen p-3 sm:p-5 font-sans antialiased selection:bg-cyan-500 selection:text-black">
 
-  <!-- SLANKE NEON HEADER -->
-  <header class="max-w-7xl mx-auto mb-6 px-6 py-4 rounded-2xl bg-gray-900/90 border border-cyan-500/50 neon-border flex flex-col sm:flex-row items-center justify-between gap-3 backdrop-blur-md">
+  <!-- COMPACTE NEON HEADER -->
+  <header class="max-w-7xl mx-auto mb-6 px-5 py-3.5 rounded-2xl bg-gray-900/90 border border-cyan-500/50 neon-border flex flex-col sm:flex-row items-center justify-between gap-3 backdrop-blur-md">
     <div class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-fuchsia-500 flex items-center justify-center font-black text-black text-xl shadow-md">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-fuchsia-500 flex items-center justify-center font-black text-black text-lg shadow-md">
         HT
       </div>
       <div>
@@ -74,7 +74,7 @@
               <p class="text-gray-400 text-xs mt-0.5">Feesten, ADE Specials & Festivals uit Partyflock & Agenda's</p>
             </div>
             <span id="events-status" class="text-[10px] bg-cyan-950 text-cyan-400 border border-cyan-800/60 rounded-full px-2.5 py-0.5 font-semibold whitespace-nowrap self-start sm:self-auto">
-              Scannen...
+              Actueel aanbod
             </span>
           </div>
 
@@ -128,12 +128,12 @@
       </div>
 
       <div id="recent-tracks-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 max-h-[460px] overflow-y-auto pr-1">
-        <!-- Dynamisch vanuit tracks.json -->
+        <!-- Dynamisch -->
       </div>
     </section>
 
 
-    <!-- HAY TRANCE CATALOGUS (ZOEK IN ALLE 2.499 NUMMERS) -->
+    <!-- HAY TRANCE CATALOGUS (ZOEK IN ALLE NUMMERS) -->
     <section class="space-y-5">
       
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
@@ -237,7 +237,7 @@
     let currentFilteredList = [];
     let displayedCount = 24;
 
-    // Unieke voorbeeldcollectie met "Must Go On" gegarandeerd als nieuwste #1
+    // Unieke fallback items met "Must Go On" gegarandeerd op #1
     const FALLBACK_UNIQUE_TRACKS = [
       { id: '1', title: 'Must Go On', artists: 'RAM, David Forbes', label: 'Nocturnal Knights', image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400', addedAt: new Date('2026-10-15'), spotifyUrl: 'https://open.spotify.com/search/RAM%20David%20Forbes%20Must%20Go%20On' },
       { id: '2', title: 'City Lights', artists: 'Armin van Buuren', label: 'Armada Music', image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400', addedAt: new Date('2026-10-01'), spotifyUrl: 'https://open.spotify.com/search/Armin%20van%20Buuren%20City%20Lights' },
@@ -261,7 +261,52 @@
       { id: '20', title: 'Carte Blanche', artists: 'Veracocha', label: 'Positiva', image: 'https://images.unsplash.com/photo-1429962714451-bb934ecdc436?w=400', addedAt: new Date('2025-12-28'), spotifyUrl: 'https://open.spotify.com/search/Veracocha%20Carte%20Blanche' }
     ];
 
-    // 1. INLADEN EN DEDUPLICATIE VAN TRACKS.JSON
+    // Helper functie om een track veilig en foutloos te normaliseren uit tracks.json
+    function normalizeTrack(raw, idx) {
+      if (!raw || typeof raw !== 'object') return null;
+
+      const title = String(raw['Track Name'] || raw.title || raw.name || raw['track_name'] || raw['Track'] || 'Onbekende titel').trim();
+      const artists = String(raw['Artist Name(s)'] || raw.artists || raw.artist || raw['artist_name'] || raw['Artist'] || 'Onbekende artiest').trim();
+      const label = String(raw['Album Name'] || raw.label || raw.album || '').trim();
+      
+      let image = raw['Album Image URL'] || raw.image || raw.cover || '';
+      if (!image || typeof image !== 'string' || !image.startsWith('http')) {
+        image = 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400';
+      }
+
+      let addedAt = new Date();
+      const rawDate = raw['Added At'] || raw.addedAt || raw['added_at'] || raw['Release Date'];
+      if (rawDate) {
+        const parsed = new Date(rawDate);
+        if (!isNaN(parsed.getTime())) addedAt = parsed;
+      }
+
+      // "Must Go On" krijgt de nieuwste datum stempel voor #1 positie
+      if (title.toLowerCase().includes('must go on')) {
+        addedAt = new Date('2026-10-15T12:00:00Z');
+      }
+
+      let spotifyUrl = `https://open.spotify.com/search/${encodeURIComponent(artists + ' ' + title)}`;
+      const trackUri = raw['Track URI'] || raw.trackUri || raw.uri;
+      if (trackUri && typeof trackUri === 'string' && trackUri.includes('spotify:track:')) {
+        const id = trackUri.split('spotify:track:')[1].split(':')[0];
+        spotifyUrl = `https://open.spotify.com/track/${id}`;
+      } else if (raw.spotifyUrl && typeof raw.spotifyUrl === 'string' && raw.spotifyUrl.startsWith('http')) {
+        spotifyUrl = raw.spotifyUrl;
+      }
+
+      return {
+        id: String(raw.id || idx + 1),
+        title: title,
+        artists: artists,
+        label: label,
+        image: image,
+        addedAt: addedAt,
+        spotifyUrl: spotifyUrl
+      };
+    }
+
+    // 1. INLADEN VAN TRACKS.JSON MET DEDUPLICATIE
     async function loadAllTracksFromJson() {
       const countLabel = document.getElementById('track-count');
       if (countLabel) countLabel.innerText = 'Laden...';
@@ -274,34 +319,18 @@
         const seenKeys = new Set();
         const parsedList = [];
 
-        data.forEach((track, idx) => {
-          const title = track['Track Name'] || track.title || 'Onbekende titel';
-          const artists = track['Artist Name(s)'] || track.artists || 'Onbekende artiest';
-          const key = `${title.toLowerCase().trim()}_${artists.toLowerCase().trim()}`;
-
-          if (!seenKeys.has(key)) {
-            seenKeys.add(key);
-            const label = track['Album Name'] || track.label || '';
-            const rawDate = track['Added At'] || track.addedAt || new Date();
-            const image = track['Album Image URL'] || track.image || 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400';
-            
-            let spotifyUrl = `https://open.spotify.com/search/${encodeURIComponent(artists + ' ' + title)}`;
-            if (track['Track URI']) {
-              const uriPart = track['Track URI'].split(':').pop();
-              spotifyUrl = `https://open.spotify.com/track/${uriPart}`;
+        if (Array.isArray(data)) {
+          data.forEach((raw, idx) => {
+            const track = normalizeTrack(raw, idx);
+            if (track) {
+              const key = `${track.title.toLowerCase()}_${track.artists.toLowerCase()}`;
+              if (!seenKeys.has(key)) {
+                seenKeys.add(key);
+                parsedList.push(track);
+              }
             }
-
-            parsedList.push({
-              id: track.id || String(idx + 1),
-              title: title,
-              artists: artists,
-              label: label,
-              image: image,
-              addedAt: new Date(rawDate),
-              spotifyUrl: spotifyUrl
-            });
-          }
-        });
+          });
+        }
 
         if (parsedList.length > 0) {
           HAY_TRANCE_TRACKS = parsedList;
@@ -310,7 +339,7 @@
         }
 
       } catch (error) {
-        console.log('tracks.json niet beschikbaar of lokaal. Gebruikt unieke voorbeeldlijst:', error);
+        console.log('tracks.json niet geladen (lokaal of afwezig). Voorbeeldlijst actief:', error);
         HAY_TRANCE_TRACKS = FALLBACK_UNIQUE_TRACKS;
       }
 
@@ -318,7 +347,7 @@
       filterAndRenderTracks();
     }
 
-    // 2. NIEUWE RELEASES (8 ITEMS MET WERKENDE SPOTIFY SEARCH/DIRECT LINKS)
+    // 2. NIEUWE RELEASES VAN PLAYLIST ARTIESTEN
     const NEW_ARTIST_RELEASES = [
       { title: 'Must Go On (Single)', artist: 'RAM & David Forbes', type: 'Single', image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400', spotifyUrl: 'https://open.spotify.com/search/RAM%20David%20Forbes%20Must%20Go%20On' },
       { title: 'Breathe In (Album)', artist: 'Armin van Buuren', type: 'Album', image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400', spotifyUrl: 'https://open.spotify.com/search/Armin%20van%20Buuren%20Breathe%20In' },
@@ -331,18 +360,13 @@
     ];
 
     let rawEventsList = [];
-    const TRANCE_ARTISTS = [
-      'Armin van Buuren', 'Ferry Corsten', 'Aly & Fila', 'Giuseppe Ottaviani', 
-      'Paul van Dyk', 'John O\'Callaghan', 'Bryan Kearney', 'Solarstone', 
-      'Gareth Emery', 'Ruben de Ronde', 'RAM', 'David Forbes', 'Sean Tyas', 'Darren Porter'
-    ];
 
-    // 3. EVENT RADAR DATA (PARTYFLOCK, ADE, LUMINOSITY & CLUB FEESTEN)
-    function getDutchTranceFestivals() {
+    // 3. EVENT RADAR DATA (PARTYFLOCK & NL TRANCE AGENDA)
+    function getDutchTranceEvents() {
       const currYear = new Date().getFullYear();
       return [
         {
-          artist: 'Armin van Buuren',
+          artist: 'Armin van Buuren & Benwal',
           eventName: 'Armin van Buuren & Benwal (ADE)',
           venue: 'Gashouder',
           city: 'Amsterdam',
@@ -371,7 +395,7 @@
           type: 'ade',
           genre: 'Uplifting Trance',
           date: new Date(currYear, 9, 23),
-          url: 'https://luminosity-events.nl/cevent/luminosity-this-is-trance-ade-2026/',
+          url: 'https://luminosity-events.nl/',
           spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY'
         },
         {
@@ -388,7 +412,7 @@
         {
           artist: 'Luminosity Events',
           eventName: 'Luminosity 19 Years Anniversary',
-          venue: 'Melkweg / Amsterdam',
+          venue: 'Melkweg',
           city: 'Amsterdam',
           type: 'uplifting',
           genre: 'Pure Trance',
@@ -420,7 +444,7 @@
         },
         {
           artist: 'Luminosity Family',
-          eventName: 'Luminosity Beach Festival 2027 (20 YRS)',
+          eventName: 'Luminosity Beach Festival 2027',
           venue: 'Bernie\'s Beach Club',
           city: 'Zandvoort',
           type: 'festival',
@@ -432,63 +456,25 @@
       ];
     }
 
-    async function loadEventsMultiSource() {
+    function loadEventsMultiSource() {
       const eventsGrid = document.getElementById('events-grid');
       const eventsStatus = document.getElementById('events-status');
-      let found = [...getDutchTranceFestivals()];
+      
+      rawEventsList = getDutchTranceEvents().sort((a, b) => a.date - b.date);
 
-      const promises = TRANCE_ARTISTS.map(async (artist) => {
-        try {
-          const res = await fetch(`https://rest.bandsintown.com/artists/${encodeURIComponent(artist)}/events?app_id=haytrance_app`);
-          if (!res.ok) return [];
-          const events = await res.json();
-          if (!Array.isArray(events)) return [];
-
-          return events
-            .filter(e => e.venue && (
-              e.venue.country === 'Netherlands' || 
-              e.venue.country === 'NL' || 
-              ['Amsterdam', 'Rotterdam', 'Utrecht', 'Eindhoven', 'Den Haag', 'Zandvoort', 'Bloemendaal', 'Arnhem', 'Breda'].includes(e.venue.city)
-            ))
-            .map(e => ({
-              artist: artist,
-              eventName: e.title || `${artist} Live in NL`,
-              venue: e.venue.name,
-              city: e.venue.city,
-              type: e.venue.city === 'Amsterdam' ? 'ade' : 'uplifting',
-              genre: 'Uplifting / Tech',
-              date: new Date(e.datetime),
-              url: e.url,
-              spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY'
-            }));
-        } catch (e) {
-          return [];
-        }
-      });
-
-      const results = await Promise.allSettled(promises);
-      results.forEach(res => {
-        if (res.status === 'fulfilled' && Array.isArray(res.value)) {
-          found.push(...res.value);
-        }
-      });
-
-      const today = new Date();
-      rawEventsList = found
-        .filter(ev => ev.date >= new Date(today.setDate(today.getDate() - 1)))
-        .sort((a, b) => a.date - b.date);
-
-      eventsStatus.classList.remove('animate-pulse');
-      eventsStatus.innerText = `${rawEventsList.length} feesten in NL`;
+      if (eventsStatus) {
+        eventsStatus.innerText = `${rawEventsList.length} feesten geladen`;
+      }
 
       renderEvents(rawEventsList);
     }
 
     function renderEvents(list) {
       const eventsGrid = document.getElementById('events-grid');
+      if (!eventsGrid) return;
       eventsGrid.innerHTML = '';
 
-      if (list.length === 0) {
+      if (!list || list.length === 0) {
         eventsGrid.innerHTML = `
           <div class="bg-gray-950/80 p-4 rounded-xl border border-gray-800 text-center space-y-2">
             <p class="text-cyan-300 text-xs font-semibold">Geen feesten gevonden voor dit filter</p>
@@ -511,8 +497,8 @@
         card.innerHTML = `
           <div class="flex items-center gap-3">
             <div class="${isADE ? 'bg-fuchsia-950 text-fuchsia-300 border-fuchsia-800/60' : 'bg-cyan-950 text-cyan-400 border-cyan-800/60'} border rounded-lg p-1.5 text-center min-w-[50px]">
-              <span class="block text-[9px] font-extrabold uppercase">${dateStr.split(' ')[0]}</span>
-              <span class="block text-xs font-black">${dateStr.split(' ')[1]} ${dateStr.split(' ')[2]}</span>
+              <span class="block text-[9px] font-extrabold uppercase">${dateStr.split(' ')[0] || ''}</span>
+              <span class="block text-xs font-black">${dateStr.split(' ')[1] || ''} ${dateStr.split(' ')[2] || ''}</span>
             </div>
             <div>
               <div class="flex items-center gap-2">
@@ -550,9 +536,10 @@
       }
     }
 
-    // 4. RENDER RELEASES & RECENT 20
+    // 4. RENDER NIEUWE RELEASES & RECENT 20
     function renderNewReleases() {
       const container = document.getElementById('new-releases-grid');
+      if (!container) return;
       container.innerHTML = '';
 
       NEW_ARTIST_RELEASES.forEach(rel => {
@@ -573,6 +560,7 @@
 
     function renderRecent20Tracks() {
       const container = document.getElementById('recent-tracks-grid');
+      if (!container) return;
       container.innerHTML = '';
 
       const sorted = [...HAY_TRANCE_TRACKS].sort((a, b) => b.addedAt - a.addedAt);
@@ -606,6 +594,8 @@
     // 5. POP-UP MODAL
     function openModal(ev) {
       const modal = document.getElementById('event-modal');
+      if (!modal) return;
+
       document.getElementById('modal-title').innerText = ev.eventName;
       document.getElementById('modal-artist').innerText = `Gehost / Met: ${ev.artist}`;
       document.getElementById('modal-type').innerText = ev.type === 'ade' ? 'ADE Special' : 'Trance Event';
@@ -630,36 +620,40 @@
     }
 
     function closeModal() {
-      document.getElementById('event-modal').classList.add('hidden');
+      const modal = document.getElementById('event-modal');
+      if (modal) modal.classList.add('hidden');
     }
 
     // 6. VOLLEDIGE CATALOGUS FILTER & PAGINERING
     function filterAndRenderTracks() {
-      const searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
-      const sortBy = document.getElementById('sort-select').value;
+      const searchQuery = (document.getElementById('search-input')?.value || '').toLowerCase().trim();
+      const sortBy = document.getElementById('sort-select')?.value || 'newest';
       const countLabel = document.getElementById('track-count');
       const noResults = document.getElementById('no-results');
 
       currentFilteredList = HAY_TRANCE_TRACKS.filter(track => {
-        return track.title.toLowerCase().includes(searchQuery) || 
-               track.artists.toLowerCase().includes(searchQuery) ||
-               (track.label && track.label.toLowerCase().includes(searchQuery));
+        if (!track) return false;
+        const title = (track.title || '').toLowerCase();
+        const artists = (track.artists || '').toLowerCase();
+        const label = (track.label || '').toLowerCase();
+        return title.includes(searchQuery) || artists.includes(searchQuery) || label.includes(searchQuery);
       });
 
-      if (sortBy === 'newest') currentFilteredList.sort((a, b) => b.addedAt - a.addedAt);
-      else if (sortBy === 'oldest') currentFilteredList.sort((a, b) => a.addedAt - b.addedAt);
-      else if (sortBy === 'title') currentFilteredList.sort((a, b) => a.title.localeCompare(b.title));
-      else if (sortBy === 'artist') currentFilteredList.sort((a, b) => a.artists.localeCompare(b.artists));
+      if (sortBy === 'newest') currentFilteredList.sort((a, b) => (b.addedAt?.getTime() || 0) - (a.addedAt?.getTime() || 0));
+      else if (sortBy === 'oldest') currentFilteredList.sort((a, b) => (a.addedAt?.getTime() || 0) - (b.addedAt?.getTime() || 0));
+      else if (sortBy === 'title') currentFilteredList.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+      else if (sortBy === 'artist') currentFilteredList.sort((a, b) => (a.artists || '').localeCompare(b.artists || ''));
 
-      countLabel.innerText = `${currentFilteredList.length} platen`;
+      if (countLabel) countLabel.innerText = `${currentFilteredList.length} platen`;
       
       if (currentFilteredList.length === 0) {
-        document.getElementById('track-grid').innerHTML = '';
-        noResults.classList.remove('hidden');
-        document.getElementById('load-more-container').classList.add('hidden');
+        const grid = document.getElementById('track-grid');
+        if (grid) grid.innerHTML = '';
+        if (noResults) noResults.classList.remove('hidden');
+        document.getElementById('load-more-container')?.classList.add('hidden');
         return;
       } else {
-        noResults.classList.add('hidden');
+        if (noResults) noResults.classList.add('hidden');
       }
 
       displayedCount = 24;
@@ -669,6 +663,7 @@
     function renderTrackBatch() {
       const grid = document.getElementById('track-grid');
       const loadMoreContainer = document.getElementById('load-more-container');
+      if (!grid) return;
       grid.innerHTML = '';
 
       const batch = currentFilteredList.slice(0, displayedCount);
@@ -703,9 +698,9 @@
       });
 
       if (displayedCount < currentFilteredList.length) {
-        loadMoreContainer.classList.remove('hidden');
+        if (loadMoreContainer) loadMoreContainer.classList.remove('hidden');
       } else {
-        loadMoreContainer.classList.add('hidden');
+        if (loadMoreContainer) loadMoreContainer.classList.add('hidden');
       }
     }
 
@@ -715,13 +710,13 @@
     }
 
     // Event Listeners
-    document.getElementById('search-input').addEventListener('input', filterAndRenderTracks);
-    document.getElementById('sort-select').addEventListener('change', filterAndRenderTracks);
+    document.getElementById('search-input')?.addEventListener('input', filterAndRenderTracks);
+    document.getElementById('sort-select')?.addEventListener('change', filterAndRenderTracks);
 
-    // Initialiseren
+    // Initialiseren bij het laden van de pagina
     renderNewReleases();
-    loadAllTracksFromJson();
     loadEventsMultiSource();
+    loadAllTracksFromJson();
   </script>
 </body>
 </html>
