@@ -7,7 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .neon-border {
-      box-shadow: 0 0 12px rgba(6, 182, 212, 0.35), inset 0 0 10px rgba(6, 182, 212, 0.1);
+      box-shadow: 0 0 14px rgba(6, 182, 212, 0.35), inset 0 0 10px rgba(6, 182, 212, 0.1);
     }
     .neon-text {
       text-shadow: 0 0 8px rgba(6, 182, 212, 0.6), 0 0 16px rgba(6, 182, 212, 0.3);
@@ -16,10 +16,10 @@
 </head>
 <body class="bg-gray-950 text-white min-h-screen p-3 sm:p-5 font-sans antialiased selection:bg-cyan-500 selection:text-black">
 
-  <!-- SLANKE HEADER -->
+  <!-- COMPACTE NEON HEADER -->
   <header class="max-w-7xl mx-auto mb-6 px-5 py-3.5 rounded-2xl bg-gray-900/90 border border-cyan-500/50 neon-border flex flex-col sm:flex-row items-center justify-between gap-3 backdrop-blur-md">
     <div class="flex items-center gap-3">
-      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-fuchsia-500 flex items-center justify-center font-black text-black text-lg shadow-md">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-fuchsia-500 flex items-center justify-center font-black text-black text-xl shadow-md">
         HT
       </div>
       <div>
@@ -30,14 +30,14 @@
       </div>
     </div>
     
-    <span class="px-3 py-1 text-[10px] font-extrabold uppercase tracking-widest text-cyan-400 bg-cyan-950/80 border border-cyan-800/60 rounded-full">
+    <span class="px-3.5 py-1 text-[11px] font-extrabold uppercase tracking-widest text-cyan-400 bg-cyan-950/80 border border-cyan-800/60 rounded-full">
       Official Trance Hub
     </span>
   </header>
 
   <main class="max-w-7xl mx-auto space-y-10">
     
-    <!-- TOP GRID: SPOTIFY PLAYER & EVENT RADAR -->
+    <!-- TOP GRID: SPOTIFY PLAYER & PARTYFLOCK EVENT RADAR -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       
       <!-- SPOTIFY EMBED PLAYER -->
@@ -46,13 +46,13 @@
           <h2 class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-fuchsia-400 flex items-center gap-2">
             <span>⚡</span> DE HAY TRANCE PLAYLIST
           </h2>
-          <p class="text-gray-400 text-xs mt-0.5">Beluister onze afspeellijst live via Spotify.</p>
+          <p class="text-gray-400 text-xs mt-0.5">Beluister de complete afspeellijst direct op Spotify.</p>
         </div>
         <div class="rounded-xl overflow-hidden border border-gray-800 shadow-inner bg-black">
           <iframe 
             src="https://open.spotify.com/embed/playlist/31dSFy8AFEtptq8bWTFBDs?utm_source=generator&theme=0" 
             width="100%" 
-            height="350" 
+            height="420" 
             frameborder="0" 
             allowfullscreen="" 
             allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
@@ -70,10 +70,10 @@
               <h2 class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 via-cyan-300 to-blue-400 flex items-center gap-2">
                 <span>🇳🇱</span> TRANCE EVENT RADAR NL
               </h2>
-              <p class="text-gray-400 text-xs mt-0.5">Feesten, ADE Specials & Festivals in Nederland</p>
+              <p class="text-gray-400 text-xs mt-0.5">Aankomende Trance feesten, ADE Specials & Festivals</p>
             </div>
             <span id="events-status" class="text-[10px] bg-cyan-950 text-cyan-400 border border-cyan-800/60 rounded-full px-2.5 py-0.5 font-semibold whitespace-nowrap self-start sm:self-auto">
-              Actueel aanbod
+              Laden...
             </span>
           </div>
 
@@ -86,7 +86,7 @@
           </div>
 
           <!-- Events Grid -->
-          <div id="events-grid" class="space-y-2 max-h-[300px] overflow-y-auto pr-1">
+          <div id="events-grid" class="space-y-2 max-h-[380px] overflow-y-auto pr-1">
             <p class="text-gray-500 text-xs text-center py-6">Evenementen laden...</p>
           </div>
         </div>
@@ -119,14 +119,14 @@
           <h2 class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-fuchsia-400 flex items-center gap-2">
             <span>✨</span> 20 LAATST TOEGEVOEGDE NUMMERS
           </h2>
-          <p class="text-xs text-gray-400 mt-0.5">De meest recente toevoegingen (met "Must Go On" op #1)</p>
+          <p class="text-xs text-gray-400 mt-0.5">De meest recente toevoegingen uit de lijst</p>
         </div>
         <span class="text-[11px] bg-cyan-950 text-cyan-400 border border-cyan-800/60 px-3 py-1 rounded-full font-bold">
           Top 20 Recent
         </span>
       </div>
 
-      <div id="recent-tracks-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 max-h-[460px] overflow-y-auto pr-1">
+      <div id="recent-tracks-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 max-h-[500px] overflow-y-auto pr-1">
         <!-- Dynamisch -->
       </div>
     </section>
@@ -151,7 +151,7 @@
           <input 
             type="text" 
             id="search-input" 
-            placeholder="Zoek op titel, artiest of platenlabel..." 
+            placeholder="Zoek op titel, artiest of platenlabel in alle nummers..." 
             class="w-full bg-gray-950 text-white border border-gray-800 rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:border-cyan-500 transition text-xs placeholder-gray-500 shadow-inner"
           >
         </div>
@@ -236,7 +236,7 @@
     let currentFilteredList = [];
     let displayedCount = 24;
 
-    // Gegarandeerde basislijst met "Must Go On" op #1
+    // Basis fallback collectie voor noodgevallen
     const DEFAULT_TRACKS = [
       { id: '1', title: 'Must Go On', artists: 'RAM, David Forbes', label: 'Nocturnal Knights', image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400', addedAt: new Date('2026-10-15'), spotifyUrl: 'https://open.spotify.com/search/RAM%20David%20Forbes%20Must%20Go%20On' },
       { id: '2', title: 'City Lights', artists: 'Armin van Buuren', label: 'Armada Music', image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400', addedAt: new Date('2026-10-01'), spotifyUrl: 'https://open.spotify.com/search/Armin%20van%20Buuren%20City%20Lights' },
@@ -245,22 +245,20 @@
       { id: '5', title: 'Communication (Part 3)', artists: 'Armin van Buuren', label: 'Armada Music', image: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400', addedAt: new Date('2026-08-30'), spotifyUrl: 'https://open.spotify.com/search/Armin%20van%20Buuren%20Communication' },
       { id: '6', title: 'Kaia', artists: 'Bryan Kearney', label: 'Kearnage Recordings', image: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400', addedAt: new Date('2026-08-14'), spotifyUrl: 'https://open.spotify.com/search/Bryan%20Kearney%20Kaia' },
       { id: '7', title: 'Out Of The Blue', artists: 'System F, Ferry Corsten', label: 'Tsunami', image: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=400', addedAt: new Date('2026-07-28'), spotifyUrl: 'https://open.spotify.com/search/System%20F%20Out%20Of%20The%20Blue' },
-      { id: '8', title: 'RAMelia (Tribute To Amelia)', artists: 'RAM, Susana', label: 'FSOE', image: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=400', addedAt: new Date('2026-07-10'), spotifyUrl: 'https://open.spotify.com/search/RAM%20RAMelia' },
-      { id: '9', title: 'We Control The Sunlight', artists: 'Aly & Fila, Jwaydan', label: 'Future Sound of Egypt', image: 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=400', addedAt: new Date('2026-06-25'), spotifyUrl: 'https://open.spotify.com/search/Aly%20Fila%20We%20Control%20The%20Sunlight' },
-      { id: '10', title: 'Sea of Trance', artists: 'Factor B', label: 'Theatre of the Mind', image: 'https://images.unsplash.com/photo-1429962714451-bb934ecdc436?w=400', addedAt: new Date('2026-06-12'), spotifyUrl: 'https://open.spotify.com/search/Factor%20B%20Sea%20of%20Trance' }
+      { id: '8', title: 'RAMelia', artists: 'RAM, Susana', label: 'FSOE', image: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=400', addedAt: new Date('2026-07-10'), spotifyUrl: 'https://open.spotify.com/search/RAM%20RAMelia' }
     ];
 
-    // Universele zoeker naar eigenschappen in willekeurige JSON bestanden
+    // Zoekfunctie voor JSON sleutels (case-insensitive & ongevoelig voor leestekens)
     function getProp(obj, keys, fallback = '') {
       if (!obj || typeof obj !== 'object') return fallback;
       for (let k of keys) {
         if (obj[k] !== undefined && obj[k] !== null && String(obj[k]).trim() !== '') return String(obj[k]).trim();
       }
-      // Case-insensitive fallback
       for (let actualKey in obj) {
-        const lower = actualKey.toLowerCase().replace(/[^a-z0-9]/g, '');
+        const cleanActual = actualKey.toLowerCase().replace(/[^a-z0-9]/g, '');
         for (let k of keys) {
-          if (lower === k.toLowerCase().replace(/[^a-z0-9]/g, '') && obj[actualKey]) {
+          const cleanK = k.toLowerCase().replace(/[^a-z0-9]/g, '');
+          if (cleanActual === cleanK && obj[actualKey] !== undefined && obj[actualKey] !== null) {
             return String(obj[actualKey]).trim();
           }
         }
@@ -281,20 +279,17 @@
       }
 
       let addedAt = new Date();
-      const rawDate = getProp(raw, ['Added At', 'addedAt', 'added_at', 'Release Date']);
+      const rawDate = getProp(raw, ['Added At', 'addedAt', 'added_at', 'Release Date', 'added']);
       if (rawDate) {
-        const p = new Date(rawDate);
-        if (!isNaN(p.getTime())) addedAt = p;
-      }
-
-      if (title.toLowerCase().includes('must go on')) {
-        addedAt = new Date('2026-10-15T12:00:00Z');
+        const parsed = new Date(rawDate);
+        if (!isNaN(parsed.getTime())) addedAt = parsed;
       }
 
       let spotifyUrl = `https://open.spotify.com/search/${encodeURIComponent(artists + ' ' + title)}`;
       const uri = getProp(raw, ['Track URI', 'trackUri', 'uri']);
       if (uri.includes('spotify:track:')) {
-        spotifyUrl = `https://open.spotify.com/track/${uri.split('spotify:track:')[1].split(':')[0]}`;
+        const trackId = uri.split('spotify:track:')[1].split(':')[0];
+        spotifyUrl = `https://open.spotify.com/track/${trackId}`;
       } else if (raw.spotifyUrl && String(raw.spotifyUrl).startsWith('http')) {
         spotifyUrl = raw.spotifyUrl;
       }
@@ -302,7 +297,7 @@
       return { id: String(idx + 1), title, artists, label, image, addedAt, spotifyUrl };
     }
 
-    // 1. LADER VOOR TRACKS.JSON
+    // 1. INLADEN VAN TRACKS.JSON
     async function loadAllTracksFromJson() {
       const countLabel = document.getElementById('track-count');
       if (countLabel) countLabel.innerText = 'Laden...';
@@ -339,7 +334,7 @@
       filterAndRenderTracks();
     }
 
-    // 2. NIEUWE RELEASES
+    // 2. NIEUWE RELEASES (8 ITEMS MET WERKBARE SPOTIFY LINKS)
     const NEW_ARTIST_RELEASES = [
       { title: 'Must Go On (Single)', artist: 'RAM & David Forbes', type: 'Single', image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400', spotifyUrl: 'https://open.spotify.com/search/RAM%20David%20Forbes%20Must%20Go%20On' },
       { title: 'Breathe In (Album)', artist: 'Armin van Buuren', type: 'Album', image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400', spotifyUrl: 'https://open.spotify.com/search/Armin%20van%20Buuren%20Breathe%20In' },
@@ -353,17 +348,19 @@
 
     let rawEventsList = [];
 
-    // 3. EVENT RADAR
+    // 3. UITGEBREIDE EVENT RADAR (FEESTEN & ADE SPECIALS IN NL)
     function getDutchTranceEvents() {
       const y = new Date().getFullYear();
       return [
         { artist: 'Armin van Buuren & Benwal', eventName: 'Armin van Buuren & Benwal (ADE)', venue: 'Gashouder', city: 'Amsterdam', type: 'ade', genre: 'Uplifting / Tech', date: new Date(y, 9, 21), url: 'https://partyflock.nl/agenda/genre/trance', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
-        { artist: 'Reason II Rise', eventName: 'Reason II Rise Special (ADE Free)', venue: 'Coco\'s Outback', city: 'Amsterdam', type: 'ade', genre: 'Uplifting Trance', date: new Date(y, 9, 22), url: 'https://partyflock.nl/agenda/genre/uplifting-trance', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
+        { artist: 'Reason II Rise', eventName: 'Reason II Rise Special (ADE Free Event)', venue: 'Coco\'s Outback', city: 'Amsterdam', type: 'ade', genre: 'Uplifting Trance', date: new Date(y, 9, 22), url: 'https://partyflock.nl/agenda/genre/uplifting-trance', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
         { artist: 'Luminosity Events', eventName: 'Luminosity "This Is Trance!" ADE', venue: 'Club Panama', city: 'Amsterdam', type: 'ade', genre: 'Uplifting Trance', date: new Date(y, 9, 23), url: 'https://luminosity-events.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
+        { artist: 'Ferry Corsten', eventName: 'What The F (ADE Special)', venue: 'Melkweg', city: 'Amsterdam', type: 'ade', genre: 'Progressive / Trance', date: new Date(y, 9, 24), url: 'https://www.ferrycorsten.com/', spotifyPreview: 'https://open.spotify.com/embed/track/41443fA1753995f5145f6E' },
         { artist: 'Factor B b2b Super8', eventName: 'Luminosity x Theatre of the Mind', venue: 'Melkweg', city: 'Amsterdam', type: 'uplifting', genre: 'Trance / Progressive', date: new Date(y, 10, 14), url: 'https://luminosity-events.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/41443fA1753995f5145f6E' },
+        { artist: 'Grotesque Events', eventName: 'Grotesque Indoor Festival', venue: 'Maassilo', city: 'Rotterdam', type: 'festival', genre: 'Tech / Uplifting Trance', date: new Date(y, 11, 12), url: 'https://partyflock.nl/agenda/genre/trance', spotifyPreview: 'https://open.spotify.com/embed/track/1yYk839b8x2b1c41A4179e' },
         { artist: 'Luminosity Events', eventName: 'Luminosity 19 Years Anniversary', venue: 'Melkweg', city: 'Amsterdam', type: 'uplifting', genre: 'Pure Trance', date: new Date(y, 11, 19), url: 'https://luminosity-events.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
         { artist: 'Armin van Buuren & Aly & Fila', eventName: 'A State Of Trance Festival 2027', venue: 'Rotterdam Ahoy', city: 'Rotterdam', type: 'festival', genre: 'Trance Festival', date: new Date(y + 1, 1, 26), url: 'https://festival.astateoftrance.com/rotterdam/', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
-        { artist: 'Grotesque Events', eventName: 'Grotesque Indoor Festival', venue: 'Maassilo', city: 'Rotterdam', type: 'festival', genre: 'Tech / Uplifting Trance', date: new Date(y, 11, 12), url: 'https://partyflock.nl/agenda/genre/trance', spotifyPreview: 'https://open.spotify.com/embed/track/1yYk839b8x2b1c41A4179e' },
+        { artist: 'Quest4Trance', eventName: 'Quest4Trance Spring Edition', venue: 'Beachclub Fuel', city: 'Bloemendaal', type: 'festival', genre: 'Uplifting Trance', date: new Date(y + 1, 4, 15), url: 'https://partyflock.nl/agenda/genre/trance', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
         { artist: 'Luminosity Family', eventName: 'Luminosity Beach Festival 2027', venue: 'Bernie\'s Beach Club', city: 'Zandvoort', type: 'festival', genre: 'Beach Festival', date: new Date(y + 1, 5, 24), url: 'https://luminosity-events.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' }
       ];
     }
@@ -431,7 +428,7 @@
       else if (type === 'festival') renderEvents(rawEventsList.filter(e => e.type === 'festival'));
     }
 
-    // 4. RELEASES & RECENT
+    // 4. RELEASES & RECENT 20
     function renderNewReleases() {
       const c = document.getElementById('new-releases-grid');
       if (!c) return;
@@ -458,6 +455,7 @@
       if (!c) return;
       c.innerHTML = '';
 
+      // Sorteert strikt op toegevoegde datum (nieuwste bovenaan)
       const sorted = [...HAY_TRANCE_TRACKS].sort((a, b) => b.addedAt - a.addedAt);
       const recent = sorted.slice(0, 20);
 
@@ -470,12 +468,12 @@
             <span class="text-xs font-bold ${idx === 0 ? 'text-cyan-400 font-extrabold' : 'text-gray-500'} w-5 text-center flex-shrink-0">#${idx + 1}</span>
             <img src="${track.image}" alt="${track.title}" class="w-10 h-10 rounded-lg object-cover flex-shrink-0">
             <div class="overflow-hidden">
-              <h4 class="text-white font-bold text-xs truncate">${track.title}</h4>
+              <h4 class="text-white font-bold text-xs truncate" title="${track.title}">${track.title}</h4>
               <p class="text-cyan-400 text-[10px] truncate">${track.artists}</p>
               <span class="text-[9px] text-gray-500">Toegevoegd: ${dStr}</span>
             </div>
           </div>
-          <a href="${track.spotifyUrl}" target="_blank" class="p-1.5 bg-gray-800 hover:bg-cyan-950 text-cyan-400 rounded-lg transition text-xs font-bold flex-shrink-0 ml-1.5">
+          <a href="${track.spotifyUrl}" target="_blank" class="p-1.5 bg-gray-800 hover:bg-cyan-950 text-cyan-400 rounded-lg transition text-xs font-bold flex-shrink-0 ml-1.5" title="Open op Spotify">
             ▶
           </a>
         `;
@@ -587,7 +585,7 @@
       renderTrackBatch();
     }
 
-    // EVENT LISTENERS & START
+    // START
     document.getElementById('search-input')?.addEventListener('input', filterAndRenderTracks);
     document.getElementById('sort-select')?.addEventListener('change', filterAndRenderTracks);
 
