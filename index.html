@@ -6,12 +6,9 @@
   <title>Hay Trance - High in Trance</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* Neon Gloed Effecten */
+    /* Neon & Cyberpunk Effecten */
     .neon-border {
-      box-shadow: 0 0 15px rgba(6, 182, 212, 0.4), inset 0 0 15px rgba(6, 182, 212, 0.15);
-    }
-    .neon-glow-pink {
-      box-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
+      box-shadow: 0 0 18px rgba(6, 182, 212, 0.4), inset 0 0 15px rgba(6, 182, 212, 0.15);
     }
     .neon-text {
       text-shadow: 0 0 10px rgba(6, 182, 212, 0.7), 0 0 20px rgba(6, 182, 212, 0.4);
@@ -49,7 +46,7 @@
           <h2 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-fuchsia-400 flex items-center gap-2">
             <span>⚡</span> DE HAY TRANCE PLAYLIST
           </h2>
-          <p class="text-gray-400 text-xs mt-1">Beluister onze complete afspeellijst live via Spotify.</p>
+          <p class="text-gray-400 text-xs mt-1">Beluister onze afspeellijst live via Spotify.</p>
         </div>
         <div class="rounded-2xl overflow-hidden border border-gray-800/80 shadow-inner bg-black">
           <iframe 
@@ -84,7 +81,7 @@
           <div class="flex flex-wrap gap-2 mb-4">
             <button onclick="filterEvents('all')" class="event-filter-btn text-xs bg-cyan-500 text-black font-extrabold px-3 py-1.5 rounded-xl transition shadow-md" data-filter="all">Alles</button>
             <button onclick="filterEvents('ade')" class="event-filter-btn text-xs bg-gray-800 text-gray-300 hover:bg-gray-700 px-3 py-1.5 rounded-xl transition" data-filter="ade">🇳🇱 ADE Specials</button>
-            <button onclick="filterEvents('festival')" class="event-filter-btn text-xs bg-gray-800 text-gray-300 hover:bg-gray-700 px-3 py-1.5 rounded-xl transition" data-filter="festival">Festivals & Club Nights</button>
+            <button onclick="filterEvents('festival')" class="event-filter-btn text-xs bg-gray-800 text-gray-300 hover:bg-gray-700 px-3 py-1.5 rounded-xl transition" data-filter="festival">Festivals & Clubs</button>
           </div>
 
           <!-- Events Grid -->
@@ -119,22 +116,22 @@
       <div class="flex justify-between items-center border-b border-gray-800/80 pb-3">
         <div>
           <h2 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-fuchsia-400 flex items-center gap-2">
-            <span>✨</span> LAATST TOEGEVOEGDE NUMMERS
+            <span>✨</span> 20 LAATST TOEGEVOEGDE NUMMERS
           </h2>
           <p class="text-xs text-gray-400 mt-0.5">De meest recente toevoegingen aan de Hay Trance lijst</p>
         </div>
         <span class="text-xs bg-cyan-950 text-cyan-400 border border-cyan-800/60 px-3 py-1 rounded-full font-bold">
-          Meest Recent
+          Top 20 Recent
         </span>
       </div>
 
       <div id="recent-tracks-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-h-[480px] overflow-y-auto pr-2">
-        <!-- Dynamisch -->
+        <!-- Dynamisch vanuit tracks.json -->
       </div>
     </section>
 
 
-    <!-- HAY TRANCE SELECTION CATALOGUS (ZOEK IN ALLE NUMMERS) -->
+    <!-- HAY TRANCE CATALOGUS (ZOEK IN ALLE NUMMERS) -->
     <section class="space-y-6">
       
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
@@ -178,7 +175,7 @@
       <!-- Grid voor Volledige Catalogus -->
       <div id="track-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
 
-      <!-- Knop: Laad Meer Nummers (voor grote collecties) -->
+      <!-- Knop: Laad Meer Nummers -->
       <div id="load-more-container" class="text-center pt-4 hidden">
         <button onclick="loadMoreTracks()" class="bg-gray-900 hover:bg-cyan-950 text-cyan-400 border border-cyan-800/60 hover:border-cyan-500 font-extrabold px-6 py-3 rounded-2xl transition shadow-lg text-sm">
           Laad meer platen ⤵
@@ -234,31 +231,65 @@
 
 
   <script>
-    // 1. HAY TRANCE CATALOGUS (Met "Must Go On" als nieuwste track #1)
-    const HAY_TRANCE_TRACKS = [
-      { id: '1', title: 'Must Go On', artists: 'RAM, David Forbes', label: 'Nocturnal Knights', image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400', addedAt: new Date('2026-10-15'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
-      { id: '2', title: 'City Lights', artists: 'Armin van Buuren', label: 'Armada Music', image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400', addedAt: new Date('2026-10-01'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
-      { id: '3', title: 'Connect', artists: 'Ferry Corsten', label: 'Flashover Recordings', image: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400', addedAt: new Date('2026-09-22'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
-      { id: '4', title: 'Horizons', artists: 'Giuseppe Ottaviani', label: 'Black Hole Recordings', image: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=400', addedAt: new Date('2026-09-10'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
-      { id: '5', title: 'Communication (Part 3)', artists: 'Armin van Buuren', label: 'Armada Music', image: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400', addedAt: new Date('2026-08-30'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
-      { id: '6', title: 'Kaia', artists: 'Bryan Kearney', label: 'Kearnage Recordings', image: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400', addedAt: new Date('2026-08-14'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
-      { id: '7', title: 'Out Of The Blue', artists: 'System F, Ferry Corsten', label: 'Tsunami', image: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=400', addedAt: new Date('2026-07-28'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
-      { id: '8', title: 'RAMelia (Tribute To Amelia)', artists: 'RAM, Susana', label: 'FSOE', image: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=400', addedAt: new Date('2026-07-10'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
-      { id: '9', title: 'We Control The Sunlight', artists: 'Aly & Fila, Jwaydan', label: 'Future Sound of Egypt', image: 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=400', addedAt: new Date('2026-06-25'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
-      { id: '10', title: 'Sea of Trance', artists: 'Factor B', label: 'Theatre of the Mind', image: 'https://images.unsplash.com/photo-1429962714451-bb934ecdc436?w=400', addedAt: new Date('2026-06-12'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
-      { id: '11', title: 'Concrete Angel', artists: 'Gareth Emery, Christina Novelli', label: 'Garuda', image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400', addedAt: new Date('2026-05-30'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
-      { id: '12', title: 'For An Angel (PvD Remix)', artists: 'Paul van Dyk', label: 'Vandit Records', image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400', addedAt: new Date('2026-05-18'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
-      { id: '13', title: 'Big Sky', artists: 'John O\'Callaghan, Audrey Gallagher', label: 'Armind', image: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400', addedAt: new Date('2026-04-20'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
-      { id: '14', title: 'Seven Cities', artists: 'Solarstone', label: 'Black Hole Recordings', image: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=400', addedAt: new Date('2026-04-05'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
-      { id: '15', title: 'Adagio for Strings', artists: 'Tiësto', label: 'Magik Muzik', image: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400', addedAt: new Date('2026-03-21'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
-      { id: '16', title: 'Shivers', artists: 'Armin van Buuren, Susana', label: 'Armada Music', image: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400', addedAt: new Date('2026-03-01'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
-      { id: '17', title: 'Linking People', artists: 'Giuseppe Ottaviani', label: 'Vandit', image: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=400', addedAt: new Date('2026-02-14'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
-      { id: '18', title: 'Satellite', artists: 'OceanLab, Above & Beyond', label: 'Anjunabeats', image: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=400', addedAt: new Date('2026-01-29'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
-      { id: '19', title: 'Airwave', artists: 'Rank 1', label: 'ID&T', image: 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=400', addedAt: new Date('2026-01-10'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
-      { id: '20', title: 'Carte Blanche', artists: 'Veracocha', label: 'Positiva', image: 'https://images.unsplash.com/photo-1429962714451-bb934ecdc436?w=400', addedAt: new Date('2025-12-28'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' }
-    ];
+    let HAY_TRANCE_TRACKS = [];
+    let currentFilteredList = [];
+    let displayedCount = 24;
 
-    // 2. RELEASES
+    // 1. INLADEN VAN TRACKS.JSON MET FALLBACK DATA
+    async function loadAllTracksFromJson() {
+      const countLabel = document.getElementById('track-count');
+      if (countLabel) countLabel.innerText = 'Laden...';
+
+      try {
+        const response = await fetch('tracks.json');
+        if (!response.ok) throw new Error('tracks.json niet gevonden');
+
+        const data = await response.json();
+
+        // Mappen van de JSON velden (ondersteunt Exportify & gewone JSON)
+        HAY_TRANCE_TRACKS = data.map((track, idx) => {
+          const title = track['Track Name'] || track.title || 'Must Go On';
+          const artists = track['Artist Name(s)'] || track.artists || 'RAM, David Forbes';
+          const label = track['Album Name'] || track.label || 'Trance Label';
+          const rawDate = track['Added At'] || track.addedAt || new Date();
+          const image = track['Album Image URL'] || track.image || 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400';
+          
+          let spotifyUrl = 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs';
+          if (track['Track URI']) {
+            const uriPart = track['Track URI'].split(':').pop();
+            spotifyUrl = `https://open.spotify.com/track/${uriPart}`;
+          } else if (track.spotifyUrl) {
+            spotifyUrl = track.spotifyUrl;
+          }
+
+          return {
+            id: track.id || String(idx + 1),
+            title: title,
+            artists: artists,
+            label: label,
+            image: image,
+            addedAt: new Date(rawDate),
+            spotifyUrl: spotifyUrl
+          };
+        });
+
+      } catch (error) {
+        console.log('Gebruikt voorbeelddata omdat tracks.json lokaal of nog niet beschikbaar is:', error);
+        
+        // Fallback als tracks.json nog niet geladen is
+        HAY_TRANCE_TRACKS = [
+          { id: '1', title: 'Must Go On', artists: 'RAM, David Forbes', label: 'Nocturnal Knights', image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400', addedAt: new Date('2026-10-15'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
+          { id: '2', title: 'City Lights', artists: 'Armin van Buuren', label: 'Armada Music', image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400', addedAt: new Date('2026-10-01'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
+          { id: '3', title: 'Connect', artists: 'Ferry Corsten', label: 'Flashover Recordings', image: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400', addedAt: new Date('2026-09-22'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
+          { id: '4', title: 'Communication (Part 3)', artists: 'Armin van Buuren', label: 'Armada Music', image: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=400', addedAt: new Date('2026-08-30'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' }
+        ];
+      }
+
+      renderRecent20Tracks();
+      filterAndRenderTracks();
+    }
+
+    // 2. NIEUWE RELEASES
     const NEW_ARTIST_RELEASES = [
       { title: 'Must Go On (Single)', artist: 'RAM & David Forbes', type: 'Single', image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400', spotifyUrl: 'https://open.spotify.com/artist/0S392vK8I98aR39uG27K23' },
       { title: 'Breathe In (Album)', artist: 'Armin van Buuren', type: 'Album', image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400', spotifyUrl: 'https://open.spotify.com/artist/0S392vK8I98aR39uG27K23' },
@@ -273,7 +304,7 @@
       'Gareth Emery', 'Ruben de Ronde', 'RAM', 'David Forbes'
     ];
 
-    // 3. UITGEBREIDE NEDERLANDSE EVENEMENTEN (INCL. ADE SPECIALS)
+    // 3. EVENT RADAR DATA (INCL ADE SPECIALS)
     function getDutchTranceFestivals() {
       const currYear = new Date().getFullYear();
       return [
@@ -283,7 +314,7 @@
           venue: 'Panama',
           city: 'Amsterdam',
           type: 'ade',
-          date: new Date(currYear, 9, 21), // Oktober ADE
+          date: new Date(currYear, 9, 21),
           url: 'https://www.luminosity-events.nl/',
           spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY'
         },
@@ -293,7 +324,7 @@
           venue: 'Melkweg',
           city: 'Amsterdam',
           type: 'ade',
-          date: new Date(currYear, 9, 22), // Oktober ADE
+          date: new Date(currYear, 9, 22),
           url: 'https://www.ferrycorsten.com/',
           spotifyPreview: 'https://open.spotify.com/embed/track/41443fA1753995f5145f6E'
         },
@@ -303,7 +334,7 @@
           venue: 'AFAS Live',
           city: 'Amsterdam',
           type: 'ade',
-          date: new Date(currYear, 9, 23), // Oktober ADE
+          date: new Date(currYear, 9, 23),
           url: 'https://astateoftrance.com/',
           spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3'
         },
@@ -313,24 +344,13 @@
           venue: 'Maassilo',
           city: 'Rotterdam',
           type: 'festival',
-          date: new Date(currYear, 11, 12), // December
+          date: new Date(currYear, 11, 12),
           url: 'https://ptsevents.nl/',
           spotifyPreview: 'https://open.spotify.com/embed/track/1yYk839b8x2b1c41A4179e'
-        },
-        {
-          artist: 'Luminosity Events',
-          eventName: 'Luminosity Beach Festival',
-          venue: 'Bernie\'s Beach Club',
-          city: 'Zandvoort',
-          type: 'festival',
-          date: new Date(currYear + 1, 5, 24), // Juni
-          url: 'https://www.luminosity-events.nl/',
-          spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY'
         }
       ];
     }
 
-    // MULTI-SOURCE EVENT RADAR
     async function loadEventsMultiSource() {
       const eventsGrid = document.getElementById('events-grid');
       const eventsStatus = document.getElementById('events-status');
@@ -390,7 +410,7 @@
         eventsGrid.innerHTML = `
           <div class="bg-gray-950/80 p-4 rounded-2xl border border-gray-800 text-center space-y-2">
             <p class="text-cyan-300 text-sm font-semibold">Geen feesten gevonden voor dit filter</p>
-            <p class="text-xs text-gray-400">Bekijk het overzicht op <a href="https://partyflock.nl/agenda/genre/trance" target="_blank" class="text-cyan-400 underline">Partyflock Trance Agenda</a></p>
+            <p class="text-xs text-gray-400">Bekijk overzichten op <a href="https://partyflock.nl/agenda/genre/trance" target="_blank" class="text-cyan-400 underline">Partyflock Trance Agenda</a></p>
           </div>`;
         return;
       }
@@ -446,7 +466,7 @@
       }
     }
 
-    // 4. RELEASES & RECENT RENDER
+    // 4. RENDER RELEASES & RECENT
     function renderNewReleases() {
       const container = document.getElementById('new-releases-grid');
       container.innerHTML = '';
@@ -500,7 +520,7 @@
       });
     }
 
-    // 5. POP-UP MODAL LOGICA
+    // 5. POP-UP MODAL
     function openModal(ev) {
       const modal = document.getElementById('event-modal');
       document.getElementById('modal-title').innerText = ev.eventName;
@@ -530,24 +550,19 @@
       document.getElementById('event-modal').classList.add('hidden');
     }
 
-    // 6. VOLLEDIGE CATALOGUS (MET SLIMME PAGINERING VOOR ALLE 2.499 NUMMERS)
-    let currentFilteredList = [];
-    let displayedCount = 24;
-
+    // 6. VOLLEDIGE CATALOGUS FILTER & PAGINERING
     function filterAndRenderTracks() {
       const searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
       const sortBy = document.getElementById('sort-select').value;
       const countLabel = document.getElementById('track-count');
       const noResults = document.getElementById('no-results');
 
-      // Filteren over ALLE aanwezige nummers
       currentFilteredList = HAY_TRANCE_TRACKS.filter(track => {
         return track.title.toLowerCase().includes(searchQuery) || 
                track.artists.toLowerCase().includes(searchQuery) ||
                (track.label && track.label.toLowerCase().includes(searchQuery));
       });
 
-      // Sorteren
       if (sortBy === 'newest') currentFilteredList.sort((a, b) => b.addedAt - a.addedAt);
       else if (sortBy === 'oldest') currentFilteredList.sort((a, b) => a.addedAt - b.addedAt);
       else if (sortBy === 'title') currentFilteredList.sort((a, b) => a.title.localeCompare(b.title));
@@ -564,7 +579,6 @@
         noResults.classList.add('hidden');
       }
 
-      // Reset getoonde aantal bij nieuwe zoekopdracht
       displayedCount = 24;
       renderTrackBatch();
     }
@@ -605,7 +619,6 @@
         grid.appendChild(card);
       });
 
-      // Toon 'Laad meer' knop als er meer nummers zijn dan getoond
       if (displayedCount < currentFilteredList.length) {
         loadMoreContainer.classList.remove('hidden');
       } else {
@@ -622,10 +635,9 @@
     document.getElementById('search-input').addEventListener('input', filterAndRenderTracks);
     document.getElementById('sort-select').addEventListener('change', filterAndRenderTracks);
 
-    // Start
+    // Initialiseren
     renderNewReleases();
-    renderRecent20Tracks();
-    filterAndRenderTracks();
+    loadAllTracksFromJson();
     loadEventsMultiSource();
   </script>
 </body>
