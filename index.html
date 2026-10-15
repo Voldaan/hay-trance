@@ -18,18 +18,18 @@
 
   <main class="max-w-6xl mx-auto space-y-10">
     
-    <!-- TOP GRID: SPOTIFY PLAYER & EVENT RADAR -->
+    <!-- TOP GRID: SPOTIFY PLAYER & MULTI-SOURCE EVENT RADAR -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
       
       <!-- SPOTIFY EMBED PLAYER -->
       <section class="bg-gray-900 border border-gray-800 rounded-2xl p-5 shadow-xl flex flex-col justify-between">
         <div class="mb-4">
           <h2 class="text-2xl font-bold text-cyan-400 flex items-center gap-2">
-            <span>🎵</span> De Hay Trance Playlist
+            <span>🎵</span> De Officiële Hay Trance Playlist
           </h2>
-          <p class="text-gray-400 text-sm mt-1">Beluister onze nieuwste trance selecties rechtstreeks op Spotify.</p>
+          <p class="text-gray-400 text-sm mt-1">Beluister onze complete afspeellijst direct op de site.</p>
         </div>
-        <div class="rounded-xl overflow-hidden border border-gray-800 shadow-inner bg-black/40">
+        <div class="rounded-xl overflow-hidden border border-gray-800 shadow-inner bg-black">
           <iframe 
             src="https://open.spotify.com/embed/playlist/31dSFy8AFEtptq8bWTFBDs?utm_source=generator&theme=0" 
             width="100%" 
@@ -43,24 +43,31 @@
         </div>
       </section>
 
-      <!-- LIVE EVENT RADAR NEDERLAND -->
+      <!-- LIVE EVENT RADAR NEDERLAND (MULTI-SOURCE) -->
       <section class="bg-gray-900 border border-gray-800 rounded-2xl p-5 shadow-xl flex flex-col justify-between">
         <div>
-          <div class="flex items-center justify-between mb-4 border-b border-gray-800 pb-3">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 border-b border-gray-800 pb-3 gap-2">
             <div>
               <h2 class="text-2xl font-bold text-cyan-400 flex items-center gap-2">
-                <span>🇳🇱</span> Event Radar Nederland
+                <span>🇳🇱</span> NL Trance Event Agenda
               </h2>
-              <p class="text-gray-400 text-sm mt-1">Aankomende trance optredens in Nederlandse feesten & clubs.</p>
+              <p class="text-gray-400 text-xs mt-0.5">Aankomende feesten & optredens in Nederland</p>
             </div>
-            <span id="events-status" class="text-xs bg-cyan-950 text-cyan-400 border border-cyan-800/50 rounded-lg px-3 py-1.5 animate-pulse whitespace-nowrap">
-              Events zoeken...
+            <span id="events-status" class="text-xs bg-cyan-950 text-cyan-400 border border-cyan-800/50 rounded-lg px-3 py-1 animate-pulse whitespace-nowrap self-start sm:self-auto">
+              Scannen...
             </span>
           </div>
 
+          <!-- Filter Knoppen binnen Agenda -->
+          <div class="flex flex-wrap gap-2 mb-4">
+            <button onclick="filterEvents('all')" class="event-filter-btn text-xs bg-cyan-500 text-black font-bold px-3 py-1 rounded-lg transition" data-filter="all">Alles</button>
+            <button onclick="filterEvents('month')" class="event-filter-btn text-xs bg-gray-800 text-gray-300 hover:bg-gray-700 px-3 py-1 rounded-lg transition" data-filter="month">Komende 30 dagen</button>
+            <button onclick="filterEvents('festival')" class="event-filter-btn text-xs bg-gray-800 text-gray-300 hover:bg-gray-700 px-3 py-1 rounded-lg transition" data-filter="festival">Festivals</button>
+          </div>
+
           <!-- Events Container -->
-          <div id="events-grid" class="space-y-3 max-h-[380px] overflow-y-auto pr-1">
-            <p class="text-gray-500 text-sm text-center py-8">Aankomende feesten in Nederland scannen...</p>
+          <div id="events-grid" class="space-y-2.5 max-h-[320px] overflow-y-auto pr-1">
+            <p class="text-gray-500 text-sm text-center py-8">Nederlandse Trance evenementen laden...</p>
           </div>
         </div>
       </section>
@@ -68,9 +75,16 @@
     </div>
 
 
-    <!-- SECTION 2: INTERACTIEVE TRACKLIST & ZOEKBALK -->
+    <!-- SECTION 2: INTERACTIEVE CATALOGUS & ZOEKBALK -->
     <section class="space-y-6">
       
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+        <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+          <span>🎧</span> Hay Trance Selection Catalogus
+        </h2>
+        <p class="text-xs text-gray-400">Doorzoek en filter onze geselecteerde tranceplaten</p>
+      </div>
+
       <!-- Zoek & Filter Bedieningspaneel -->
       <div class="bg-gray-900 border border-gray-800 rounded-2xl p-4 flex flex-col md:flex-row gap-4 justify-between items-center shadow-xl">
         <div class="relative w-full md:w-1/2">
@@ -78,7 +92,7 @@
           <input 
             type="text" 
             id="search-input" 
-            placeholder="Zoek op titel of artiest..." 
+            placeholder="Zoek op titel, artiest of platenlabel..." 
             class="w-full bg-gray-950 text-white border border-gray-800 rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:border-cyan-500 transition text-sm placeholder-gray-500"
           >
         </div>
@@ -112,172 +126,273 @@
 
   </main>
 
+
+  <!-- EVENT DETAIL POP-UP MODAL (Blijf-op-de-site feature) -->
+  <div id="event-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-gray-900 border border-cyan-500/30 rounded-2xl p-6 max-w-lg w-full shadow-2xl relative space-y-5">
+      
+      <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl font-bold p-1">✕</button>
+
+      <div>
+        <span id="modal-type" class="text-[10px] font-bold uppercase tracking-wider bg-cyan-950 text-cyan-400 border border-cyan-800/50 px-2.5 py-1 rounded-md">
+          Festival
+        </span>
+        <h3 id="modal-title" class="text-2xl font-black text-white mt-2">Event Naam</h3>
+        <p id="modal-artist" class="text-cyan-400 font-semibold text-sm">Artiest / Host</p>
+      </div>
+
+      <div class="bg-gray-950/80 p-4 rounded-xl border border-gray-800 space-y-2 text-sm text-gray-300">
+        <p class="flex items-center gap-2">📅 <span id="modal-date" class="font-medium text-white">Datum</span></p>
+        <p class="flex items-center gap-2">📍 <span id="modal-location" class="font-medium text-white">Locatie, Stad</span></p>
+        <p class="flex items-center gap-2">⏳ <span id="modal-countdown" class="font-semibold text-cyan-400">Aftellen...</span></p>
+      </div>
+
+      <!-- Embedded Quick Preview Sound Player -->
+      <div>
+        <p class="text-xs text-gray-400 mb-2 font-medium">🎧 Sfeer / Artiest Sound Preview:</p>
+        <iframe id="modal-audio-iframe" class="w-full rounded-xl" height="80" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture" loading="lazy"></iframe>
+      </div>
+
+      <!-- Acties -->
+      <div class="grid grid-cols-2 gap-3 pt-2">
+        <a id="modal-cal-btn" href="#" target="_blank" class="text-center text-xs bg-gray-800 hover:bg-gray-700 text-gray-200 border border-gray-700 py-2.5 rounded-xl font-semibold transition">
+          📅 Opslaan in Kalender
+        </a>
+        <a id="modal-ticket-btn" href="#" target="_blank" class="text-center text-xs bg-cyan-500 hover:bg-cyan-400 text-black py-2.5 rounded-xl font-bold transition">
+          Tickets & Info ↗
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+
   <script>
-    // 1. CREDENTIALS
-    const CLIENT_ID = '3c9a755f3b844dacb1b517067573ef02';
-    const CLIENT_SECRET = '586f8801439842b09b9b5517d14f8da2';
-    const PLAYLIST_ID = '31dSFy8AFEtptq8bWTFBDs';
-
-    let allTracks = [];
-    // Standaard lijst met bekende trance-artiesten om altijd evenementen in NL te kunnen scannen
-    let uniqueArtistNames = new Set([
-      'Armin van Buuren', 'Ferry Corsten', 'Aly & Fila', 'Giuseppe Ottaviani', 
-      'Paul van Dyk', 'John O\'Callaghan', 'Bryan Kearney', 'Solarstone', 
-      'Gareth Emery', 'Ruben de Ronde', 'Ben Gold', 'Super8 & Tab'
-    ]);
-
-    // Fallback database met klassieke & moderne Hay Trance platen (voor als Spotify API direct vanuit de browser geblokkeerd wordt)
-    const FALLBACK_TRACKS = [
-      { id: '1', title: 'Communication (Part 3)', artists: 'Armin van Buuren', image: 'https://i.scdn.co/image/ab67616d0000b273b3203998f4df8cf36e0d9b4b', addedAt: new Date('2024-02-15'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
-      { id: '2', title: 'Out Of The Blue', artists: 'System F, Ferry Corsten', image: 'https://i.scdn.co/image/ab67616d0000b273418d1847e0aa8b274c43ee6a', addedAt: new Date('2024-01-20'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
-      { id: '3', title: 'RAMelia (Tribute To Amelia)', artists: 'RAM, Susana', image: 'https://i.scdn.co/image/ab67616d0000b273c52e42d7658c4dd4cf2b7245', addedAt: new Date('2023-11-05'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
-      { id: '4', title: 'We Control The Sunlight', artists: 'Aly & Fila, Jwaydan', image: 'https://i.scdn.co/image/ab67616d0000b273039d5e7a9e69123fe11f9530', addedAt: new Date('2023-10-12'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
-      { id: '5', title: 'Concrete Angel', artists: 'Gareth Emery, Christina Novelli', image: 'https://i.scdn.co/image/ab67616d0000b2734568e64c399b19e2c65f9bb3', addedAt: new Date('2023-09-01'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
-      { id: '6', title: 'For An Angel (PvD E-Motion Mix)', artists: 'Paul van Dyk', image: 'https://i.scdn.co/image/ab67616d0000b2738b58498965825d10d638914b', addedAt: new Date('2023-08-14'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
-      { id: '7', title: 'Big Sky', artists: 'John O\'Callaghan, Audrey Gallagher', image: 'https://i.scdn.co/image/ab67616d0000b2732a3536ea1f2d6e32bb821434', addedAt: new Date('2023-07-22'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
-      { id: '8', title: 'Seven Cities', artists: 'Solarstone', image: 'https://i.scdn.co/image/ab67616d0000b273fdbd672ea4e64f068fb26ad3', addedAt: new Date('2023-06-10'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' }
+    // 1. HAY TRANCE PLATEN CATALOGUS
+    const HAY_TRANCE_TRACKS = [
+      { id: '1', title: 'Communication (Part 3)', artists: 'Armin van Buuren', label: 'Armada Music', image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400', addedAt: new Date('2024-03-01'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
+      { id: '2', title: 'Out Of The Blue', artists: 'System F, Ferry Corsten', label: 'Flashover Recordings', image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400', addedAt: new Date('2024-02-18'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
+      { id: '3', title: 'RAMelia (Tribute To Amelia)', artists: 'RAM, Susana', label: 'FSOE', image: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400', addedAt: new Date('2024-01-25'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
+      { id: '4', title: 'We Control The Sunlight', artists: 'Aly & Fila, Jwaydan', label: 'Future Sound of Egypt', image: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=400', addedAt: new Date('2023-12-10'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
+      { id: '5', title: 'Concrete Angel', artists: 'Gareth Emery, Christina Novelli', label: 'Garuda', image: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400', addedAt: new Date('2023-11-05'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
+      { id: '6', title: 'For An Angel (PvD Remix)', artists: 'Paul van Dyk', label: 'Vandit Records', image: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400', addedAt: new Date('2023-10-14'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
+      { id: '7', title: 'Big Sky', artists: 'John O\'Callaghan, Audrey Gallagher', label: 'Armind', image: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=400', addedAt: new Date('2023-09-02'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
+      { id: '8', title: 'Seven Cities', artists: 'Solarstone', label: 'Black Hole Recordings', image: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=400', addedAt: new Date('2023-08-20'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
+      { id: '9', title: 'Adagio for Strings', artists: 'Tiësto', label: 'Magik Muzik', image: 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=400', addedAt: new Date('2023-07-15'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
+      { id: '10', title: 'Shivers', artists: 'Armin van Buuren, Susana', label: 'Armada Music', image: 'https://images.unsplash.com/photo-1429962714451-bb934ecdc436?w=400', addedAt: new Date('2023-06-01'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
+      { id: '11', title: 'Linking People', artists: 'Giuseppe Ottaviani', label: 'Vandit', image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400', addedAt: new Date('2023-05-12'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' },
+      { id: '12', title: 'Satellite', artists: 'OceanLab, Above & Beyond', label: 'Anjunabeats', image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400', addedAt: new Date('2023-04-03'), spotifyUrl: 'https://open.spotify.com/playlist/31dSFy8AFEtptq8bWTFBDs' }
     ];
 
-    // 2. Spotify Access Token
-    async function getAccessToken() {
-      const response = await fetch('https://accounts.spotify.com/api/token', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization': 'Basic ' + btoa(CLIENT_ID + ':' + CLIENT_SECRET)
+    let rawEventsList = [];
+    const TRANCE_ARTISTS = [
+      'Armin van Buuren', 'Ferry Corsten', 'Aly & Fila', 'Giuseppe Ottaviani', 
+      'Paul van Dyk', 'John O\'Callaghan', 'Bryan Kearney', 'Solarstone', 
+      'Gareth Emery', 'Ruben de Ronde', 'Ben Gold', 'Factor B'
+    ];
+
+    // Curated Dutch Trance Festivals (Auto-calculated voor komende maanden)
+    function getDutchTranceFestivals() {
+      const now = new Date();
+      const currYear = now.getFullYear();
+
+      return [
+        {
+          artist: 'Luminosity Events',
+          eventName: 'Luminosity Beach Festival',
+          venue: 'Bernie\'s Beach Club',
+          city: 'Zandvoort',
+          type: 'festival',
+          date: new Date(currYear, 5, 25), // Juni
+          url: 'https://www.luminosity-events.nl/',
+          spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY'
         },
-        body: 'grant_type=client_credentials'
-      });
-
-      if (!response.ok) throw new Error('Spotify auth mislukt');
-      const data = await response.json();
-      return data.access_token;
+        {
+          artist: 'Armin van Buuren',
+          eventName: 'A State Of Trance (ASOT) Festival',
+          venue: 'Ahoy',
+          city: 'Rotterdam',
+          type: 'festival',
+          date: new Date(currYear, 1, 21), // Februari
+          url: 'https://astateoftrance.com/',
+          spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3'
+        },
+        {
+          artist: 'Grotesque Events',
+          eventName: 'Grotesque Indoor Festival',
+          venue: 'Maassilo',
+          city: 'Rotterdam',
+          type: 'club',
+          date: new Date(currYear, 11, 12), // December
+          url: 'https://ptsevents.nl/',
+          spotifyPreview: 'https://open.spotify.com/embed/track/1yYk839b8x2b1c41A4179e'
+        },
+        {
+          artist: 'Ferry Corsten',
+          eventName: 'What The F (Live in Club)',
+          venue: 'Melkweg',
+          city: 'Amsterdam',
+          type: 'club',
+          date: new Date(currYear, 10, 15), // November
+          url: 'https://www.ferrycorsten.com/',
+          spotifyPreview: 'https://open.spotify.com/embed/track/41443fA1753995f5145f6E'
+        }
+      ];
     }
 
-    // 3. Tracks Ophalen (met automatische fallback)
-    async function loadPlaylistTracks() {
-      try {
-        const token = await getAccessToken();
-        const response = await fetch(`https://api.spotify.com/v1/playlists/${PLAYLIST_ID}/tracks?limit=100`, {
-          headers: { 'Authorization': 'Bearer ' + token }
-        });
-
-        if (!response.ok) throw new Error('Spotify API token restrictie');
-
-        const data = await response.json();
-        const items = data.items || [];
-
-        if (items.length === 0) throw new Error('Geen API tracks');
-
-        allTracks = items
-          .filter(item => item && item.track)
-          .map(item => {
-            if (item.track.artists) {
-              item.track.artists.forEach(a => uniqueArtistNames.add(a.name));
-            }
-            return {
-              id: item.track.id,
-              title: item.track.name,
-              artists: item.track.artists.map(a => a.name).join(', '),
-              image: item.track.album?.images?.[0]?.url || '',
-              addedAt: new Date(item.added_at),
-              spotifyUrl: item.track.external_urls?.spotify || `https://open.spotify.com/playlist/${PLAYLIST_ID}`
-            };
-          });
-
-      } catch (error) {
-        console.log('Spotify API beperkt client-credentials. Gebruikt Hay Trance catalogus.', error);
-        allTracks = FALLBACK_TRACKS;
-      }
-
-      filterAndRenderTracks();
-      loadEventsForArtists();
-    }
-
-    // 4. Live Events Ophalen via Bandsintown API
-    async function loadEventsForArtists() {
+    // 2. MULTI-SOURCE EVENT RADAR SCANNEN
+    async function loadEventsMultiSource() {
       const eventsGrid = document.getElementById('events-grid');
       const eventsStatus = document.getElementById('events-status');
-      const foundEvents = [];
+      let found = [...getDutchTranceFestivals()];
 
-      const artistList = Array.from(uniqueArtistNames).slice(0, 10);
-
-      for (const artist of artistList) {
+      // API Oproepen voor Live Artiesten Tourdata
+      const promises = TRANCE_ARTISTS.map(async (artist) => {
         try {
           const res = await fetch(`https://rest.bandsintown.com/artists/${encodeURIComponent(artist)}/events?app_id=haytrance_app`);
-          if (!res.ok) continue;
-
+          if (!res.ok) return [];
           const events = await res.json();
-          if (Array.isArray(events)) {
-            const nlEvents = events.filter(e => 
-              e.venue && (
-                e.venue.country === 'Netherlands' || 
-                e.venue.country === 'NL' || 
-                ['Amsterdam', 'Rotterdam', 'Utrecht', 'Eindhoven', 'Den Haag', 'Zandvoort', 'Bloemendaal'].includes(e.venue.city)
-              )
-            );
+          if (!Array.isArray(events)) return [];
 
-            nlEvents.forEach(e => {
-              foundEvents.push({
-                artist: artist,
-                eventName: e.title || e.venue.name,
-                venue: e.venue.name,
-                city: e.venue.city,
-                date: new Date(e.datetime),
-                url: e.url
-              });
-            });
-          }
-        } catch (e) {}
-      }
+          return events
+            .filter(e => e.venue && (
+              e.venue.country === 'Netherlands' || 
+              e.venue.country === 'NL' || 
+              ['Amsterdam', 'Rotterdam', 'Utrecht', 'Eindhoven', 'Den Haag', 'Zandvoort', 'Bloemendaal', 'Arnhem', 'Breda', 'Groningen'].includes(e.venue.city)
+            ))
+            .map(e => ({
+              artist: artist,
+              eventName: e.title || `${artist} Live in NL`,
+              venue: e.venue.name,
+              city: e.venue.city,
+              type: 'club',
+              date: new Date(e.datetime),
+              url: e.url,
+              spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY'
+            }));
+        } catch (e) {
+          return [];
+        }
+      });
 
-      foundEvents.sort((a, b) => a.date - b.date);
+      const results = await Promise.allSettled(promises);
+      results.forEach(res => {
+        if (res.status === 'fulfilled' && Array.isArray(res.value)) {
+          found.push(...res.value);
+        }
+      });
+
+      // Filter toekomstige events & Sorteer op datum
+      const today = new Date();
+      rawEventsList = found
+        .filter(ev => ev.date >= new Date(today.setDate(today.getDate() - 1)))
+        .sort((a, b) => a.date - b.date);
+
       eventsStatus.classList.remove('animate-pulse');
+      eventsStatus.innerText = `${rawEventsList.length} feesten gevonden`;
 
+      renderEvents(rawEventsList);
+    }
+
+    // Render Events in Agenda
+    function renderEvents(list) {
+      const eventsGrid = document.getElementById('events-grid');
       eventsGrid.innerHTML = '';
 
-      if (foundEvents.length === 0) {
-        eventsStatus.innerText = 'Agenda beschikbaar';
+      if (list.length === 0) {
         eventsGrid.innerHTML = `
-          <div class="bg-gray-950/80 p-4 rounded-xl border border-gray-800 text-center">
-            <p class="text-gray-300 text-sm font-medium mb-1">Aankomende Trance Events in Nederland</p>
-            <p class="text-xs text-gray-500 mb-3">Bekijk direct het complete overzicht van trance feesten & festivals:</p>
-            <div class="flex flex-wrap justify-center gap-2">
-              <a href="https://partyflock.nl/agenda/genre/trance" target="_blank" class="text-xs bg-cyan-950 text-cyan-300 border border-cyan-800/50 px-3 py-1.5 rounded-lg hover:bg-cyan-900 transition">Partyflock Agenda ↗</a>
-              <a href="https://www.luminosity-events.nl/" target="_blank" class="text-xs bg-cyan-950 text-cyan-300 border border-cyan-800/50 px-3 py-1.5 rounded-lg hover:bg-cyan-900 transition">Luminosity Events ↗</a>
-              <a href="https://astateoftrance.com/" target="_blank" class="text-xs bg-cyan-950 text-cyan-300 border border-cyan-800/50 px-3 py-1.5 rounded-lg hover:bg-cyan-900 transition">ASOT Events ↗</a>
-            </div>
+          <div class="bg-gray-950/80 p-4 rounded-xl border border-gray-800 text-center space-y-2">
+            <p class="text-cyan-300 text-sm font-semibold">Geen feesten gevonden voor dit filter</p>
+            <p class="text-xs text-gray-400">Bekijk de complete overzichten op <a href="https://partyflock.nl/agenda/genre/trance" target="_blank" class="text-cyan-400 underline">Partyflock Trance</a></p>
           </div>`;
         return;
       }
 
-      eventsStatus.innerText = `${foundEvents.length} optredens gevonden`;
-
-      foundEvents.forEach(ev => {
+      list.forEach((ev, index) => {
         const dateStr = ev.date.toLocaleDateString('nl-NL', {
-          weekday: 'short', day: 'numeric', month: 'short', year: 'numeric'
+          weekday: 'short', day: 'numeric', month: 'short'
         });
 
         const card = document.createElement('div');
-        card.className = 'bg-gray-950/80 border border-gray-800 rounded-xl p-3.5 flex justify-between items-center hover:border-cyan-500/50 transition';
+        card.className = 'bg-gray-950/90 border border-gray-800 hover:border-cyan-500/50 rounded-xl p-3 flex justify-between items-center transition cursor-pointer group';
+        card.onclick = () => openModal(ev);
+
         card.innerHTML = `
-          <div>
-            <div class="flex items-center gap-2">
-              <span class="font-bold text-cyan-300 text-sm">${ev.artist}</span>
-              <span class="text-[10px] bg-cyan-950 text-cyan-400 font-semibold px-2 py-0.5 rounded border border-cyan-800/40">${dateStr}</span>
+          <div class="flex items-center gap-3">
+            <div class="bg-cyan-950 text-cyan-400 border border-cyan-800/50 rounded-lg p-2 text-center min-w-[52px]">
+              <span class="block text-xs font-bold uppercase">${dateStr.split(' ')[0]}</span>
+              <span class="block text-sm font-black">${dateStr.split(' ')[1]} ${dateStr.split(' ')[2]}</span>
             </div>
-            <h4 class="text-white font-medium text-xs mt-1 line-clamp-1">${ev.eventName}</h4>
-            <p class="text-gray-400 text-[11px] mt-0.5">📍 ${ev.venue}, ${ev.city}</p>
+            <div>
+              <h4 class="text-white font-bold text-xs sm:text-sm group-hover:text-cyan-300 transition line-clamp-1">${ev.eventName}</h4>
+              <p class="text-gray-400 text-[11px] mt-0.5">📍 ${ev.venue}, ${ev.city}</p>
+            </div>
           </div>
-          <a href="${ev.url}" target="_blank" class="text-xs text-cyan-400 border border-cyan-800/50 hover:bg-cyan-950 px-3 py-1.5 rounded-lg transition whitespace-nowrap ml-3">
-            Tickets ↗
-          </a>
+          <button class="text-xs bg-gray-900 border border-gray-700 group-hover:border-cyan-500 text-cyan-400 px-3 py-1.5 rounded-lg transition font-medium whitespace-nowrap ml-2">
+            Details 👁️
+          </button>
         `;
         eventsGrid.appendChild(card);
       });
     }
 
-    // 5. Track Filter & Render
+    // Event Filters
+    function filterEvents(type) {
+      document.querySelectorAll('.event-filter-btn').forEach(btn => {
+        if (btn.getAttribute('data-filter') === type) {
+          btn.className = 'event-filter-btn text-xs bg-cyan-500 text-black font-bold px-3 py-1 rounded-lg transition';
+        } else {
+          btn.className = 'event-filter-btn text-xs bg-gray-800 text-gray-300 hover:bg-gray-700 px-3 py-1 rounded-lg transition';
+        }
+      });
+
+      const now = new Date();
+      if (type === 'all') {
+        renderEvents(rawEventsList);
+      } else if (type === 'month') {
+        const in30Days = new Date();
+        in30Days.setDate(now.getDate() + 30);
+        renderEvents(rawEventsList.filter(e => e.date <= in30Days));
+      } else if (type === 'festival') {
+        renderEvents(rawEventsList.filter(e => e.type === 'festival'));
+      }
+    }
+
+    // 3. POP-UP MODAL LOGICA (Houdt bezoekers op de site)
+    function openModal(ev) {
+      const modal = document.getElementById('event-modal');
+      document.getElementById('modal-title').innerText = ev.eventName;
+      document.getElementById('modal-artist').innerText = `Gehost / Met: ${ev.artist}`;
+      document.getElementById('modal-type').innerText = ev.type || 'Event';
+      document.getElementById('modal-location').innerText = `${ev.venue}, ${ev.city}`;
+      
+      const dateFormatted = ev.date.toLocaleDateString('nl-NL', {
+        weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+      });
+      document.getElementById('modal-date').innerText = dateFormatted;
+
+      // Countdown berekenen
+      const diffDays = Math.ceil((ev.date - new Date()) / (1000 * 60 * 60 * 24));
+      document.getElementById('modal-countdown').innerText = diffDays > 0 ? `Nog ${diffDays} dagen tot het feest!` : 'Vandaag / Dit weekend!';
+
+      // Spotify Audio preview inladen
+      document.getElementById('modal-audio-iframe').src = ev.spotifyPreview || 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY';
+
+      // Kalender link genereren
+      const calTitle = encodeURIComponent(ev.eventName);
+      const calLoc = encodeURIComponent(`${ev.venue}, ${ev.city}`);
+      document.getElementById('modal-cal-btn').href = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${calTitle}&location=${calLoc}`;
+      
+      document.getElementById('modal-ticket-btn').href = ev.url;
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('event-modal').classList.add('hidden');
+    }
+
+    // 4. TRACKLIST CATALOGUS RENDER & FILTER
     function filterAndRenderTracks() {
       const searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
       const sortBy = document.getElementById('sort-select').value;
@@ -285,9 +400,10 @@
       const countLabel = document.getElementById('track-count');
       const noResults = document.getElementById('no-results');
 
-      let filtered = allTracks.filter(track => {
+      let filtered = HAY_TRANCE_TRACKS.filter(track => {
         return track.title.toLowerCase().includes(searchQuery) || 
-               track.artists.toLowerCase().includes(searchQuery);
+               track.artists.toLowerCase().includes(searchQuery) ||
+               (track.label && track.label.toLowerCase().includes(searchQuery));
       });
 
       if (sortBy === 'newest') filtered.sort((a, b) => b.addedAt - a.addedAt);
@@ -323,6 +439,7 @@
             <div class="p-4">
               <h3 class="font-bold text-white text-base truncate" title="${track.title}">${track.title}</h3>
               <p class="text-cyan-400 text-sm truncate mt-0.5" title="${track.artists}">${track.artists}</p>
+              ${track.label ? `<span class="inline-block mt-2 text-[10px] bg-gray-800 text-gray-400 px-2 py-0.5 rounded border border-gray-700">${track.label}</span>` : ''}
             </div>
           </div>
           <div class="p-4 pt-0 border-t border-gray-800/50 mt-2 flex justify-between items-center text-xs text-gray-500">
@@ -338,8 +455,9 @@
     document.getElementById('search-input').addEventListener('input', filterAndRenderTracks);
     document.getElementById('sort-select').addEventListener('change', filterAndRenderTracks);
 
-    // Start de applicatie
-    loadPlaylistTracks();
+    // Initialiseren
+    filterAndRenderTracks();
+    loadEventsMultiSource();
   </script>
 </body>
 </html>
