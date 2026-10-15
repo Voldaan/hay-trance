@@ -13,7 +13,7 @@
     <h1 class="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600 tracking-wider">
       HAY TRANCE
     </h1>
-    <p class="text-gray-400 mt-2 text-lg">Playlist, live optredens in Nederland & achtergronden.</p>
+    <p class="text-gray-400 mt-2 text-lg italic">We give you the best high in trance!</p>
   </header>
 
   <main class="max-w-6xl mx-auto space-y-12">
@@ -87,7 +87,7 @@
   </main>
 
   <script>
-    // 1. CREDENTIALS (TOEGEVOEGD)
+    // 1. CREDENTIALS
     const CLIENT_ID = '3c9a755f3b844dacb1b517067573ef02';
     const CLIENT_SECRET = '586f8801439842b09b9b5517d14f8da2';
     const PLAYLIST_ID = '31dSFy8AFEtptq8bWTFBDs';
@@ -127,7 +127,6 @@
         allTracks = data.items
           .filter(item => item.track)
           .map(item => {
-            // Unieke artiesten verzamelen voor event checks
             item.track.artists.forEach(a => uniqueArtistNames.add(a.name));
 
             return {
@@ -141,8 +140,6 @@
           });
 
         filterAndRenderTracks();
-        
-        // Start het zoeken naar Nederlandse events voor de opgehaalde artiesten
         loadEventsForArtists();
 
       } catch (error) {
@@ -157,7 +154,6 @@
       const eventsStatus = document.getElementById('events-status');
       const foundEvents = [];
 
-      // Neem de eerste 15 unieke artiesten om overmatig API-verkeer te voorkomen
       const artistList = Array.from(uniqueArtistNames).slice(0, 15);
 
       for (const artist of artistList) {
@@ -167,7 +163,6 @@
 
           const events = await res.json();
           if (Array.isArray(events)) {
-            // Filter op evenementen in Nederland
             const nlEvents = events.filter(e => 
               e.venue && (e.venue.country === 'Netherlands' || e.venue.country === 'NL')
             );
@@ -188,7 +183,6 @@
         }
       }
 
-      // Sorteer events op datum (dichtstbijzijnde eerst)
       foundEvents.sort((a, b) => a.date - b.date);
 
       eventsStatus.classList.remove('animate-pulse');
