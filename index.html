@@ -236,57 +236,120 @@
     let currentFilteredList = [];
     let displayedCount = 24;
 
-    function getProp(obj, keys, fallback = '') {
-      if (!obj || typeof obj !== 'object') return fallback;
-      for (let k of keys) {
-        if (obj[k] !== undefined && obj[k] !== null && String(obj[k]).trim() !== '') return String(obj[k]).trim();
+    // UNIVERSELE TRACK PARSER (WERKT MET OBJECTEN, ARRAYS EN ELK JSON-FORMAT)
+    function extractTrackFromRaw(raw, idx) {
+      if (!raw) return null;
+
+      // 1. ALS RAW EEN ARRAY IS (bijv. [TrackURI, TrackName, ArtistURI, ArtistName, ...])
+      if (Array.isArray(raw)) {
+        if (raw.length === 0) return null;
+        const joined = raw.join(' ').toLowerCase();
+        if (joined.includes('track uri') || joined.includes('track name') || joined.includes('artist name')) {
+          return null; // Headerrij negeren
+        }
+
+        const uri = String(raw[0] || '').trim();
+        const title = String(raw[1] || raw[0] || '').trim();
+        const artists = String(raw[3] || raw[2] || raw[1] || 'Onbekende artiest').trim();
+        const label = String(raw[5] || raw[4] || '').trim();
+        let image = String(raw[9] || raw[8] || '').trim();
+        if (!image.startsWith('http')) {
+          image = 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400';
+        }
+
+        let addedAt = new Date(0);
+        const rawDate = raw[raw.length - 1] || raw[18] || raw[8];
+        if (rawDate) {
+          const parsed = new Date(rawDate);
+          if (!isNaN(parsed.getTime())) addedAt = parsed;
+        }
+
+        let spotifyUrl = `https://open.spotify.com/search/${encodeURIComponent(artists + ' ' + title)}`;
+        if (uri.includes('spotify:track:')) {
+          const trackId = uri.split('spotify:track:')[1].split(':')[0];
+          spotifyUrl = `https://open.spotify.com/track/${trackId}`;
+        }
+
+        return { id: String(idx + 1), title, artists, label, image, addedAt, spotifyUrl };
       }
-      for (let actualKey in obj) {
-        const cleanActual = actualKey.toLowerCase().replace(/[^a-z0-9]/g, '');
-        for (let k of keys) {
-          const cleanK = k.toLowerCase().replace(/[^a-z0-9]/g, '');
-          if (cleanActual === cleanK && obj[actualKey] !== undefined && obj[actualKey] !== null) {
-            return String(obj[actualKey]).trim();
+
+      // 2. ALS RAW EEN OBJECT IS
+      if (typeof raw === 'object') {
+        let cleanObj = {};
+        for (let key in raw) {
+          if (Object.prototype.hasOwnProperty.call(raw, key)) {
+            const cleanKey = key.replace(/^\uFEFF/, '').trim();
+            cleanObj[cleanKey] = raw[key];
           }
         }
+
+        function val(possibleKeys) {
+          for (let pk of possibleKeys) {
+            if (cleanObj[pk] !== undefined && cleanObj[pk] !== null && String(cleanObj[pk]).trim() !== '') {
+              return String(cleanObj[pk]).trim();
+            }
+          }
+          for (let k in cleanObj) {
+            const lowerK = k.toLowerCase().replace(/[^a-z0-9]/g, '');
+            for (let pk of possibleKeys) {
+              const lowerPK = pk.toLowerCase().replace(/[^a-z0-9]/g, '');
+              if (lowerK === lowerPK && cleanObj[k] !== undefined && cleanObj[k] !== null && String(cleanObj[k]).trim() !== '') {
+                return String(cleanObj[k]).trim();
+              }
+            }
+          }
+          return '';
+        }
+
+        let title = val(['Track Name', 'title', 'name', 'track_name', 'Track', 'Song']);
+        let artists = val(['Artist Name(s)', 'artists', 'artist', 'artist_name', 'Artist Name', 'Artist']);
+        let label = val(['Album Name', 'label', 'album', 'album_name', 'Album']);
+        let image = val(['Album Image URL', 'image', 'cover', 'img', 'image_url', 'Album Image']);
+        let rawDate = val(['Added At', 'addedAt', 'added_at', 'Release Date', 'added', 'Date']);
+        let uri = val(['Track URI', 'trackUri', 'uri', 'Spotify Track URI', 'Link', 'URL']);
+
+        // Fallback als title niet direct onder sleutel staat
+        if (!title) {
+          for (let k in cleanObj) {
+            if (typeof cleanObj[k] === 'string' && cleanObj[k].trim().length > 0) {
+              const str = cleanObj[k].trim();
+              if (!str.startsWith('http') && !str.startsWith('spotify:')) {
+                title = str;
+                break;
+              }
+            }
+          }
+        }
+
+        if (!title) return null;
+
+        if (!artists) artists = 'Onbekende artiest';
+
+        if (!image || !image.startsWith('http')) {
+          image = 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400';
+        }
+
+        let addedAt = new Date(0);
+        if (rawDate) {
+          const parsed = new Date(rawDate);
+          if (!isNaN(parsed.getTime())) addedAt = parsed;
+        }
+
+        let spotifyUrl = `https://open.spotify.com/search/${encodeURIComponent(artists + ' ' + title)}`;
+        if (uri && uri.includes('spotify:track:')) {
+          const trackId = uri.split('spotify:track:')[1].split(':')[0];
+          spotifyUrl = `https://open.spotify.com/track/${trackId}`;
+        } else if (uri && uri.startsWith('http')) {
+          spotifyUrl = uri;
+        }
+
+        return { id: String(idx + 1), title, artists, label, image, addedAt, spotifyUrl };
       }
-      return fallback;
+
+      return null;
     }
 
-    function safeParseTrack(raw, idx) {
-      if (!raw || typeof raw !== 'object') return null;
-
-      const title = getProp(raw, ['Track Name', 'title', 'name', 'track_name', 'Track'], '');
-      if (!title) return null;
-
-      const artists = getProp(raw, ['Artist Name(s)', 'artists', 'artist', 'artist_name', 'Artist'], 'Onbekende artiest');
-      const label = getProp(raw, ['Album Name', 'label', 'album'], '');
-      
-      let image = getProp(raw, ['Album Image URL', 'image', 'cover', 'img'], '');
-      if (!image.startsWith('http')) {
-        image = 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400';
-      }
-
-      let addedAt = new Date(0);
-      const rawDate = getProp(raw, ['Added At', 'addedAt', 'added_at', 'Release Date', 'added']);
-      if (rawDate) {
-        const parsed = new Date(rawDate);
-        if (!isNaN(parsed.getTime())) addedAt = parsed;
-      }
-
-      let spotifyUrl = `https://open.spotify.com/search/${encodeURIComponent(artists + ' ' + title)}`;
-      const uri = getProp(raw, ['Track URI', 'trackUri', 'uri']);
-      if (uri && uri.includes('spotify:track:')) {
-        const trackId = uri.split('spotify:track:')[1].split(':')[0];
-        spotifyUrl = `https://open.spotify.com/track/${trackId}`;
-      } else if (raw.spotifyUrl && String(raw.spotifyUrl).startsWith('http')) {
-        spotifyUrl = raw.spotifyUrl;
-      }
-
-      return { id: String(idx + 1), title, artists, label, image, addedAt, spotifyUrl };
-    }
-
-    // LADER VOOR TRACKS.JSON MET DUIDELIJKE FOUTMELDING
+    // SLIMME LADER DIE OOK COLUMNAR/NESTED JSONS AUTOMATISCH UITPAKT
     async function loadAllTracksFromJson() {
       const countLabel = document.getElementById('track-count');
       if (countLabel) countLabel.innerText = 'Laden...';
@@ -294,30 +357,54 @@
       try {
         const res = await fetch('tracks.json');
         if (!res.ok) {
-          throw new Error(`Bestand tracks.json geeft status ${res.status} (Niet gevonden op GitHub)`);
+          throw new Error(`Bestand 'tracks.json' niet gevonden op GitHub (HTTP status ${res.status}).`);
         }
 
-        let data = await res.json();
+        let rawText = await res.text();
+        let data;
 
-        if (!Array.isArray(data) && typeof data === 'object') {
+        try {
+          data = JSON.parse(rawText);
+        } catch (jsonErr) {
+          throw new Error(`Syntactische fout in 'tracks.json'. Controleer de opmaak met JSONLint.com.`);
+        }
+
+        let rawList = data;
+        if (!Array.isArray(data) && typeof data === 'object' && data !== null) {
           const keys = Object.keys(data);
-          for (let k of keys) {
-            if (Array.isArray(data[k])) {
-              data = data[k];
-              break;
+          const firstVal = data[keys[0]];
+          
+          if (Array.isArray(firstVal)) {
+            const rowCount = firstVal.length;
+            rawList = [];
+            for (let i = 0; i < rowCount; i++) {
+              let rowObj = {};
+              for (let k of keys) {
+                if (Array.isArray(data[k])) {
+                  rowObj[k] = data[k][i];
+                }
+              }
+              rawList.push(rowObj);
+            }
+          } else {
+            for (let k of keys) {
+              if (Array.isArray(data[k])) {
+                rawList = data[k];
+                break;
+              }
             }
           }
         }
 
-        if (!Array.isArray(data)) {
-          data = [data];
+        if (!Array.isArray(rawList)) {
+          rawList = [rawList];
         }
 
         const seen = new Set();
         const list = [];
 
-        data.forEach((raw, idx) => {
-          const t = safeParseTrack(raw, idx);
+        rawList.forEach((raw, idx) => {
+          const t = extractTrackFromRaw(raw, idx);
           if (t && t.title) {
             const key = `${t.title.toLowerCase()}_${t.artists.toLowerCase()}`;
             if (!seen.has(key)) {
@@ -328,7 +415,7 @@
         });
 
         if (list.length === 0) {
-          throw new Error('Geen geldige nummers gevonden in tracks.json. Controleer de opmaak.');
+          throw new Error('Geen geldige nummers herkend in tracks.json.');
         }
 
         HAY_TRANCE_TRACKS = list;
@@ -336,8 +423,8 @@
       } catch (err) {
         console.error('Fout bij laden van tracks.json:', err);
         if (countLabel) {
-          countLabel.innerText = 'Fout bij inladen!';
-          countLabel.className = 'text-xs font-bold bg-red-950 text-red-400 border border-red-800 rounded-xl px-3 py-2 whitespace-nowrap';
+          countLabel.innerText = '⚠️ Leesfout!';
+          countLabel.className = 'text-xs font-bold bg-red-950 text-red-400 border border-red-800 rounded-xl px-3 py-2 whitespace-nowrap cursor-pointer';
           countLabel.title = err.message;
         }
         HAY_TRANCE_TRACKS = [];
