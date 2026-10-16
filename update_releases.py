@@ -1,47 +1,47 @@
 import os
 import json
 import requests
+import sys
 
-# Sleutels ophalen uit GitHub Secrets
-client_id = os.environ.get('SPOTIFY_CLIENT_ID')
-client_secret = os.environ.get('SPOTIFY_CLIENT_SECRET')
+# Sleutels ophalen en automatisch haakjes/spaties verwijderen
+client_id = os.environ.get('SPOTIFY_CLIENT_ID', '').strip('() ')
+client_secret = os.environ.get('SPOTIFY_CLIENT_SECRET', '').strip('() ')
+
+print(f"DEBUG: Client ID lengte = {len(client_id)}, Client Secret lengte = {len(client_secret)}")
 
 def get_spotify_token():
-    auth_response = requests.post('https://accounts.spotify.com/api/token', {
+    auth_response = requests.post('https://accounts.spotify.com/api/token', data={
         'grant_type': 'client_credentials',
         'client_id': client_id,
         'client_secret': client_secret,
     })
     if auth_response.status_code == 200:
         return auth_response.json().get('access_token')
-    print(f"Auth Fout: {auth_response.status_code} - {auth_response.text}")
+    
+    print(f"❌ SPOTIFY AUTH FOUT [{auth_response.status_code}]: {auth_response.text}")
     return None
 
 def fetch_new_trance_releases():
     token = get_spotify_token()
     if not token:
-        print("Kan geen toegangstoken ophalen bij Spotify.")
-        return []
+        sys.exit(1) # Laat de action rood worden als auth mislukt!
 
     headers = {'Authorization': f'Bearer {token}'}
     
-    # Zoekopdrachten voor gegarandeerde trance nummers
-    queries = ['genre:"trance"', 'trance 2026', 'uplifting trance']
+    params = {
+        'q': 'trance',
+        'type': 'track',
+        'limit': 20
+    }
+    res = requests.get('https://api.spotify.com/v1/search', headers=headers, params=params)
     
-    tracks = []
-    for q in queries:
-        params = {
-            'q': q,
-            'type': 'track',
-            'limit': 15
-        }
-        res = requests.get('https://api.spotify.com/v1/search', headers=headers, params=params)
-        if res.status_code == 200:
-            data = res.json()
-            items = data.get('tracks', {}).get('items', [])
-            if items:
-                tracks.extend(items)
-                break  # Gevonden! Dan stoppen we met zoeken.
+    if res.status_code != 200:
+        print(f"❌ SEARCH FOUT [{res.status_code}]: {res.text}")
+        sys.exit(1)
+
+    data = res.json()
+    tracks = data.get('tracks', {}).get('items', [])
+    print(f"✅ Gevonden nummers bij Spotify: {len(tracks)}")
 
     releases = []
     seen = set()
@@ -61,7 +61,6 @@ def fetch_new_trance_releases():
         img_url = images[0]['url'] if images else 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400'
         album_name = album.get('name', 'Trance Release')
 
-        # Label/Bron bepalen voor de filters
         source = 'beatport'
         artist_lower = artists.lower()
         album_lower = album_name.lower()
@@ -95,6 +94,7 @@ if __name__ == '__main__':
     if new_releases:
         with open('releases.json', 'w', encoding='utf-8') as f:
             json.dump(new_releases, f, ensure_ascii=False, indent=2)
-        print(f"Succesvol {len(new_releases)} nieuwe releases opgeslagen in releases.json!")
+        print(f"🎉 Succesvol {len(new_releases)} nieuwe releases opgeslagen in releases.json!")
     else:
-        print("Geen nummers kunnen ophalen bij Spotify.")
+        print("❌ Geen nummers gevonden.")
+        sys.exit(1)
