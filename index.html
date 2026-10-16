@@ -236,19 +236,6 @@
     let currentFilteredList = [];
     let displayedCount = 24;
 
-    // Basis fallback collectie voor noodgevallen
-    const DEFAULT_TRACKS = [
-      { id: '1', title: 'Must Go On', artists: 'RAM, David Forbes', label: 'Nocturnal Knights', image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400', addedAt: new Date('2026-10-15'), spotifyUrl: 'https://open.spotify.com/search/RAM%20David%20Forbes%20Must%20Go%20On' },
-      { id: '2', title: 'City Lights', artists: 'Armin van Buuren', label: 'Armada Music', image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400', addedAt: new Date('2026-10-01'), spotifyUrl: 'https://open.spotify.com/search/Armin%20van%20Buuren%20City%20Lights' },
-      { id: '3', title: 'Connect', artists: 'Ferry Corsten', label: 'Flashover Recordings', image: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400', addedAt: new Date('2026-09-22'), spotifyUrl: 'https://open.spotify.com/search/Ferry%20Corsten%20Connect' },
-      { id: '4', title: 'Horizons', artists: 'Giuseppe Ottaviani', label: 'Black Hole Recordings', image: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=400', addedAt: new Date('2026-09-10'), spotifyUrl: 'https://open.spotify.com/search/Giuseppe%20Ottaviani%20Horizons' },
-      { id: '5', title: 'Communication (Part 3)', artists: 'Armin van Buuren', label: 'Armada Music', image: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400', addedAt: new Date('2026-08-30'), spotifyUrl: 'https://open.spotify.com/search/Armin%20van%20Buuren%20Communication' },
-      { id: '6', title: 'Kaia', artists: 'Bryan Kearney', label: 'Kearnage Recordings', image: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400', addedAt: new Date('2026-08-14'), spotifyUrl: 'https://open.spotify.com/search/Bryan%20Kearney%20Kaia' },
-      { id: '7', title: 'Out Of The Blue', artists: 'System F, Ferry Corsten', label: 'Tsunami', image: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=400', addedAt: new Date('2026-07-28'), spotifyUrl: 'https://open.spotify.com/search/System%20F%20Out%20Of%20The%20Blue' },
-      { id: '8', title: 'RAMelia', artists: 'RAM, Susana', label: 'FSOE', image: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=400', addedAt: new Date('2026-07-10'), spotifyUrl: 'https://open.spotify.com/search/RAM%20RAMelia' }
-    ];
-
-    // Universele zoeker naar eigenschappen in willekeurige JSON-bestanden
     function getProp(obj, keys, fallback = '') {
       if (!obj || typeof obj !== 'object') return fallback;
       for (let k of keys) {
@@ -269,7 +256,9 @@
     function safeParseTrack(raw, idx) {
       if (!raw || typeof raw !== 'object') return null;
 
-      const title = getProp(raw, ['Track Name', 'title', 'name', 'track_name', 'Track'], 'Onbekende titel');
+      const title = getProp(raw, ['Track Name', 'title', 'name', 'track_name', 'Track'], '');
+      if (!title) return null;
+
       const artists = getProp(raw, ['Artist Name(s)', 'artists', 'artist', 'artist_name', 'Artist'], 'Onbekende artiest');
       const label = getProp(raw, ['Album Name', 'label', 'album'], '');
       
@@ -278,21 +267,16 @@
         image = 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400';
       }
 
-      let addedAt = new Date();
+      let addedAt = new Date(0);
       const rawDate = getProp(raw, ['Added At', 'addedAt', 'added_at', 'Release Date', 'added']);
       if (rawDate) {
         const parsed = new Date(rawDate);
         if (!isNaN(parsed.getTime())) addedAt = parsed;
       }
 
-      // "Must Go On" krijgt een vaste datum voor de #1 positie
-      if (title.toLowerCase().includes('must go on')) {
-        addedAt = new Date('2026-10-15T12:00:00Z');
-      }
-
       let spotifyUrl = `https://open.spotify.com/search/${encodeURIComponent(artists + ' ' + title)}`;
       const uri = getProp(raw, ['Track URI', 'trackUri', 'uri']);
-      if (uri.includes('spotify:track:')) {
+      if (uri && uri.includes('spotify:track:')) {
         const trackId = uri.split('spotify:track:')[1].split(':')[0];
         spotifyUrl = `https://open.spotify.com/track/${trackId}`;
       } else if (raw.spotifyUrl && String(raw.spotifyUrl).startsWith('http')) {
@@ -302,17 +286,19 @@
       return { id: String(idx + 1), title, artists, label, image, addedAt, spotifyUrl };
     }
 
-    // 1. FLEXIBELE LADER VOOR TRACKS.JSON (ONDERSTEUNT INGEPAKTE EN UITGEPAKTE DATA)
+    // LADER VOOR TRACKS.JSON MET DUIDELIJKE FOUTMELDING
     async function loadAllTracksFromJson() {
       const countLabel = document.getElementById('track-count');
       if (countLabel) countLabel.innerText = 'Laden...';
 
       try {
         const res = await fetch('tracks.json');
-        if (!res.ok) throw new Error('tracks.json niet gevonden');
+        if (!res.ok) {
+          throw new Error(`Bestand tracks.json geeft status ${res.status} (Niet gevonden op GitHub)`);
+        }
+
         let data = await res.json();
 
-        // Als de data is ingepakt in een hoofd-object (bijv. { "Hay Trance": [...] } of { "tracks": [...] })
         if (!Array.isArray(data) && typeof data === 'object') {
           const keys = Object.keys(data);
           for (let k of keys) {
@@ -323,7 +309,6 @@
           }
         }
 
-        // Als het nog steeds een los object is, maak er een lijst van
         if (!Array.isArray(data)) {
           data = [data];
         }
@@ -333,7 +318,7 @@
 
         data.forEach((raw, idx) => {
           const t = safeParseTrack(raw, idx);
-          if (t && t.title !== 'Onbekende titel') {
+          if (t && t.title) {
             const key = `${t.title.toLowerCase()}_${t.artists.toLowerCase()}`;
             if (!seen.has(key)) {
               seen.add(key);
@@ -342,18 +327,27 @@
           }
         });
 
-        HAY_TRANCE_TRACKS = list.length > 0 ? list : DEFAULT_TRACKS;
+        if (list.length === 0) {
+          throw new Error('Geen geldige nummers gevonden in tracks.json. Controleer de opmaak.');
+        }
+
+        HAY_TRANCE_TRACKS = list;
 
       } catch (err) {
-        console.log('Gebruikt standaardlijst:', err);
-        HAY_TRANCE_TRACKS = DEFAULT_TRACKS;
+        console.error('Fout bij laden van tracks.json:', err);
+        if (countLabel) {
+          countLabel.innerText = 'Fout bij inladen!';
+          countLabel.className = 'text-xs font-bold bg-red-950 text-red-400 border border-red-800 rounded-xl px-3 py-2 whitespace-nowrap';
+          countLabel.title = err.message;
+        }
+        HAY_TRANCE_TRACKS = [];
       }
 
       renderRecent20Tracks();
       filterAndRenderTracks();
     }
 
-    // 2. NIEUWE RELEASES
+    // RELEASES
     const NEW_ARTIST_RELEASES = [
       { title: 'Must Go On (Single)', artist: 'RAM & David Forbes', type: 'Single', image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400', spotifyUrl: 'https://open.spotify.com/search/RAM%20David%20Forbes%20Must%20Go%20On' },
       { title: 'Breathe In (Album)', artist: 'Armin van Buuren', type: 'Album', image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400', spotifyUrl: 'https://open.spotify.com/search/Armin%20van%20Buuren%20Breathe%20In' },
@@ -367,7 +361,7 @@
 
     let rawEventsList = [];
 
-    // 3. UITGEBREIDE EVENT RADAR (FEESTEN & ADE SPECIALS IN NL)
+    // EVENT RADAR
     function getDutchTranceEvents() {
       const y = new Date().getFullYear();
       return [
@@ -447,7 +441,6 @@
       else if (type === 'festival') renderEvents(rawEventsList.filter(e => e.type === 'festival'));
     }
 
-    // 4. RELEASES & RECENT 20
     function renderNewReleases() {
       const c = document.getElementById('new-releases-grid');
       if (!c) return;
@@ -474,11 +467,19 @@
       if (!c) return;
       c.innerHTML = '';
 
+      if (HAY_TRANCE_TRACKS.length === 0) {
+        c.innerHTML = `<p class="text-gray-500 text-xs text-center col-span-4 py-4">Geen nummers geladen uit tracks.json</p>`;
+        return;
+      }
+
       const sorted = [...HAY_TRANCE_TRACKS].sort((a, b) => b.addedAt - a.addedAt);
       const recent = sorted.slice(0, 20);
 
       recent.forEach((track, idx) => {
-        const dStr = track.addedAt.toLocaleDateString('nl-NL', { day: 'numeric', month: 'short' });
+        const dStr = track.addedAt.getTime() > 0 
+          ? track.addedAt.toLocaleDateString('nl-NL', { day: 'numeric', month: 'short', year: 'numeric' })
+          : 'Datum onbekend';
+
         const card = document.createElement('div');
         card.className = 'bg-gray-900/90 border border-gray-800 rounded-xl p-2.5 flex items-center justify-between hover:border-cyan-500/50 transition';
         card.innerHTML = `
@@ -499,7 +500,6 @@
       });
     }
 
-    // 5. MODAL LOGICA
     function openModal(ev) {
       const m = document.getElementById('event-modal');
       if (!m) return;
@@ -522,7 +522,6 @@
       if (m) m.classList.add('hidden');
     }
 
-    // 6. CATALOGUS RENDER & PAGINERING
     function filterAndRenderTracks() {
       const q = (document.getElementById('search-input')?.value || '').toLowerCase().trim();
       const sortBy = document.getElementById('sort-select')?.value || 'newest';
@@ -541,7 +540,10 @@
       else if (sortBy === 'title') currentFilteredList.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
       else if (sortBy === 'artist') currentFilteredList.sort((a, b) => (a.artists || '').localeCompare(b.artists || ''));
 
-      if (countLabel) countLabel.innerText = `${currentFilteredList.length} platen`;
+      if (countLabel && HAY_TRANCE_TRACKS.length > 0) {
+        countLabel.innerText = `${currentFilteredList.length} platen`;
+        countLabel.className = 'text-xs font-bold bg-cyan-950 text-cyan-400 border border-cyan-800/60 rounded-xl px-3 py-2 whitespace-nowrap';
+      }
 
       if (currentFilteredList.length === 0) {
         const grid = document.getElementById('track-grid');
@@ -566,7 +568,10 @@
       const batch = currentFilteredList.slice(0, displayedCount);
 
       batch.forEach(track => {
-        const dStr = track.addedAt.toLocaleDateString('nl-NL', { year: 'numeric', month: 'short', day: 'numeric' });
+        const dStr = track.addedAt.getTime() > 0 
+          ? track.addedAt.toLocaleDateString('nl-NL', { year: 'numeric', month: 'short', day: 'numeric' })
+          : 'Onbekend';
+
         const card = document.createElement('div');
         card.className = 'bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-lg hover:border-cyan-500/50 hover:scale-[1.02] transition-all duration-300 flex flex-col justify-between';
         card.innerHTML = `
@@ -603,7 +608,7 @@
       renderTrackBatch();
     }
 
-    // STARTING POINT
+    // START
     document.getElementById('search-input')?.addEventListener('input', filterAndRenderTracks);
     document.getElementById('sort-select')?.addEventListener('change', filterAndRenderTracks);
 
