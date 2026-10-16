@@ -12,7 +12,10 @@ def get_spotify_token():
         'client_id': client_id,
         'client_secret': client_secret,
     })
-    return auth_response.json().get('access_token')
+    if auth_response.status_code == 200:
+        return auth_response.json().get('access_token')
+    print(f"Auth Fout: {auth_response.status_code} - {auth_response.text}")
+    return None
 
 def fetch_new_trance_releases():
     token = get_spotify_token()
@@ -22,47 +25,68 @@ def fetch_new_trance_releases():
 
     headers = {'Authorization': f'Bearer {token}'}
     
-    # Zoek de nieuwste releases in het genre Trance
-    params = {
-        'q': 'genre:trance tag:new',
-        'type': 'track',
-        'limit': 12
-    }
+    # Zoekopdrachten voor gegarandeerde trance nummers
+    queries = ['genre:"trance"', 'trance 2026', 'uplifting trance']
     
-    res = requests.get('https://api.spotify.com/v1/search', headers=headers, params=params)
-    data = res.json()
+    tracks = []
+    for q in queries:
+        params = {
+            'q': q,
+            'type': 'track',
+            'limit': 15
+        }
+        res = requests.get('https://api.spotify.com/v1/search', headers=headers, params=params)
+        if res.status_code == 200:
+            data = res.json()
+            items = data.get('tracks', {}).get('items', [])
+            if items:
+                tracks.extend(items)
+                break  # Gevonden! Dan stoppen we met zoeken.
 
     releases = []
-    tracks = data.get('tracks', {}).get('items', [])
+    seen = set()
 
-    for idx, item in enumerate(tracks):
+    for item in tracks:
+        track_name = item.get('name', '')
+        artists_list = [a['name'] for a in item.get('artists', [])]
+        artists = ", ".join(artists_list)
+        key = f"{track_name.lower()}_{artists.lower()}"
+
+        if key in seen:
+            continue
+        seen.add(key)
+
         album = item.get('album', {})
         images = album.get('images', [])
         img_url = images[0]['url'] if images else 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400'
-        artists = ", ".join([a['name'] for a in item.get('artists', [])])
-        
-        title = item.get('name', '')
         album_name = album.get('name', 'Trance Release')
 
-        # Bepaal categorie
-        source = 'all'
+        # Label/Bron bepalen voor de filters
+        source = 'beatport'
         artist_lower = artists.lower()
-        if 'armin' in artist_lower or 'armada' in album_name.lower():
+        album_lower = album_name.lower()
+
+        if any(k in artist_lower or k in album_lower for k in ['armin', 'armada', 'armind']):
             source = 'armada'
-        elif 'above' in artist_lower or 'anjuna' in album_name.lower():
+        elif any(k in artist_lower or k in album_lower for k in ['above', 'anjuna']):
             source = 'anjuna'
-        elif 'aly' in artist_lower or 'fsoe' in album_name.lower():
+        elif any(k in artist_lower or k in album_lower for k in ['aly', 'fsoe', 'egypt']):
             source = 'fsoe'
+        elif any(k in artist_lower or k in album_lower for k in ['black hole', 'solarstone', 'tiesto']):
+            source = 'blackhole'
 
         releases.append({
-            "id": f"rel_{idx+1}",
-            "title": title,
+            "id": f"rel_{len(releases)+1}",
+            "title": track_name,
             "artist": artists,
             "label": album_name,
             "source": source,
             "tag": "Release Friday",
             "image": img_url
         })
+
+        if len(releases) >= 12:
+            break
 
     return releases
 
@@ -72,3 +96,5 @@ if __name__ == '__main__':
         with open('releases.json', 'w', encoding='utf-8') as f:
             json.dump(new_releases, f, ensure_ascii=False, indent=2)
         print(f"Succesvol {len(new_releases)} nieuwe releases opgeslagen in releases.json!")
+    else:
+        print("Geen nummers kunnen ophalen bij Spotify.")
