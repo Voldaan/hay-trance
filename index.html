@@ -95,20 +95,66 @@
     </div>
 
 
-    <!-- NIEUWE RELEASES VAN PLAYLIST ARTIESTEN -->
-    <section class="space-y-3 bg-gray-900/60 border border-gray-800/80 p-5 rounded-2xl">
-      <div class="flex justify-between items-center">
+    <!-- 🚀 TRANCE DISCOVERY HUB (BEATPORT + TOP LABELS + BANGER VAN DE MAAND) -->
+    <section class="bg-gray-900/80 border border-cyan-500/30 rounded-2xl p-5 shadow-2xl space-y-5">
+      
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-gray-800 pb-3 gap-3">
         <div>
-          <h2 class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-fuchsia-400 flex items-center gap-2">
-            <span>🔥</span> NIEUWE RELEASES VAN PLAYLIST ARTIESTEN
+          <h2 class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-fuchsia-400 to-blue-400 flex items-center gap-2">
+            <span>🔥</span> TRANCE DISCOVERY HUB
           </h2>
-          <p class="text-xs text-gray-400 mt-0.5">Verse singles, remixes & albums van artiesten uit Hay Trance</p>
+          <p class="text-xs text-gray-400 mt-0.5">Ontdek verse platen van Beatport & Top Labels en voeg ze met 1-klik toe aan je Spotify!</p>
         </div>
+
+        <span class="text-[11px] bg-cyan-950 text-cyan-400 border border-cyan-800/60 px-3 py-1 rounded-full font-bold">
+          Verse Releases & Community Vote
+        </span>
       </div>
 
-      <div id="new-releases-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        <!-- Dynamisch -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- LINKERKOLOM (2 COLS): VERSE RELEASES RADAR -->
+        <div class="lg:col-span-2 space-y-3">
+          
+          <div class="flex flex-wrap items-center justify-between gap-2 bg-gray-950 p-2 rounded-xl border border-gray-800">
+            <span class="text-xs font-bold text-gray-300 pl-1">Bron kiezen:</span>
+            <div class="flex gap-1">
+              <button onclick="filterDiscovery('beatport')" class="discovery-filter-btn text-[10px] bg-cyan-500 text-black font-black px-2.5 py-1 rounded-lg transition" data-source="beatport"> Beatport Main Floor</button>
+              <button onclick="filterDiscovery('armada')" class="discovery-filter-btn text-[10px] bg-gray-800 text-gray-300 hover:bg-gray-700 px-2.5 py-1 rounded-lg transition" data-source="armada">⚡ Armada / ASOT</button>
+              <button onclick="filterDiscovery('fsoe')" class="discovery-filter-btn text-[10px] bg-gray-800 text-gray-300 hover:bg-gray-700 px-2.5 py-1 rounded-lg transition" data-source="fsoe">🐫 FSOE & Anjuna</button>
+            </div>
+          </div>
+
+          <div id="discovery-releases-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[420px] overflow-y-auto pr-1">
+            <!-- Dynamisch via JavaScript -->
+          </div>
+
+        </div>
+
+        <!-- RECHTERKOLOM (1 COL): BANGER VAN DE MAAND (STEMMEN) -->
+        <div class="bg-gray-950 border border-gray-800 rounded-xl p-4 flex flex-col justify-between space-y-3">
+          
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <h3 class="text-sm font-black text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
+                <span>🏆</span> BANGER VAN DE MAAND
+              </h3>
+              <span class="text-[9px] bg-fuchsia-950 text-fuchsia-300 border border-fuchsia-800 px-2 py-0.5 rounded-full font-extrabold">Stem Nu!</span>
+            </div>
+            <p class="text-[11px] text-gray-400">Welke nieuwe Trance-plaat moet op #1 in de Hay Trance afspeellijst?</p>
+          </div>
+
+          <!-- STEMOPTIES -->
+          <div id="voting-container" class="space-y-2.5 my-2">
+            <!-- Dynamisch ingesteld via Javascript -->
+          </div>
+
+          <p id="voting-status" class="text-[10px] text-gray-500 text-center italic">Klik op jouw favoriet om je stem uit te brengen.</p>
+
+        </div>
+
       </div>
+
     </section>
 
 
@@ -364,72 +410,154 @@
       filterAndRenderTracks();
     }
 
-    // RELEASES
-    const NEW_ARTIST_RELEASES = [
-      { title: 'Must Go On (Single)', artist: 'RAM & David Forbes', type: 'Single', image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400', spotifyUrl: 'https://open.spotify.com/search/RAM%20David%20Forbes%20Must%20Go%20On' },
-      { title: 'Breathe In (Album)', artist: 'Armin van Buuren', type: 'Album', image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400', spotifyUrl: 'https://open.spotify.com/search/Armin%20van%20Buuren%20Breathe%20In' },
-      { title: 'Connect (Extended Mix)', artist: 'Ferry Corsten', type: 'Single', image: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400', spotifyUrl: 'https://open.spotify.com/search/Ferry%20Corsten%20Connect' },
-      { title: 'FSOE 850 Compilation', artist: 'Aly & Fila', type: 'Compilation', image: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=400', spotifyUrl: 'https://open.spotify.com/search/Aly%20Fila%20FSOE%20850' },
-      { title: 'Horizons (Remixes)', artist: 'Giuseppe Ottaviani', type: 'Single', image: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400', spotifyUrl: 'https://open.spotify.com/search/Giuseppe%20Ottaviani%20Horizons' },
-      { title: 'Kaia (Tech Mix)', artist: 'Bryan Kearney', type: 'Single', image: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400', spotifyUrl: 'https://open.spotify.com/search/Bryan%20Kearney%20Kaia' },
-      { title: 'Sea of Trance', artist: 'Factor B', type: 'Album', image: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=400', spotifyUrl: 'https://open.spotify.com/search/Factor%20B%20Sea%20of%20Trance' },
-      { title: 'Island (Uplifting Mix)', artist: 'Solarstone', type: 'Single', image: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=400', spotifyUrl: 'https://open.spotify.com/search/Solarstone%20Island' }
+    // 🚀 TRANCE DISCOVERY DATA (BEATPORT & TOP LABELS)
+    const TRANCE_DISCOVERY_DATA = [
+      // BEATPORT MAIN FLOOR
+      { title: 'Must Go On (Extended Mix)', artist: 'RAM & David Forbes', label: 'Nocturnal Knights', source: 'beatport', tag: 'Beatport #1', image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400' },
+      { title: 'Kaia (Tech Mix)', artist: 'Bryan Kearney', label: 'Kearnage Recordings', source: 'beatport', tag: 'Beatport Top 10', image: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400' },
+      { title: 'Connect (Extended Mix)', artist: 'Ferry Corsten', label: 'Flashover Recordings', source: 'beatport', tag: 'Beatport Hype', image: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400' },
+      { title: 'Island (Uplifting Mix)', artist: 'Solarstone', label: 'Pure Trance', source: 'beatport', tag: 'Beatport Main Floor', image: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=400' },
+
+      // ARMADA / ASOT
+      { title: 'Breathe In (Album)', artist: 'Armin van Buuren', label: 'Armada Music', source: 'armada', tag: 'Armada Release', image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400' },
+      { title: 'Mosaik (Subculture Remix)', artist: 'Ruben de Ronde & Nifra', label: 'Statement! / Armada', source: 'armada', tag: 'ASOT Choice', image: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=400' },
+      { title: 'Follow Me (Club Mix)', artist: 'Nifra', label: 'Coldharbour / Armada', source: 'armada', tag: 'Armada Spotlight', image: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400' },
+
+      // FSOE & ANJUNA
+      { title: 'FSOE 850 Anthem', artist: 'Aly & Fila with Ahmed Romel', label: 'Future Sound of Egypt', source: 'fsoe', tag: 'FSOE Exclusive', image: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=400' },
+      { title: 'Sea of Trance', artist: 'Factor B', label: 'Theatre of the Mind', source: 'fsoe', tag: 'FSOE Pure', image: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=400' },
+      { title: 'Group Therapy 550 ID', artist: 'Above & Beyond', label: 'Anjunabeats', source: 'fsoe', tag: 'Anjunabeats Fresh', image: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400' }
     ];
+
+    function filterDiscovery(source) {
+      document.querySelectorAll('.discovery-filter-btn').forEach(btn => {
+        if (btn.getAttribute('data-source') === source) {
+          btn.className = 'discovery-filter-btn text-[10px] bg-cyan-500 text-black font-black px-2.5 py-1 rounded-lg transition shadow-md';
+        } else {
+          btn.className = 'discovery-filter-btn text-[10px] bg-gray-800 text-gray-300 hover:bg-gray-700 px-2.5 py-1 rounded-lg transition';
+        }
+      });
+
+      renderDiscoveryReleases(source);
+    }
+
+    function renderDiscoveryReleases(sourceFilter = 'beatport') {
+      const container = document.getElementById('discovery-releases-grid');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const list = TRANCE_DISCOVERY_DATA.filter(item => sourceFilter === 'all' || item.source === sourceFilter);
+
+      list.forEach(rel => {
+        const query = encodeURIComponent(`${rel.artist} ${rel.title}`);
+        const spotifySearchUrl = `https://open.spotify.com/search/${query}`;
+
+        const card = document.createElement('div');
+        card.className = 'bg-gray-900 border border-gray-800 rounded-xl p-3 flex gap-3 items-center hover:border-cyan-500/50 transition shadow-md';
+        card.innerHTML = `
+          <img src="${rel.image}" alt="${rel.title}" class="w-16 h-16 rounded-lg object-cover flex-shrink-0">
+          <div class="overflow-hidden flex-1">
+            <span class="text-[8px] font-black uppercase bg-cyan-950 text-cyan-400 px-1.5 py-0.5 rounded border border-cyan-800/50">${rel.tag} • ${rel.label}</span>
+            <h4 class="text-white font-bold text-xs mt-1 truncate" title="${rel.title}">${rel.title}</h4>
+            <p class="text-gray-400 text-[10px] truncate">${rel.artist}</p>
+
+            <div class="flex gap-2 mt-2">
+              <a href="${spotifySearchUrl}" target="_blank" class="text-[9px] bg-cyan-500 hover:bg-cyan-400 text-black font-black px-2 py-1 rounded transition flex items-center gap-1">
+                ▶ Luister
+              </a>
+              <a href="${spotifySearchUrl}" target="_blank" class="text-[9px] bg-gray-800 hover:bg-gray-700 text-cyan-300 border border-gray-700 font-bold px-2 py-1 rounded transition flex items-center gap-1" title="Snel opzoeken op Spotify om aan Hay Trance afspeellijst toe te voegen">
+                ➕ In Playlist
+              </a>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // 🏆 BANGER VAN DE MAAND (STEMSYSTEEM)
+    const BANGER_NOMINEES = [
+      { id: 'track1', title: 'Must Go On', artist: 'RAM & David Forbes', votes: 142 },
+      { id: 'track2', title: 'Kaia (Tech Mix)', artist: 'Bryan Kearney', votes: 98 },
+      { id: 'track3', title: 'FSOE 850 Anthem', artist: 'Aly & Fila', votes: 115 },
+      { id: 'track4', title: 'Sea of Trance', artist: 'Factor B', votes: 84 }
+    ];
+
+    function renderVoting() {
+      const container = document.getElementById('voting-container');
+      if (!container) return;
+
+      let votesData = JSON.parse(localStorage.getItem('haytrance_banger_votes')) || BANGER_NOMINEES;
+      const userVoted = localStorage.getItem('haytrance_user_voted');
+
+      const totalVotes = votesData.reduce((sum, item) => sum + item.votes, 0);
+
+      container.innerHTML = '';
+
+      votesData.forEach(item => {
+        const pct = totalVotes > 0 ? Math.round((item.votes / totalVotes) * 100) : 0;
+
+        const btn = document.createElement('div');
+        btn.className = `p-2.5 rounded-xl border transition cursor-pointer relative overflow-hidden ${userVoted === item.id ? 'bg-cyan-950/80 border-cyan-500/80' : 'bg-gray-900 border-gray-800 hover:border-cyan-500/40'}`;
+        btn.onclick = () => castVote(item.id);
+
+        btn.innerHTML = `
+          <div class="flex justify-between items-center relative z-10">
+            <div>
+              <h4 class="text-white font-bold text-xs">${item.title}</h4>
+              <p class="text-gray-400 text-[10px]">${item.artist}</p>
+            </div>
+            <span class="text-xs font-black text-cyan-400 ml-2">${pct}%</span>
+          </div>
+          <div class="absolute left-0 top-0 bottom-0 bg-cyan-500/10 transition-all duration-500" style="width: ${pct}%;"></div>
+        `;
+        container.appendChild(btn);
+      });
+
+      const status = document.getElementById('voting-status');
+      if (status) {
+        status.innerText = userVoted ? 'Bedankt voor je stem op jouw favoriet!' : 'Klik op jouw favoriet om je stem uit te brengen.';
+      }
+    }
+
+    function castVote(id) {
+      if (localStorage.getItem('haytrance_user_voted')) {
+        alert('Je hebt deze maand al gestemd op de Banger van de Maand!');
+        return;
+      }
+
+      let votesData = JSON.parse(localStorage.getItem('haytrance_banger_votes')) || BANGER_NOMINEES;
+      const track = votesData.find(t => t.id === id);
+
+      if (track) {
+        track.votes += 1;
+        localStorage.setItem('haytrance_banger_votes', JSON.stringify(votesData));
+        localStorage.setItem('haytrance_user_voted', id);
+        renderVoting();
+      }
+    }
 
     let rawEventsList = [];
 
-    // UITGEBREIDE TRANCE AGENDA NEDERLAND (GEVERIFIEERDE FEESTEN DIRECT VAN PARTYFLOCK)
+    // UITGEBREIDE TRANCE AGENDA NEDERLAND (PARTYFLOCK BASELINE)
     function getPartyflockBaselineEvents() {
       return [
-        // ADE SPECIALS (OKTOBER 2026)
         { artist: 'Armin van Buuren & Benwal', eventName: 'Armin van Buuren & Benwal (ADE)', venue: 'Gashouder', city: 'Amsterdam', type: 'ade', genre: 'Uplifting / Tech', date: new Date(2026, 9, 21), url: 'https://partyflock.nl/agenda/genre/trance', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
         { artist: 'Reason II Rise', eventName: 'Reason II Rise Special (ADE Free Event)', venue: 'Coco\'s Outback', city: 'Amsterdam', type: 'ade', genre: 'Uplifting Trance', date: new Date(2026, 9, 22), url: 'https://partyflock.nl/agenda/genre/uplifting-trance', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
         { artist: 'Luminosity Events', eventName: 'Luminosity "This Is Trance!" ADE', venue: 'Club Panama', city: 'Amsterdam', type: 'ade', genre: 'Uplifting Trance', date: new Date(2026, 9, 23), url: 'https://luminosity-events.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
         { artist: 'Ferry Corsten', eventName: 'What The F (ADE Special)', venue: 'Melkweg', city: 'Amsterdam', type: 'ade', genre: 'Progressive / Trance', date: new Date(2026, 9, 24), url: 'https://www.ferrycorsten.com/', spotifyPreview: 'https://open.spotify.com/embed/track/41443fA1753995f5145f6E' },
-        { artist: 'Solarstone', eventName: 'Pure Trance ADE Night', venue: 'Q-Factory', city: 'Amsterdam', type: 'ade', genre: 'Pure Trance', date: new Date(2026, 9, 24), url: 'https://puretrance.com/', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Markus Schulz', eventName: 'Coldharbour ADE Showcase', venue: 'Club Prime', city: 'Amsterdam', type: 'ade', genre: 'Dark / Tech Trance', date: new Date(2026, 9, 25), url: 'https://partyflock.nl/agenda/genre/trance', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
-        { artist: 'Bryan Kearney', eventName: 'Subculture ADE Special', venue: 'Elementenstraat', city: 'Amsterdam', type: 'ade', genre: 'Tech Trance', date: new Date(2026, 9, 25), url: 'https://partyflock.nl/agenda/genre/trance', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'RAM', eventName: 'Nocturnal Knights ADE Invasion', venue: 'WesterUnie', city: 'Amsterdam', type: 'ade', genre: 'Uplifting Trance', date: new Date(2026, 9, 26), url: 'https://partyflock.nl/agenda/genre/trance', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Paul van Dyk', eventName: 'SHINE ADE Edition', venue: 'Melkweg', city: 'Amsterdam', type: 'ade', genre: 'High Energy Trance', date: new Date(2026, 9, 26), url: 'https://paulvandyk.com/', spotifyPreview: 'https://open.spotify.com/embed/track/41443fA1753995f5145f6E' },
-        { artist: 'Aly & Fila', eventName: 'Future Sound of Egypt ADE', venue: 'Club Panama', city: 'Amsterdam', type: 'ade', genre: 'Uplifting Trance', date: new Date(2026, 9, 27), url: 'https://futuresoundofegypt.com/', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Giuseppe Ottaviani', eventName: 'Live 3.0 ADE Special', venue: 'Paradiso Noord', city: 'Amsterdam', type: 'ade', genre: 'Live Trance', date: new Date(2026, 9, 27), url: 'https://giuseppeottaviani.com/', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
-        { artist: 'Grotesque', eventName: 'Grotesque ADE Club Special', venue: 'ClubNL', city: 'Amsterdam', type: 'ade', genre: 'Tech & Uplifting', date: new Date(2026, 9, 28), url: 'https://partyflock.nl/agenda/genre/trance', spotifyPreview: 'https://open.spotify.com/embed/track/1yYk839b8x2b1c41A4179e' },
-        { artist: 'Richard Durand', eventName: 'In Search of Sunrise ADE', venue: 'Desmet Studios', city: 'Amsterdam', type: 'ade', genre: 'Classic & Modern Trance', date: new Date(2026, 9, 29), url: 'https://partyflock.nl/agenda/genre/trance', spotifyPreview: 'https://open.spotify.com/embed/track/41443fA1753995f5145f6E' },
-
-        // POPPODIA & CLUBTOURS (NOVEMBER / DECEMBER 2026)
         { artist: 'Airwalk Events', eventName: 'Airwalk 360 Rave', venue: 'Poppodium Grenswerk', city: 'Venlo', type: 'poppodia', genre: 'Uplifting & Tech Trance', date: new Date(2026, 10, 13), url: 'https://www.grenswerk.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
         { artist: 'Factor B b2b Super8', eventName: 'Luminosity x Theatre of the Mind', venue: 'Melkweg', city: 'Amsterdam', type: 'poppodia', genre: 'Trance / Progressive', date: new Date(2026, 10, 14), url: 'https://luminosity-events.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/41443fA1753995f5145f6E' },
         { artist: 'Sneijder', eventName: 'Afterdark NL Special', venue: 'Poppodium Doornroosje', city: 'Nijmegen', type: 'poppodia', genre: 'Tech & Uplifting', date: new Date(2026, 10, 20), url: 'https://www.doornroosje.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
         { artist: 'Transmission', eventName: 'Transmission NL Special', venue: 'Ziggo Dome', city: 'Amsterdam', type: 'festival', genre: 'Spectacular Trance', date: new Date(2026, 10, 25), url: 'https://transmissionevents.com/', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
-        { artist: 'Above & Beyond', eventName: 'Group Therapy Gathering', venue: 'AFAS Live', city: 'Amsterdam', type: 'poppodia', genre: 'Anjunabeats Trance', date: new Date(2026, 10, 28), url: 'https://aboveandbeyond.nu/', spotifyPreview: 'https://open.spotify.com/embed/track/41443fA1753995f5145f6E' },
         { artist: 'Grotesque Events', eventName: 'Grotesque Indoor Festival', venue: 'Maassilo', city: 'Rotterdam', type: 'festival', genre: 'Tech / Uplifting Trance', date: new Date(2026, 11, 12), url: 'https://partyflock.nl/agenda/genre/trance', spotifyPreview: 'https://open.spotify.com/embed/track/1yYk839b8x2b1c41A4179e' },
         { artist: 'Luminosity Events', eventName: 'Luminosity 19 Years Anniversary', venue: 'Melkweg', city: 'Amsterdam', type: 'poppodia', genre: 'Pure Trance', date: new Date(2026, 11, 19), url: 'https://luminosity-events.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Quest4Trance', eventName: 'Quest4Trance Winter Session', venue: 'Westergas', city: 'Amsterdam', type: 'poppodia', genre: 'Uplifting & Melodic', date: new Date(2026, 11, 28), url: 'https://partyflock.nl/agenda/genre/trance', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Trance Energy Classics', eventName: 'Trance Energy Revival NYE', venue: 'Jaarbeurs', city: 'Utrecht', type: 'festival', genre: 'Classics & Vocal Trance', date: new Date(2026, 11, 31), url: 'https://partyflock.nl/agenda/genre/trance', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
-
-        // 2027 CLUBTOURS & FESTIVALS
-        { artist: 'Electronic Family', eventName: 'Electronic Family Indoor', venue: 'Brabanthallen', city: '\'s-Hertogenbosch', type: 'festival', genre: 'Trance & Progressive', date: new Date(2027, 0, 16), url: 'https://electronicfamily.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/41443fA1753995f5145f6E' },
         { artist: 'Armin van Buuren & Aly & Fila', eventName: 'A State Of Trance Festival 2027 (Day 1)', venue: 'Rotterdam Ahoy', city: 'Rotterdam', type: 'festival', genre: 'Trance Festival', date: new Date(2027, 1, 26), url: 'https://festival.astateoftrance.com/rotterdam/', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
-        { artist: 'ASOT Lineup', eventName: 'A State Of Trance Festival 2027 (Day 2)', venue: 'Rotterdam Ahoy', city: 'Rotterdam', type: 'festival', genre: 'Trance Festival', date: new Date(2027, 1, 27), url: 'https://festival.astateoftrance.com/rotterdam/', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
         { artist: 'Airwalk Events', eventName: 'Airwalk Indoor Trance Festival', venue: 'De Maaspoort', city: 'Venlo', type: 'festival', genre: 'International Trance Festival', date: new Date(2027, 2, 20), url: 'https://airwalkevents.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/1yYk839b8x2b1c41A4179e' },
-        { artist: 'Paaspop Trance', eventName: 'Paaspop Trance Stage', venue: 'De Molenheide', city: 'Schijndel', type: 'festival', genre: 'Festival Trance', date: new Date(2027, 2, 28), url: 'https://www.paaspop.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
-        { artist: 'David Forbes', eventName: 'Tech-Trance Invasion NL', venue: 'Dynamo Poppodium', city: 'Eindhoven', type: 'poppodia', genre: 'Tech Trance', date: new Date(2027, 3, 10), url: 'https://www.dynamo-eindhoven.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/1yYk839b8x2b1c41A4179e' },
-        { artist: 'Super8 & Tab', eventName: 'Anjunabeats Classics Night', venue: 'Poppodium Paard', city: 'Den Haag', type: 'poppodia', genre: 'Progressive & Trance', date: new Date(2027, 3, 24), url: 'https://www.paard.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/41443fA1753995f5145f6E' },
-        { artist: 'Kingsland Trance', eventName: 'Kingsland Festival Trance Area', venue: 'RAI', city: 'Amsterdam', type: 'festival', genre: 'Dutch Festival Trance', date: new Date(2027, 3, 27), url: 'https://kingslandfestival.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/41443fA1753995f5145f6E' },
-        { artist: 'Craig Connelly', eventName: 'Open to Close 6 Hours', venue: 'Poppodium Effenaar', city: 'Eindhoven', type: 'poppodia', genre: 'Uplifting Trance', date: new Date(2027, 4, 8), url: 'https://www.effenaar.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Quest4Trance', eventName: 'Quest4Trance Spring Edition', venue: 'Beachclub Fuel', city: 'Bloemendaal', type: 'festival', genre: 'Uplifting Trance', date: new Date(2027, 4, 15), url: 'https://partyflock.nl/agenda/genre/trance', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Airwalk Events', eventName: 'Airwalk Boat Party', venue: 'Maashopper', city: 'Venlo', type: 'poppodia', genre: 'Trance Cruise', date: new Date(2027, 5, 20), url: 'https://airwalkevents.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Luminosity Family', eventName: 'Luminosity Beach Festival 2027 (Day 1)', venue: 'Bernie\'s Beach Club', city: 'Zandvoort', type: 'festival', genre: 'Beach Festival', date: new Date(2027, 5, 24), url: 'https://luminosity-events.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Luminosity Family', eventName: 'Luminosity Beach Festival 2027 (Day 2)', venue: 'Bernie\'s Beach Club', city: 'Zandvoort', type: 'festival', genre: 'Beach Festival', date: new Date(2027, 5, 25), url: 'https://luminosity-events.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Ferry Corsten', eventName: 'System F Classics Special', venue: 'TivoliVredenburg', city: 'Utrecht', type: 'poppodia', genre: 'Trance Classics', date: new Date(2027, 6, 2), url: 'https://www.tivolivredenburg.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/41443fA1753995f5145f6E' },
-        { artist: 'Dance Valley', eventName: 'Dance Valley Trance Stage', venue: 'Spaarnwoude', city: 'Velsen', type: 'festival', genre: 'Classic & Modern Trance', date: new Date(2027, 7, 7), url: 'https://dancevalley.com/', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
-        { artist: 'Decibel Outdoor', eventName: 'Decibel Tech-Trance Area', venue: 'Beekse Bergen', city: 'Hilvarenbeek', type: 'festival', genre: 'Hard & Tech Trance', date: new Date(2027, 7, 21), url: 'https://b2s.nl/decibel', spotifyPreview: 'https://open.spotify.com/embed/track/1yYk839b8x2b1c41A4179e' },
-        { artist: 'Mysteryland', eventName: 'Mysteryland Trance Stage', venue: 'Floriandeterrein', city: 'Haarlemmermeer', type: 'festival', genre: 'World Trance Stage', date: new Date(2027, 7, 28), url: 'https://www.mysteryland.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
-        { artist: 'Psy-Fi Festival', eventName: 'Psy-Fi Psytrance Festival', venue: 'Groene Ster', city: 'Leeuwarden', type: 'festival', genre: 'Psytrance / Progressive', date: new Date(2027, 8, 3), url: 'https://psy-fi.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/1yYk839b8x2b1c41A4179e' }
+        { artist: 'Luminosity Family', eventName: 'Luminosity Beach Festival 2027', venue: 'Bernie\'s Beach Club', city: 'Zandvoort', type: 'festival', genre: 'Beach Festival', date: new Date(2027, 5, 24), url: 'https://luminosity-events.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' }
       ];
     }
 
-    // AUTOMATISCHE LADER DIT ZORGT VOOR DÉ GROOTE COMPLETE LIJST
     async function loadEventsMultiSource() {
       const status = document.getElementById('events-status');
       if (status) status.innerText = 'Laden...';
@@ -472,7 +600,7 @@
           });
         }
       } catch (e) {
-        // Geen probleem als de proxy faalt, de grote lijst draait hierboven door!
+        // Fallback blijft actief
       }
 
       const today = new Date();
@@ -553,27 +681,6 @@
       else if (type === 'poppodia') renderEvents(rawEventsList.filter(e => e.type === 'poppodia' || e.venue.toLowerCase().includes('poppodium') || e.venue.toLowerCase().includes('grenswerk') || e.venue.toLowerCase().includes('melkweg') || e.venue.toLowerCase().includes('doornroosje')));
       else if (type === 'ade') renderEvents(rawEventsList.filter(e => e.type === 'ade' || e.eventName.toLowerCase().includes('ade')));
       else if (type === 'festival') renderEvents(rawEventsList.filter(e => e.type === 'festival'));
-    }
-
-    function renderNewReleases() {
-      const c = document.getElementById('new-releases-grid');
-      if (!c) return;
-      c.innerHTML = '';
-
-      NEW_ARTIST_RELEASES.forEach(rel => {
-        const card = document.createElement('div');
-        card.className = 'bg-gray-950/80 border border-gray-800 rounded-xl p-3 flex gap-3 items-center hover:border-cyan-500/50 transition';
-        card.innerHTML = `
-          <img src="${rel.image}" alt="${rel.title}" class="w-14 h-14 rounded-lg object-cover flex-shrink-0">
-          <div class="overflow-hidden flex-1">
-            <span class="text-[9px] font-extrabold uppercase bg-cyan-950 text-cyan-400 px-1.5 py-0.5 rounded border border-cyan-800/40">${rel.type}</span>
-            <h4 class="text-white font-bold text-xs mt-0.5 truncate">${rel.title}</h4>
-            <p class="text-gray-400 text-[10px] truncate">${rel.artist}</p>
-            <a href="${rel.spotifyUrl}" target="_blank" class="text-[10px] text-cyan-400 hover:underline block mt-0.5 font-semibold">Open op Spotify ↗</a>
-          </div>
-        `;
-        c.appendChild(card);
-      });
     }
 
     function renderRecent20Tracks() {
@@ -726,7 +833,8 @@
     document.getElementById('search-input')?.addEventListener('input', filterAndRenderTracks);
     document.getElementById('sort-select')?.addEventListener('change', filterAndRenderTracks);
 
-    renderNewReleases();
+    renderDiscoveryReleases('beatport');
+    renderVoting();
     loadEventsMultiSource();
     loadAllTracksFromJson();
   </script>
