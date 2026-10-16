@@ -37,7 +37,7 @@
 
   <main class="max-w-7xl mx-auto space-y-10">
     
-    <!-- TOP GRID: SPOTIFY PLAYER & PARTYFLOCK EVENT RADAR -->
+    <!-- TOP GRID: SPOTIFY PLAYER & PARTYFLOCK LIVE EVENT RADAR -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       
       <!-- SPOTIFY EMBED PLAYER -->
@@ -62,7 +62,7 @@
         </div>
       </section>
 
-      <!-- LIVE EVENT RADAR NEDERLAND (DYNAMISCH GEFILTERD OP AANKOMENDE FEESTEN) -->
+      <!-- LIVE EVENT RADAR (AUTOMATISCH INGELADEN) -->
       <section class="bg-gray-900/90 border border-gray-800 rounded-2xl p-5 shadow-xl flex flex-col justify-between hover:border-fuchsia-500/40 transition">
         <div>
           <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-3 border-b border-gray-800/80 pb-2.5 gap-2">
@@ -70,10 +70,10 @@
               <h2 class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 via-cyan-300 to-blue-400 flex items-center gap-2">
                 <span>🇳🇱</span> TRANCE EVENT RADAR NL
               </h2>
-              <p class="text-gray-400 text-xs mt-0.5">Aankomende Trance feesten, Poppodia & Festivals in Nederland</p>
+              <p class="text-gray-400 text-xs mt-0.5">Live overzicht van aankomende Trance feesten & festivals</p>
             </div>
             <span id="events-status" class="text-[10px] bg-cyan-950 text-cyan-400 border border-cyan-800/60 rounded-full px-2.5 py-0.5 font-semibold whitespace-nowrap self-start sm:self-auto">
-              Laden...
+              Live ophalen...
             </span>
           </div>
 
@@ -81,14 +81,13 @@
           <div class="flex flex-wrap gap-1.5 mb-3">
             <button onclick="filterEvents('all')" class="event-filter-btn text-[11px] bg-cyan-500 text-black font-extrabold px-2.5 py-1 rounded-lg transition shadow-md" data-filter="all">Alles</button>
             <button onclick="filterEvents('poppodia')" class="event-filter-btn text-[11px] bg-gray-800 text-gray-300 hover:bg-gray-700 px-2.5 py-1 rounded-lg transition" data-filter="poppodia">🏛️ Poppodia & Clubtours</button>
-            <button onclick="filterEvents('uplifting')" class="event-filter-btn text-[11px] bg-gray-800 text-gray-300 hover:bg-gray-700 px-2.5 py-1 rounded-lg transition" data-filter="uplifting">✨ Uplifting</button>
             <button onclick="filterEvents('ade')" class="event-filter-btn text-[11px] bg-gray-800 text-gray-300 hover:bg-gray-700 px-2.5 py-1 rounded-lg transition" data-filter="ade">🇳🇱 ADE Specials</button>
             <button onclick="filterEvents('festival')" class="event-filter-btn text-[11px] bg-gray-800 text-gray-300 hover:bg-gray-700 px-2.5 py-1 rounded-lg transition" data-filter="festival">Festivals</button>
           </div>
 
           <!-- Events Grid Met Soepele Scrollbar -->
           <div id="events-grid" class="space-y-2 max-h-[380px] overflow-y-auto pr-1">
-            <p class="text-gray-500 text-xs text-center py-6">Evenementen laden...</p>
+            <p class="text-gray-500 text-xs text-center py-6">Live feesten laden van Partyflock...</p>
           </div>
         </div>
       </section>
@@ -202,7 +201,7 @@
 
       <div>
         <span id="modal-type" class="text-[10px] font-extrabold uppercase tracking-wider bg-cyan-950 text-cyan-400 border border-cyan-800/60 px-2 py-0.5 rounded-md">
-          Festival
+          Event
         </span>
         <h3 id="modal-title" class="text-xl font-black text-white mt-1.5">Event Naam</h3>
         <p id="modal-artist" class="text-cyan-400 font-semibold text-xs mt-0.5">Artiest / Host</p>
@@ -320,17 +319,11 @@
       try {
         const res = await fetch('tracks.json');
         if (!res.ok) {
-          throw new Error(`Bestand 'tracks.json' niet gevonden op GitHub (HTTP status ${res.status}).`);
+          throw new Error(`Bestand 'tracks.json' niet gevonden op GitHub.`);
         }
 
         let rawText = await res.text();
-        let data;
-
-        try {
-          data = JSON.parse(rawText);
-        } catch (jsonErr) {
-          throw new Error(`Syntactische fout in 'tracks.json'. Controleer de opmaak met JSONLint.com.`);
-        }
+        let data = JSON.parse(rawText);
 
         let rawList = data;
         if (!Array.isArray(data) && typeof data === 'object' && data !== null) {
@@ -343,9 +336,7 @@
           }
         }
 
-        if (!Array.isArray(rawList)) {
-          rawList = [rawList];
-        }
+        if (!Array.isArray(rawList)) rawList = [rawList];
 
         const seen = new Set();
         const list = [];
@@ -361,19 +352,11 @@
           }
         });
 
-        if (list.length === 0) {
-          throw new Error('Geen geldige nummers herkend in tracks.json.');
-        }
-
         HAY_TRANCE_TRACKS = list;
 
       } catch (err) {
         console.error('Fout bij laden van tracks.json:', err);
-        if (countLabel) {
-          countLabel.innerText = '⚠️ Leesfout!';
-          countLabel.className = 'text-xs font-bold bg-red-950 text-red-400 border border-red-800 rounded-xl px-3 py-2 whitespace-nowrap cursor-pointer';
-          countLabel.title = err.message;
-        }
+        if (countLabel) countLabel.innerText = '⚠️ Leesfout!';
         HAY_TRANCE_TRACKS = [];
       }
 
@@ -395,63 +378,92 @@
 
     let rawEventsList = [];
 
-    // AGENDA MET ALLE AANKOMENDE TOEKOMSTIGE TRANCE FEESTEN IN NEDERLAND
-    function getDutchTranceEvents() {
-      return [
-        // ADE SPECIALS (OKTOBER 2026)
-        { artist: 'Armin van Buuren & Benwal', eventName: 'Armin van Buuren & Benwal (ADE)', venue: 'Gashouder', city: 'Amsterdam', type: 'ade', genre: 'Uplifting / Tech', date: new Date(2026, 9, 21), url: 'https://partyflock.nl/agenda/genre/trance', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
-        { artist: 'Reason II Rise', eventName: 'Reason II Rise Special (ADE Free Event)', venue: 'Coco\'s Outback', city: 'Amsterdam', type: 'ade', genre: 'Uplifting Trance', date: new Date(2026, 9, 22), url: 'https://partyflock.nl/agenda/genre/uplifting-trance', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Luminosity Events', eventName: 'Luminosity "This Is Trance!" ADE', venue: 'Club Panama', city: 'Amsterdam', type: 'ade', genre: 'Uplifting Trance', date: new Date(2026, 9, 23), url: 'https://luminosity-events.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Ferry Corsten', eventName: 'What The F (ADE Special)', venue: 'Melkweg', city: 'Amsterdam', type: 'ade', genre: 'Progressive / Trance', date: new Date(2026, 9, 24), url: 'https://www.ferrycorsten.com/', spotifyPreview: 'https://open.spotify.com/embed/track/41443fA1753995f5145f6E' },
-        { artist: 'Solarstone', eventName: 'Pure Trance ADE Night', venue: 'Q-Factory', city: 'Amsterdam', type: 'ade', genre: 'Pure Trance', date: new Date(2026, 9, 24), url: 'https://puretrance.com/', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Markus Schulz', eventName: 'Coldharbour ADE Showcase', venue: 'Club Prime', city: 'Amsterdam', type: 'ade', genre: 'Dark / Tech Trance', date: new Date(2026, 9, 25), url: 'https://partyflock.nl/agenda/genre/trance', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
-        { artist: 'Bryan Kearney', eventName: 'Subculture ADE Special', venue: 'Elementenstraat', city: 'Amsterdam', type: 'ade', genre: 'Tech Trance', date: new Date(2026, 9, 25), url: 'https://partyflock.nl/agenda/genre/trance', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'RAM', eventName: 'Nocturnal Knights ADE Invasion', venue: 'WesterUnie', city: 'Amsterdam', type: 'ade', genre: 'Uplifting Trance', date: new Date(2026, 9, 26), url: 'https://partyflock.nl/agenda/genre/trance', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
+    // AUTOMATISCH LIVE EVENTS INLADEN (PARTYFLOCK FEED + EVENTS.JSON FALLBACK)
+    async function loadEventsMultiSource() {
+      const status = document.getElementById('events-status');
+      if (status) status.innerText = 'Live ophalen...';
 
-        // AIRWALK GRENSWERK & POPPODIA (NOVEMBER 2026 ONWARDS)
-        { artist: 'EloTrance & Justin Tinderdate', eventName: 'Airwalk 360 Rave', venue: 'Poppodium Grenswerk', city: 'Venlo', type: 'poppodia', genre: 'Uplifting & Tech Trance', date: new Date(2026, 10, 13), url: 'https://www.grenswerk.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Factor B b2b Super8', eventName: 'Luminosity x Theatre of the Mind', venue: 'Melkweg', city: 'Amsterdam', type: 'poppodia', genre: 'Trance / Progressive', date: new Date(2026, 10, 14), url: 'https://luminosity-events.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/41443fA1753995f5145f6E' },
-        { artist: 'Sneijder', eventName: 'Afterdark NL Special', venue: 'Poppodium Doornroosje', city: 'Nijmegen', type: 'poppodia', genre: 'Tech & Uplifting', date: new Date(2026, 10, 20), url: 'https://www.doornroosje.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Transmission', eventName: 'Transmission NL Special', venue: 'Ziggo Dome', city: 'Amsterdam', type: 'festival', genre: 'Spectacular Trance', date: new Date(2026, 10, 25), url: 'https://transmissionevents.com/', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
-        { artist: 'Above & Beyond', eventName: 'Group Therapy Gathering', venue: 'AFAS Live', city: 'Amsterdam', type: 'poppodia', genre: 'Anjunabeats Trance', date: new Date(2026, 10, 28), url: 'https://aboveandbeyond.nu/', spotifyPreview: 'https://open.spotify.com/embed/track/41443fA1753995f5145f6E' },
+      let events = [];
 
-        // DECEMBER 2026 & NYE
-        { artist: 'Grotesque Events', eventName: 'Grotesque Indoor Festival', venue: 'Maassilo', city: 'Rotterdam', type: 'festival', genre: 'Tech / Uplifting Trance', date: new Date(2026, 11, 12), url: 'https://partyflock.nl/agenda/genre/trance', spotifyPreview: 'https://open.spotify.com/embed/track/1yYk839b8x2b1c41A4179e' },
-        { artist: 'Luminosity Events', eventName: 'Luminosity 19 Years Anniversary', venue: 'Melkweg', city: 'Amsterdam', type: 'poppodia', genre: 'Pure Trance', date: new Date(2026, 11, 19), url: 'https://luminosity-events.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Quest4Trance', eventName: 'Quest4Trance Winter Session', venue: 'Westergas', city: 'Amsterdam', type: 'uplifting', genre: 'Uplifting & Melodic', date: new Date(2026, 11, 28), url: 'https://partyflock.nl/agenda/genre/trance', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Trance Energy Classics', eventName: 'Trance Energy Revival NYE', venue: 'Jaarbeurs', city: 'Utrecht', type: 'festival', genre: 'Classics & Vocal Trance', date: new Date(2026, 11, 31), url: 'https://partyflock.nl/agenda/genre/trance', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
+      // 1. Probeer live feesten van Partyflock te halen
+      try {
+        const rssUrl = encodeURIComponent('https://partyflock.nl/agenda/genre/trance.rss');
+        const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${rssUrl}`);
+        
+        if (res.ok) {
+          const data = await res.json();
+          if (data.status === 'ok' && Array.isArray(data.items)) {
+            data.items.forEach(item => {
+              const pubDate = new Date(item.pubDate || item.pubdate);
+              const titleParts = (item.title || '').split(' - ');
+              const eventName = titleParts[0] || item.title;
+              const locationParts = (titleParts[1] || '').split(',');
+              const venue = locationParts[0] ? locationParts[0].trim() : 'Nederland';
+              const city = locationParts[1] ? locationParts[1].trim() : '';
 
-        // 2027 FESTIVALS & CLUBTOURS
-        { artist: 'Electronic Family', eventName: 'Electronic Family Indoor', venue: 'Brabanthallen', city: '\'s-Hertogenbosch', type: 'festival', genre: 'Trance & Progressive', date: new Date(2027, 0, 16), url: 'https://electronicfamily.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/41443fA1753995f5145f6E' },
-        { artist: 'Armin van Buuren & Aly & Fila', eventName: 'A State Of Trance Festival 2027 (Day 1)', venue: 'Rotterdam Ahoy', city: 'Rotterdam', type: 'festival', genre: 'Trance Festival', date: new Date(2027, 1, 26), url: 'https://festival.astateoftrance.com/rotterdam/', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
-        { artist: 'ASOT Lineup', eventName: 'A State Of Trance Festival 2027 (Day 2)', venue: 'Rotterdam Ahoy', city: 'Rotterdam', type: 'festival', genre: 'Trance Festival', date: new Date(2027, 1, 27), url: 'https://festival.astateoftrance.com/rotterdam/', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
-        { artist: 'Airwalk & De Maaspoort', eventName: 'Airwalk Indoor Trance Festival', venue: 'De Maaspoort', city: 'Venlo', type: 'festival', genre: 'International Trance Festival', date: new Date(2027, 2, 20), url: 'https://airwalkevents.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/1yYk839b8x2b1c41A4179e' },
-        { artist: 'Paaspop Trance', eventName: 'Paaspop Trance Stage', venue: 'De Molenheide', city: 'Schijndel', type: 'festival', genre: 'Festival Trance', date: new Date(2027, 2, 28), url: 'https://www.paaspop.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
-        { artist: 'David Forbes', eventName: 'Tech-Trance Invasion NL', venue: 'Dynamo Poppodium', city: 'Eindhoven', type: 'poppodia', genre: 'Tech Trance', date: new Date(2027, 3, 10), url: 'https://www.dynamo-eindhoven.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/1yYk839b8x2b1c41A4179e' },
-        { artist: 'Kingsland Trance', eventName: 'Kingsland Festival Trance Area', venue: 'RAI', city: 'Amsterdam', type: 'festival', genre: 'Dutch Festival Trance', date: new Date(2027, 3, 27), url: 'https://kingslandfestival.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/41443fA1753995f5145f6E' },
-        { artist: 'Craig Connelly', eventName: 'Open to Close 6 Hours', venue: 'Poppodium Effenaar', city: 'Eindhoven', type: 'poppodia', genre: 'Uplifting Trance', date: new Date(2027, 4, 8), url: 'https://www.effenaar.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Quest4Trance', eventName: 'Quest4Trance Spring Edition', venue: 'Beachclub Fuel', city: 'Bloemendaal', type: 'festival', genre: 'Uplifting Trance', date: new Date(2027, 4, 15), url: 'https://partyflock.nl/agenda/genre/trance', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Airwalk Events', eventName: 'Airwalk Boat Party', venue: 'Maashopper', city: 'Venlo', type: 'poppodia', genre: 'Trance Cruise', date: new Date(2027, 5, 20), url: 'https://airwalkevents.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Luminosity Family', eventName: 'Luminosity Beach Festival 2027 (Day 1)', venue: 'Bernie\'s Beach Club', city: 'Zandvoort', type: 'festival', genre: 'Beach Festival', date: new Date(2027, 5, 24), url: 'https://luminosity-events.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Luminosity Family', eventName: 'Luminosity Beach Festival 2027 (Day 2)', venue: 'Bernie\'s Beach Club', city: 'Zandvoort', type: 'festival', genre: 'Beach Festival', date: new Date(2027, 5, 25), url: 'https://luminosity-events.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Luminosity Family', eventName: 'Luminosity Beach Festival 2027 (Day 3)', venue: 'Bernie\'s Beach Club', city: 'Zandvoort', type: 'festival', genre: 'Beach Festival', date: new Date(2027, 5, 26), url: 'https://luminosity-events.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Ferry Corsten', eventName: 'System F Classics Special', venue: 'TivoliVredenburg', city: 'Utrecht', type: 'poppodia', genre: 'Trance Classics', date: new Date(2027, 6, 2), url: 'https://www.tivolivredenburg.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/41443fA1753995f5145f6E' },
-        { artist: 'Dance Valley', eventName: 'Dance Valley Trance Stage', venue: 'Spaarnwoude', city: 'Velsen', type: 'festival', genre: 'Classic & Modern Trance', date: new Date(2027, 7, 7), url: 'https://dancevalley.com/', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
-        { artist: 'Mysteryland', eventName: 'Mysteryland Trance Stage', venue: 'Floriandeterrein', city: 'Haarlemmermeer', type: 'festival', genre: 'World Trance Stage', date: new Date(2027, 7, 28), url: 'https://www.mysteryland.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' }
-      ];
-    }
+              const nameLower = eventName.toLowerCase();
+              const venueLower = venue.toLowerCase();
 
-    // AUTOMATISCH DYNAMISCH FILTEREN: ALLEEN TOEKOMSTIGE FEESTEN
-    function loadEventsMultiSource() {
+              let type = 'uplifting';
+              if (nameLower.includes('ade')) type = 'ade';
+              else if (nameLower.includes('festival') || nameLower.includes('beach')) type = 'festival';
+              else if (venueLower.includes('poppodium') || venueLower.includes('grenswerk') || venueLower.includes('effenaar') || venueLower.includes('doornroosje') || venueLower.includes('melkweg') || venueLower.includes('tivoli')) type = 'poppodia';
+
+              events.push({
+                artist: eventName,
+                eventName: eventName,
+                venue: venue,
+                city: city || 'Nederland',
+                type: type,
+                genre: 'Trance / Dance',
+                date: pubDate,
+                url: item.link || 'https://partyflock.nl/agenda/genre/trance',
+                spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY'
+              });
+            });
+          }
+        }
+      } catch (err) {
+        console.warn('Live Partyflock feed niet bereikbaar:', err);
+      }
+
+      // 2. Probeer daarnaast eventuele eigen feesten uit 'events.json' op te halen (optioneel bestand)
+      try {
+        const localRes = await fetch('events.json');
+        if (localRes.ok) {
+          const localData = await localRes.json();
+          if (Array.isArray(localData)) {
+            localData.forEach(e => {
+              events.push({
+                artist: e.artist || e.eventName,
+                eventName: e.eventName || e.title,
+                venue: e.venue || e.location || 'Poppodium',
+                city: e.city || '',
+                type: e.type || 'poppodia',
+                genre: e.genre || 'Trance',
+                date: new Date(e.date),
+                url: e.url || 'https://partyflock.nl',
+                spotifyPreview: e.spotifyPreview || 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY'
+              });
+            });
+          }
+        }
+      } catch (e) {
+        // Geen events.json aanwezig, geen probleem!
+      }
+
+      // 3. Filter alleen TOEKOMSTIGE feesten
       const today = new Date();
-      today.setHours(0, 0, 0, 0); // Vanaf begin van vandaag
+      today.setHours(0, 0, 0, 0);
 
-      rawEventsList = getDutchTranceEvents()
-        .filter(e => e.date >= today) // VERLEDEN FEESTEN AUTOMATISCH VERBERGEN!
+      rawEventsList = events
+        .filter(e => !isNaN(e.date.getTime()) && e.date >= today)
         .sort((a, b) => a.date - b.date);
 
-      const status = document.getElementById('events-status');
-      if (status) status.innerText = `${rawEventsList.length} feesten geladen`;
+      if (status) {
+        status.innerText = rawEventsList.length > 0 ? `${rawEventsList.length} feesten live geladen` : 'Geen feesten gevonden';
+      }
+
       renderEvents(rawEventsList);
     }
 
@@ -461,7 +473,7 @@
       grid.innerHTML = '';
 
       if (!list || list.length === 0) {
-        grid.innerHTML = `<div class="p-4 text-center text-xs text-gray-400">Geen aankomende feesten voor dit filter.</div>`;
+        grid.innerHTML = `<div class="p-6 text-center text-xs text-gray-400">Geen aankomende feesten gevonden voor dit filter.</div>`;
         return;
       }
 
@@ -488,7 +500,7 @@
                 ${isADE ? '<span class="text-[8px] bg-fuchsia-500 text-black font-extrabold px-1.5 py-0.2 rounded">ADE</span>' : ''}
                 ${isPoppodium ? '<span class="text-[8px] bg-blue-500 text-black font-extrabold px-1.5 py-0.2 rounded">Poppodium</span>' : ''}
               </div>
-              <p class="text-gray-400 text-[10px] mt-0.5">📍 ${ev.venue}, ${ev.city} • ${ev.genre}</p>
+              <p class="text-gray-400 text-[10px] mt-0.5">📍 ${ev.venue}${ev.city ? ', ' + ev.city : ''} • ${ev.genre}</p>
             </div>
           </div>
           <button class="text-[11px] bg-gray-900 border border-gray-700 text-cyan-400 px-2.5 py-1 rounded-lg font-medium whitespace-nowrap">
@@ -511,7 +523,6 @@
       if (type === 'all') renderEvents(rawEventsList);
       else if (type === 'poppodia') renderEvents(rawEventsList.filter(e => e.type === 'poppodia' || e.venue.toLowerCase().includes('poppodium') || e.venue.toLowerCase().includes('grenswerk')));
       else if (type === 'ade') renderEvents(rawEventsList.filter(e => e.type === 'ade' || e.eventName.toLowerCase().includes('ade')));
-      else if (type === 'uplifting') renderEvents(rawEventsList.filter(e => e.type === 'uplifting' || (e.genre && e.genre.toLowerCase().includes('uplifting'))));
       else if (type === 'festival') renderEvents(rawEventsList.filter(e => e.type === 'festival'));
     }
 
@@ -580,13 +591,13 @@
       document.getElementById('modal-title').innerText = ev.eventName;
       document.getElementById('modal-artist').innerText = `Gehost / Met: ${ev.artist}`;
       document.getElementById('modal-type').innerText = ev.type === 'ade' ? 'ADE Special' : ev.type === 'poppodia' ? 'Poppodium / Clubtour' : 'Trance Event';
-      document.getElementById('modal-location').innerText = `${ev.venue}, ${ev.city}`;
+      document.getElementById('modal-location').innerText = `${ev.venue}${ev.city ? ', ' + ev.city : ''}`;
       document.getElementById('modal-date').innerText = ev.date.toLocaleDateString('nl-NL', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
       
       const diff = Math.ceil((ev.date - new Date()) / (1000 * 60 * 60 * 24));
-      document.getElementById('modal-countdown').innerText = diff > 0 ? `Nog ${diff} dagen!` : 'Dit weekend!';
+      document.getElementById('modal-countdown').innerText = diff > 0 ? `Nog ${diff} dagen!` : 'Vandaag / Dit weekend!';
       document.getElementById('modal-audio-iframe').src = ev.spotifyPreview || '';
-      document.getElementById('modal-cal-btn').href = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(ev.eventName)}&location=${encodeURIComponent(ev.venue + ', ' + ev.city)}`;
+      document.getElementById('modal-cal-btn').href = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(ev.eventName)}&location=${encodeURIComponent(ev.venue + (ev.city ? ', ' + ev.city : ''))}`;
       document.getElementById('modal-ticket-btn').href = ev.url;
       m.classList.remove('hidden');
     }
