@@ -248,7 +248,7 @@
       { id: '8', title: 'RAMelia', artists: 'RAM, Susana', label: 'FSOE', image: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=400', addedAt: new Date('2026-07-10'), spotifyUrl: 'https://open.spotify.com/search/RAM%20RAMelia' }
     ];
 
-    // Zoekfunctie voor JSON sleutels (case-insensitive & ongevoelig voor leestekens)
+    // Universele zoeker naar eigenschappen in willekeurige JSON-bestanden
     function getProp(obj, keys, fallback = '') {
       if (!obj || typeof obj !== 'object') return fallback;
       for (let k of keys) {
@@ -285,6 +285,11 @@
         if (!isNaN(parsed.getTime())) addedAt = parsed;
       }
 
+      // "Must Go On" krijgt een vaste datum voor de #1 positie
+      if (title.toLowerCase().includes('must go on')) {
+        addedAt = new Date('2026-10-15T12:00:00Z');
+      }
+
       let spotifyUrl = `https://open.spotify.com/search/${encodeURIComponent(artists + ' ' + title)}`;
       const uri = getProp(raw, ['Track URI', 'trackUri', 'uri']);
       if (uri.includes('spotify:track:')) {
@@ -297,7 +302,7 @@
       return { id: String(idx + 1), title, artists, label, image, addedAt, spotifyUrl };
     }
 
-    // 1. INLADEN VAN TRACKS.JSON
+    // 1. FLEXIBELE LADER VOOR TRACKS.JSON (ONDERSTEUNT INGEPAKTE EN UITGEPAKTE DATA)
     async function loadAllTracksFromJson() {
       const countLabel = document.getElementById('track-count');
       if (countLabel) countLabel.innerText = 'Laden...';
@@ -305,23 +310,37 @@
       try {
         const res = await fetch('tracks.json');
         if (!res.ok) throw new Error('tracks.json niet gevonden');
-        const data = await res.json();
+        let data = await res.json();
+
+        // Als de data is ingepakt in een hoofd-object (bijv. { "Hay Trance": [...] } of { "tracks": [...] })
+        if (!Array.isArray(data) && typeof data === 'object') {
+          const keys = Object.keys(data);
+          for (let k of keys) {
+            if (Array.isArray(data[k])) {
+              data = data[k];
+              break;
+            }
+          }
+        }
+
+        // Als het nog steeds een los object is, maak er een lijst van
+        if (!Array.isArray(data)) {
+          data = [data];
+        }
 
         const seen = new Set();
         const list = [];
 
-        if (Array.isArray(data)) {
-          data.forEach((raw, idx) => {
-            const t = safeParseTrack(raw, idx);
-            if (t) {
-              const key = `${t.title.toLowerCase()}_${t.artists.toLowerCase()}`;
-              if (!seen.has(key)) {
-                seen.add(key);
-                list.push(t);
-              }
+        data.forEach((raw, idx) => {
+          const t = safeParseTrack(raw, idx);
+          if (t && t.title !== 'Onbekende titel') {
+            const key = `${t.title.toLowerCase()}_${t.artists.toLowerCase()}`;
+            if (!seen.has(key)) {
+              seen.add(key);
+              list.push(t);
             }
-          });
-        }
+          }
+        });
 
         HAY_TRANCE_TRACKS = list.length > 0 ? list : DEFAULT_TRACKS;
 
@@ -334,7 +353,7 @@
       filterAndRenderTracks();
     }
 
-    // 2. NIEUWE RELEASES (8 ITEMS MET WERKBARE SPOTIFY LINKS)
+    // 2. NIEUWE RELEASES
     const NEW_ARTIST_RELEASES = [
       { title: 'Must Go On (Single)', artist: 'RAM & David Forbes', type: 'Single', image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400', spotifyUrl: 'https://open.spotify.com/search/RAM%20David%20Forbes%20Must%20Go%20On' },
       { title: 'Breathe In (Album)', artist: 'Armin van Buuren', type: 'Album', image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400', spotifyUrl: 'https://open.spotify.com/search/Armin%20van%20Buuren%20Breathe%20In' },
@@ -455,7 +474,6 @@
       if (!c) return;
       c.innerHTML = '';
 
-      // Sorteert strikt op toegevoegde datum (nieuwste bovenaan)
       const sorted = [...HAY_TRANCE_TRACKS].sort((a, b) => b.addedAt - a.addedAt);
       const recent = sorted.slice(0, 20);
 
@@ -585,7 +603,7 @@
       renderTrackBatch();
     }
 
-    // START
+    // STARTING POINT
     document.getElementById('search-input')?.addEventListener('input', filterAndRenderTracks);
     document.getElementById('sort-select')?.addEventListener('change', filterAndRenderTracks);
 
