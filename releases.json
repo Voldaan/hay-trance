@@ -1,47 +1,122 @@
 [
   {
     "id": "rel_1",
-    "title": "Trance (with Travis Scott & Young Thug)",
-    "artist": "Metro Boomin, Travis Scott, Young Thug",
-    "label": "HEROES & VILLAINS",
-    "source": "beatport",
-    "tag": "Release Friday",
-    "image": "https://i.scdn.co/image/ab67616d0000b273c4fee55d7b51479627c31f89"
+    "title": "You (Valentino Indy Remix)",
+    "artist": "Lost Kings, Valentino Indy",
+    "label": "Armada Music",
+    "source": "armada",
+    "tag": "Armada",
+    "image": "https://i.scdn.co/image/ab67616d0000b2732808fd19254ed64dbd2e8bcc",
+    "release_date": "2026-10-16"
   },
   {
     "id": "rel_2",
-    "title": "Trance (Walk It Down)",
-    "artist": "Quavo",
-    "label": "Trance (Walk It Down)",
-    "source": "beatport",
-    "tag": "Release Friday",
-    "image": "https://i.scdn.co/image/ab67616d0000b2738eebf1743b94ce34c5d7be8c"
+    "title": "Soundboy",
+    "artist": "Giuseppe Ottaviani, Hypaton",
+    "label": "Armada Music",
+    "source": "armada",
+    "tag": "Armada",
+    "image": "https://i.scdn.co/image/ab67616d0000b273190caa9532836110240c8470",
+    "release_date": "2026-10-16"
   },
   {
     "id": "rel_3",
-    "title": "TRANCE",
-    "artist": "BRANNY",
-    "label": "TRANCE",
-    "source": "beatport",
-    "tag": "Release Friday",
-    "image": "https://i.scdn.co/image/ab67616d0000b273fa6e4d0c957bab60b0077045"
+    "title": "Call My Bluff (VIP Mix)",
+    "artist": "Brooks, Vikkstar, Jex",
+    "label": "Armada Music",
+    "source": "armada",
+    "tag": "Armada",
+    "image": "https://i.scdn.co/image/ab67616d0000b273393677ef25916cc492ff9014",
+    "release_date": "2026-10-16"
   },
   {
     "id": "rel_4",
-    "title": "Too Many Nights (feat. Don Toliver & with Future)",
-    "artist": "Metro Boomin, Future, Don Toliver",
-    "label": "HEROES & VILLAINS",
-    "source": "beatport",
-    "tag": "Release Friday",
-    "image": "https://i.scdn.co/image/ab67616d0000b273c4fee55d7b51479627c31f89"
+    "title": "Lizard",
+    "artist": "Mauro Picotto, Matty Ralph",
+    "label": "Armada Music",
+    "source": "armada",
+    "tag": "Armada",
+    "image": "https://i.scdn.co/image/ab67616d0000b273931711bfd701bfed4dc67544",
+    "release_date": "2026-10-16"
   },
   {
     "id": "rel_5",
-    "title": "trance",
-    "artist": "ksuuvi",
-    "label": "ksuuvi buckets",
+    "title": "I'm Gonna Get You",
+    "artist": "Angie Brown, Twism, B3RAO",
+    "label": "Armada Music",
+    "source": "armada",
+    "tag": "Armada",
+    "image": "https://i.scdn.co/image/ab67616d0000b2733d261c549e333d37f267dde8",
+    "release_date": "2026-10-16"
+  },
+  {
+    "id": "rel_6",
+    "title": "Something To Hold",
+    "artist": "Ciaran McAuley, Liel Kolet",
+    "label": "Black Hole Recordings",
+    "source": "blackhole",
+    "tag": "Black Hole",
+    "image": "https://i.scdn.co/image/ab67616d0000b27338808790ac89956d5f5f529a",
+    "release_date": "2026-10-16"
+  },
+  {
+    "id": "rel_7",
+    "title": "The Kick",
+    "artist": "EGGSTA, That Girl, EGGSTA & That Girl",
+    "label": "Black Hole Recordings",
+    "source": "blackhole",
+    "tag": "Black Hole",
+    "image": "https://i.scdn.co/image/ab67616d0000b27339a90efd162ba36d2282520b",
+    "release_date": "2026-10-16"
+  },
+  {
+    "id": "rel_8",
+    "title": "Stay In Your Lane",
+    "artist": "Key4050, John O'Callaghan, Bryan Kearney",
+    "label": "Black Hole Recordings",
+    "source": "blackhole",
+    "tag": "Black Hole",
+    "image": "https://i.scdn.co/image/ab67616d0000b273b1ca5b8641f3dfdf64e2d08e",
+    "release_date": "2026-10-16"
+  },
+  {
+    "id": "rel_9",
+    "title": "Submission",
+    "artist": "Lostly",
+    "label": "VANDIT Records",
     "source": "beatport",
-    "tag": "Release Friday",
-    "image": "https://i.scdn.co/image/ab67616d0000b2736b2f0083a0f7a7e67bcf4820"
+    "tag": "VANDIT",
+    "image": "https://i.scdn.co/image/ab67616d0000b2735ed220167cc783b607030ff5",
+    "release_date": "2026-10-16"
+  },
+  {
+    "id": "rel_10",
+    "title": "Flashpoint",
+    "artist": "Markus Schulz, ALAT",
+    "label": "Coldharbour Recordings",
+    "source": "beatport",
+    "tag": "Coldharbour",
+    "image": "https://i.scdn.co/image/ab67616d0000b273691a480d2c21c914527a3c13",
+    "release_date": "2026-10-16"
+  },
+  {
+    "id": "rel_11",
+    "title": "Free Your Mind",
+    "artist": "Mike Efex",
+    "label": "Coldharbour Recordings",
+    "source": "beatport",
+    "tag": "Coldharbour",
+    "image": "https://i.scdn.co/image/ab67616d0000b27313cde1d332000f11cb069056",
+    "release_date": "2026-10-16"
+  },
+  {
+    "id": "rel_12",
+    "title": "Nights Like This",
+    "artist": "Above & Beyond",
+    "label": "Anjunabeats",
+    "source": "anjuna",
+    "tag": "Anjunabeats",
+    "image": "https://i.scdn.co/image/ab67616d0000b273a68ef77d2db0f92a6ce414a6",
+    "release_date": "2026-10-15"
   }
 ]
