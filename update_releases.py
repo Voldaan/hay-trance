@@ -7,8 +7,6 @@ import sys
 client_id = os.environ.get('SPOTIFY_CLIENT_ID', '').strip('() ')
 client_secret = os.environ.get('SPOTIFY_CLIENT_SECRET', '').strip('() ')
 
-print(f"DEBUG: Client ID lengte = {len(client_id)}, Client Secret lengte = {len(client_secret)}")
-
 def get_spotify_token():
     auth_response = requests.post('https://accounts.spotify.com/api/token', data={
         'grant_type': 'client_credentials',
@@ -24,14 +22,15 @@ def get_spotify_token():
 def fetch_new_trance_releases():
     token = get_spotify_token()
     if not token:
-        sys.exit(1) # Laat de action rood worden als auth mislukt!
+        sys.exit(1)
 
     headers = {'Authorization': f'Bearer {token}'}
     
+    # Spotify vereist nu strikt limit: 10 voor zoekopdrachten
     params = {
         'q': 'trance',
         'type': 'track',
-        'limit': 20
+        'limit': 10
     }
     res = requests.get('https://api.spotify.com/v1/search', headers=headers, params=params)
     
@@ -83,9 +82,6 @@ def fetch_new_trance_releases():
             "tag": "Release Friday",
             "image": img_url
         })
-
-        if len(releases) >= 12:
-            break
 
     return releases
 
