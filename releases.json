@@ -1,1 +1,47 @@
-[]
+[
+  {
+    "id": "rel_1",
+    "title": "Trance (with Travis Scott & Young Thug)",
+    "artist": "Metro Boomin, Travis Scott, Young Thug",
+    "label": "HEROES & VILLAINS",
+    "source": "beatport",
+    "tag": "Release Friday",
+    "image": "https://i.scdn.co/image/ab67616d0000b273c4fee55d7b51479627c31f89"
+  },
+  {
+    "id": "rel_2",
+    "title": "Trance (Walk It Down)",
+    "artist": "Quavo",
+    "label": "Trance (Walk It Down)",
+    "source": "beatport",
+    "tag": "Release Friday",
+    "image": "https://i.scdn.co/image/ab67616d0000b2738eebf1743b94ce34c5d7be8c"
+  },
+  {
+    "id": "rel_3",
+    "title": "TRANCE",
+    "artist": "BRANNY",
+    "label": "TRANCE",
+    "source": "beatport",
+    "tag": "Release Friday",
+    "image": "https://i.scdn.co/image/ab67616d0000b273fa6e4d0c957bab60b0077045"
+  },
+  {
+    "id": "rel_4",
+    "title": "Too Many Nights (feat. Don Toliver & with Future)",
+    "artist": "Metro Boomin, Future, Don Toliver",
+    "label": "HEROES & VILLAINS",
+    "source": "beatport",
+    "tag": "Release Friday",
+    "image": "https://i.scdn.co/image/ab67616d0000b273c4fee55d7b51479627c31f89"
+  },
+  {
+    "id": "rel_5",
+    "title": "trance",
+    "artist": "ksuuvi",
+    "label": "ksuuvi buckets",
+    "source": "beatport",
+    "tag": "Release Friday",
+    "image": "https://i.scdn.co/image/ab67616d0000b2736b2f0083a0f7a7e67bcf4820"
+  }
+]
