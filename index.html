@@ -106,9 +106,14 @@
           <p class="text-xs text-gray-400 mt-0.5">Verse trance-platen van de grootste labels. Luister direct en voeg toe aan de lijst!</p>
         </div>
 
-        <span id="current-week-tag" class="text-[11px] bg-cyan-950 text-cyan-400 border border-cyan-800/60 px-3 py-1 rounded-full font-bold">
-          Release Friday • Week
-        </span>
+        <div class="flex flex-wrap items-center gap-2">
+          <button onclick="shuffleDiscoveryReleases()" class="text-xs font-bold bg-gradient-to-r from-cyan-500 to-fuchsia-500 hover:from-cyan-400 hover:to-fuchsia-400 text-black px-3.5 py-1.5 rounded-full transition shadow-md flex items-center gap-1.5 active:scale-95">
+            🔄 Ontdek andere nummers van deze week
+          </button>
+          <span id="current-week-tag" class="text-[11px] bg-cyan-950 text-cyan-400 border border-cyan-800/60 px-3 py-1.5 rounded-full font-bold">
+            Release Friday • Week
+          </span>
+        </div>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -423,6 +428,7 @@
 
     // 🚀 RELEASE FRIDAY DISCOVERY DATA
     let TRANCE_DISCOVERY_DATA = [];
+    let currentDiscoveryFilter = 'all';
 
     async function loadReleasesJson() {
       try {
@@ -446,6 +452,7 @@
     }
 
     function filterDiscovery(source) {
+      currentDiscoveryFilter = source;
       document.querySelectorAll('.discovery-filter-btn').forEach(btn => {
         if (btn.getAttribute('data-source') === source) {
           btn.className = 'discovery-filter-btn text-[10px] bg-cyan-500 text-black font-black px-2.5 py-1 rounded-lg transition shadow-md';
@@ -457,7 +464,11 @@
       renderDiscoveryReleases(source);
     }
 
-    function renderDiscoveryReleases(sourceFilter = 'all') {
+    function shuffleDiscoveryReleases() {
+      renderDiscoveryReleases(currentDiscoveryFilter, true);
+    }
+
+    function renderDiscoveryReleases(sourceFilter = 'all', doShuffle = false) {
       const container = document.getElementById('discovery-releases-grid');
       if (!container) return;
       container.innerHTML = '';
@@ -475,6 +486,10 @@
       if (list.length === 0) {
         container.innerHTML = `<p class="text-gray-500 text-xs py-4 text-center col-span-2">Geen releases geladen.</p>`;
         return;
+      }
+
+      if (doShuffle) {
+        list = [...list].sort(() => 0.5 - Math.random());
       }
 
       list.forEach(rel => {
