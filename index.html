@@ -1,929 +1,506 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hay Trance - High in Trance</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    .neon-border {
-      box-shadow: 0 0 14px rgba(6, 182, 212, 0.35), inset 0 0 10px rgba(6, 182, 212, 0.1);
-    }
-    .neon-text {
-      text-shadow: 0 0 8px rgba(6, 182, 212, 0.6), 0 0 16px rgba(6, 182, 212, 0.3);
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hay Trance | De Ultieme Trance Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #0a0b10;
+            --card-bg: #121520;
+            --accent-purple: #7928ca;
+            --accent-cyan: #00dfd8;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border-color: #1e293b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 60px;
+        }
+
+        header {
+            background: linear-gradient(135deg, rgba(121, 40, 202, 0.2) 0%, rgba(0, 223, 216, 0.1) 100%);
+            border-bottom: 1px solid var(--border-color);
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            color: var(--text-main);
+            text-decoration: none;
+            padding: 8px 18px;
+            border-radius: 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 40px auto 0;
+            padding: 0 20px;
+        }
+
+        section {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        /* Refresh & Filter Controls */
+        .controls-bar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 6px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background: var(--accent-purple);
+            color: #fff;
+            border-color: var(--accent-purple);
+        }
+
+        .btn-refresh {
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 223, 216, 0.2);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-refresh:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 223, 216, 0.4);
+        }
+
+        /* Grid & Cards */
+        .releases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .release-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .release-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-cyan);
+        }
+
+        .card-img {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+        }
+
+        .card-body {
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .card-tag {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card-artist {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card-footer {
+            margin-top: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .btn-vote {
+            background: transparent;
+            border: 1px solid var(--accent-purple);
+            color: var(--accent-purple);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+
+        .btn-vote:hover, .btn-vote.voted {
+            background: var(--accent-purple);
+            color: #fff;
+        }
+
+        /* Voting Highlight Box */
+        .banger-box {
+            background: linear-gradient(135deg, rgba(121, 40, 202, 0.15) 0%, rgba(0, 0, 0, 0.4) 100%);
+            border: 1px solid var(--accent-purple);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        /* Event Agenda Table */
+        .agenda-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .agenda-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .event-date {
+            font-weight: 800;
+            color: var(--accent-cyan);
+            min-width: 110px;
+        }
+
+        .event-details h4 {
+            font-size: 1.05rem;
+            font-weight: 700;
+        }
+
+        .event-details p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .btn-cal {
+            background: var(--border-color);
+            color: var(--text-main);
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: background 0.2s ease;
+        }
+
+        .btn-cal:hover {
+            background: var(--accent-purple);
+        }
+    </style>
 </head>
-<body class="bg-gray-950 text-white min-h-screen p-3 sm:p-5 font-sans antialiased selection:bg-cyan-500 selection:text-black">
+<body>
 
-  <!-- COMPACTE NEON HEADER -->
-  <header class="max-w-7xl mx-auto mb-6 px-5 py-3.5 rounded-2xl bg-gray-900/90 border border-cyan-500/50 neon-border flex flex-col sm:flex-row items-center justify-between gap-3 backdrop-blur-md">
-    <div class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-fuchsia-500 flex items-center justify-center font-black text-black text-xl shadow-md">
-        HT
-      </div>
-      <div>
-        <h1 class="text-2xl sm:text-3xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-fuchsia-400 to-blue-500 uppercase neon-text">
-          HAY TRANCE
-        </h1>
-        <p class="text-cyan-300/90 text-xs italic font-medium">"We give you the best high in trance!"</p>
-      </div>
-    </div>
-    
-    <span class="px-3.5 py-1 text-[11px] font-extrabold uppercase tracking-widest text-cyan-400 bg-cyan-950/80 border border-cyan-800/60 rounded-full">
-      Official Trance Hub
-    </span>
-  </header>
+    <header>
+        <h1>Hay Trance</h1>
+        <p>Jouw wekelijkse update van de beste trance releases & NL/BE evenementen</p>
+        <nav>
+            <a href="#releases" class="nav-link">🎵 Release Friday</a>
+            <a href="#banger" class="nav-link">🔥 Banger van de Week</a>
+            <a href="#agenda" class="nav-link">📅 Trance Agenda</a>
+        </nav>
+    </header>
 
-  <main class="max-w-7xl mx-auto space-y-10">
-    
-    <!-- TOP GRID: SPOTIFY PLAYER & PARTYFLOCK EVENT RADAR -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      
-      <!-- SPOTIFY EMBED PLAYER -->
-      <section class="bg-gray-900/90 border border-gray-800 rounded-2xl p-5 shadow-xl flex flex-col justify-between hover:border-cyan-500/40 transition">
-        <div class="mb-3">
-          <h2 class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-fuchsia-400 flex items-center gap-2">
-            <span>⚡</span> DE HAY TRANCE PLAYLIST
-          </h2>
-          <p class="text-gray-400 text-xs mt-0.5">Beluister de complete afspeellijst direct op Spotify.</p>
-        </div>
-        <div class="rounded-xl overflow-hidden border border-gray-800 shadow-inner bg-black">
-          <iframe 
-            src="https://open.spotify.com/embed/playlist/31dSFy8AFEtptq8bWTFBDs?utm_source=generator&theme=0" 
-            width="100%" 
-            height="420" 
-            frameborder="0" 
-            allowfullscreen="" 
-            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
-            loading="lazy"
-            class="w-full">
-          </iframe>
-        </div>
-      </section>
-
-      <!-- LIVE EVENT RADAR NEDERLAND (UITGEBREID) -->
-      <section class="bg-gray-900/90 border border-gray-800 rounded-2xl p-5 shadow-xl flex flex-col justify-between hover:border-fuchsia-500/40 transition">
-        <div>
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-3 border-b border-gray-800/80 pb-2.5 gap-2">
-            <div>
-              <h2 class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 via-cyan-300 to-blue-400 flex items-center gap-2">
-                <span>🇳🇱</span> TRANCE EVENT RADAR NL & BE
-              </h2>
-              <p class="text-gray-400 text-xs mt-0.5">Aankomende Trance feesten, Poppodia & Festivals (50+ Events)</p>
-            </div>
-            <span id="events-status" class="text-[10px] bg-cyan-950 text-cyan-400 border border-cyan-800/60 rounded-full px-2.5 py-0.5 font-semibold whitespace-nowrap self-start sm:self-auto">
-              Laden...
-            </span>
-          </div>
-
-          <!-- Filter Knoppen -->
-          <div class="flex flex-wrap gap-1.5 mb-3">
-            <button onclick="filterEvents('all')" class="event-filter-btn text-[11px] bg-cyan-500 text-black font-extrabold px-2.5 py-1 rounded-lg transition shadow-md" data-filter="all">Alles</button>
-            <button onclick="filterEvents('poppodia')" class="event-filter-btn text-[11px] bg-gray-800 text-gray-300 hover:bg-gray-700 px-2.5 py-1 rounded-lg transition" data-filter="poppodia">🏛️ Poppodia & Clubtours</button>
-            <button onclick="filterEvents('ade')" class="event-filter-btn text-[11px] bg-gray-800 text-gray-300 hover:bg-gray-700 px-2.5 py-1 rounded-lg transition" data-filter="ade">🇳🇱 ADE Specials</button>
-            <button onclick="filterEvents('festival')" class="event-filter-btn text-[11px] bg-gray-800 text-gray-300 hover:bg-gray-700 px-2.5 py-1 rounded-lg transition" data-filter="festival">Festivals</button>
-          </div>
-
-          <!-- Events Grid -->
-          <div id="events-grid" class="space-y-2 max-h-[380px] overflow-y-auto pr-1">
-            <p class="text-gray-500 text-xs text-center py-6">Evenementen laden...</p>
-          </div>
-        </div>
-      </section>
-
-    </div>
-
-
-    <!-- 🚀 TRANCE DISCOVERY HUB (RELEASE FRIDAY + BANGER VAN DE WEEK) -->
-    <section class="bg-gray-900/80 border border-cyan-500/30 rounded-2xl p-5 shadow-2xl space-y-5">
-      
-      <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-gray-800 pb-3 gap-3">
-        <div>
-          <h2 class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-fuchsia-400 to-blue-400 flex items-center gap-2">
-            <span>🔥</span> RELEASE FRIDAY DISCOVERY HUB
-          </h2>
-          <p class="text-xs text-gray-400 mt-0.5">Verse trance-platen van de grootste labels. Luister direct en voeg toe aan de lijst!</p>
-        </div>
-
-        <span id="current-week-tag" class="text-[11px] bg-cyan-950 text-cyan-400 border border-cyan-800/60 px-3 py-1 rounded-full font-bold">
-          Release Friday • Week
-        </span>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <main>
         
-        <!-- LINKERKOLOM (2 COLS): VERSE RELEASES RADAR -->
-        <div class="lg:col-span-2 space-y-3">
-          
-          <div class="flex flex-wrap items-center justify-between gap-2 bg-gray-950 p-2 rounded-xl border border-gray-800">
-            <span class="text-xs font-bold text-gray-300 pl-1">Label Filter:</span>
-            <div class="flex flex-wrap gap-1">
-              <button onclick="filterDiscovery('all')" class="discovery-filter-btn text-[10px] bg-cyan-500 text-black font-black px-2.5 py-1 rounded-lg transition" data-source="all">Alles</button>
-              <button onclick="filterDiscovery('armada')" class="discovery-filter-btn text-[10px] bg-gray-800 text-gray-300 hover:bg-gray-700 px-2.5 py-1 rounded-lg transition" data-source="armada">⚡ Armada / ASOT</button>
-              <button onclick="filterDiscovery('anjuna')" class="discovery-filter-btn text-[10px] bg-gray-800 text-gray-300 hover:bg-gray-700 px-2.5 py-1 rounded-lg transition" data-source="anjuna">🎹 Anjunabeats</button>
-              <button onclick="filterDiscovery('blackhole')" class="discovery-filter-btn text-[10px] bg-gray-800 text-gray-300 hover:bg-gray-700 px-2.5 py-1 rounded-lg transition" data-source="blackhole">🕳️ Black Hole</button>
-              <button onclick="filterDiscovery('fsoe')" class="discovery-filter-btn text-[10px] bg-gray-800 text-gray-300 hover:bg-gray-700 px-2.5 py-1 rounded-lg transition" data-source="fsoe">🐫 FSOE</button>
-              <button onclick="filterDiscovery('beatport')" class="discovery-filter-btn text-[10px] bg-gray-800 text-gray-300 hover:bg-gray-700 px-2.5 py-1 rounded-lg transition" data-source="beatport">🎧 Top Releases</button>
+        <!-- RELEASE FRIDAY DISCOVERY HUB -->
+        <section id="releases">
+            <div class="section-title">
+                <span>Release Friday Discovery Hub <small style="font-size: 0.9rem; color: var(--text-muted); font-weight: 400;">(Laatste 7 dagen)</small></span>
+                <button id="shuffle-btn" onclick="shuffleAndRenderReleases()" class="btn-refresh">
+                    🔄 Ontdek andere nummers van deze week
+                </button>
             </div>
-          </div>
 
-          <div id="discovery-releases-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[420px] overflow-y-auto pr-1">
-            <!-- Dynamisch geladen vanuit releases.json -->
-          </div>
-
-        </div>
-
-        <!-- RECHTERKOLOM (1 COL): BANGER VAN DE WEEK -->
-        <div class="bg-gray-950 border border-gray-800 rounded-xl p-4 flex flex-col justify-between space-y-3 shadow-inner">
-          
-          <div>
-            <div class="flex justify-between items-center mb-1">
-              <h3 class="text-sm font-black text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
-                <span>🏆</span> BANGER VAN DE WEEK
-              </h3>
-              <span class="text-[9px] bg-fuchsia-950 text-fuchsia-300 border border-fuchsia-800 px-2 py-0.5 rounded-full font-extrabold">Stem Deze Week</span>
+            <div class="controls-bar">
+                <div class="filter-group">
+                    <button class="filter-btn active" data-source="all" onclick="filterReleases('all', this)">Alles</button>
+                    <button class="filter-btn" data-source="armada" onclick="filterReleases('armada', this)">Armada / ASOT</button>
+                    <button class="filter-btn" data-source="fsoe" onclick="filterReleases('fsoe', this)">FSOE / Subculture</button>
+                    <button class="filter-btn" data-source="anjuna" onclick="filterReleases('anjuna', this)">Anjunabeats</button>
+                    <button class="filter-btn" data-source="blackhole" onclick="filterReleases('blackhole', this)">Black Hole / ITWT</button>
+                    <button class="filter-btn" data-source="beatport" onclick="filterReleases('beatport', this)">Coldharbour</button>
+                </div>
             </div>
-            <p class="text-[11px] text-gray-400">Stem op jouw favoriete nieuwe release van deze week!</p>
-          </div>
 
-          <!-- STEMOPTIES -->
-          <div id="voting-container" class="space-y-2.5 my-2">
-            <!-- Dynamisch gekoppeld aan de top releases van die week -->
-          </div>
+            <div id="releases-grid" class="releases-grid">
+                <!-- Wordt dynamisch gevuld door JS -->
+            </div>
+        </section>
 
-          <p id="voting-status" class="text-[10px] text-gray-500 text-center italic">Klik op jouw favoriet om je stem uit te brengen.</p>
+        <!-- BANGER VAN DE WEEK -->
+        <section id="banger">
+            <div class="section-title">
+                <span>🔥 Banger van de Week</span>
+            </div>
+            <div class="banger-box">
+                <div>
+                    <h3 id="banger-status-title">Stem op jouw favoriet van Week <span id="week-number"></span>!</h3>
+                    <p id="banger-status-sub" style="color: var(--text-muted); font-size: 0.9rem;">
+                        Kies hieronder of in het release-overzicht jouw absolute top-plaat van deze week.
+                    </p>
+                </div>
+            </div>
+        </section>
 
-        </div>
+        <!-- EVENEMENTEN AGENDA -->
+        <section id="agenda">
+            <div class="section-title">
+                <span>📅 Trance Agenda NL & BE (2026/2027)</span>
+            </div>
+            
+            <div class="agenda-list" id="agenda-list">
+                <!-- Voorbeeld evenementen -->
+                <div class="agenda-item">
+                    <div class="event-date">24 APR 2026</div>
+                    <div class="event-details">
+                        <h4>A State Of Trance Festival</h4>
+                        <p>Ahoy, Rotterdam | 22:00 - 06:00</p>
+                    </div>
+                    <a href="https://calendar.google.com" target="_blank" class="btn-cal">+ Google Agenda</a>
+                </div>
 
-      </div>
+                <div class="agenda-item">
+                    <div class="event-date">15 MEI 2026</div>
+                    <div class="event-details">
+                        <h4>Luminosity Beach Festival</h4>
+                        <p>Bernie's Beach Club, Zandvoort</p>
+                    </div>
+                    <a href="https://calendar.google.com" target="_blank" class="btn-cal">+ Google Agenda</a>
+                </div>
 
-    </section>
+                <div class="agenda-item">
+                    <div class="event-date">10 OKT 2026</div>
+                    <div class="event-details">
+                        <h4>Grotesque Indoor Festival</h4>
+                        <p>Maassilo, Rotterdam</p>
+                    </div>
+                    <a href="https://calendar.google.com" target="_blank" class="btn-cal">+ Google Agenda</a>
+                </div>
+            </div>
+        </section>
 
+    </main>
 
-    <!-- 20 LAATST TOEGEVOEGDE NUMMERS -->
-    <section class="space-y-3">
-      <div class="flex justify-between items-center border-b border-gray-800/80 pb-2.5">
-        <div>
-          <h2 class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-fuchsia-400 flex items-center gap-2">
-            <span>✨</span> 20 LAATST TOEGEVOEGDE NUMMERS
-          </h2>
-          <p class="text-xs text-gray-400 mt-0.5">De meest recente toevoegingen uit de hoofdcatalogus</p>
-        </div>
-        <span class="text-[11px] bg-cyan-950 text-cyan-400 border border-cyan-800/60 px-3 py-1 rounded-full font-bold">
-          Top 20 Recent
-        </span>
-      </div>
+    <script>
+        let allWeeklyReleases = [];
+        let activeFilter = 'all';
+        let currentWeekNumber = getISOWeekNumber(new Date());
 
-      <div id="recent-tracks-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 max-h-[500px] overflow-y-auto pr-1">
-        <!-- Dynamisch -->
-      </div>
-    </section>
-
-
-    <!-- HAY TRANCE CATALOGUS -->
-    <section class="space-y-5">
-      
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-        <div>
-          <h2 class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-fuchsia-400 flex items-center gap-2">
-            <span>🎧</span> VOLLEDIGE HAY TRANCE CATALOGUS
-          </h2>
-          <p class="text-xs text-gray-400 mt-0.5">Doorzoek de complete verzameling van al onze trance-platen</p>
-        </div>
-      </div>
-
-      <!-- Zoek & Filter Bedieningspaneel -->
-      <div class="bg-gray-900 border border-gray-800 rounded-2xl p-3.5 flex flex-col md:flex-row gap-3 justify-between items-center shadow-xl">
-        <div class="relative w-full md:w-1/2">
-          <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-gray-400 text-sm">🔍</span>
-          <input 
-            type="text" 
-            id="search-input" 
-            placeholder="Zoek op titel, artiest of platenlabel in alle nummers..." 
-            class="w-full bg-gray-950 text-white border border-gray-800 rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:border-cyan-500 transition text-xs placeholder-gray-500 shadow-inner"
-          >
-        </div>
-
-        <div class="flex items-center justify-between w-full md:w-auto gap-3">
-          <select 
-            id="sort-select" 
-            class="bg-gray-950 text-gray-300 border border-gray-800 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-cyan-500 cursor-pointer"
-          >
-            <option value="newest">Nieuwste eerst</option>
-            <option value="oldest">Oudste eerst</option>
-            <option value="title">Titel (A-Z)</option>
-            <option value="artist">Artiest (A-Z)</option>
-          </select>
-
-          <span id="track-count" class="text-xs font-bold bg-cyan-950 text-cyan-400 border border-cyan-800/60 rounded-xl px-3 py-2 whitespace-nowrap">
-            0 platen
-          </span>
-        </div>
-      </div>
-
-      <!-- Grid voor Catalogus -->
-      <div id="track-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5"></div>
-
-      <!-- Knop: Laad Meer -->
-      <div id="load-more-container" class="text-center pt-3 hidden">
-        <button onclick="loadMoreTracks()" class="bg-gray-900 hover:bg-cyan-950 text-cyan-400 border border-cyan-800/60 hover:border-cyan-500 font-extrabold px-5 py-2.5 rounded-xl transition shadow-lg text-xs">
-          Laad meer platen ⤵
-        </button>
-      </div>
-
-      <!-- Geen resultaten -->
-      <div id="no-results" class="hidden text-center text-gray-500 my-12">
-        <p class="text-lg font-bold text-gray-400">Geen nummers gevonden</p>
-        <p class="text-xs mt-1">Probeer een andere zoekterm.</p>
-      </div>
-    </section>
-
-  </main>
-
-
-  <!-- EVENT MODAL -->
-  <div id="event-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-gray-900 border border-cyan-500/40 rounded-2xl p-5 max-w-lg w-full shadow-2xl relative space-y-4 neon-border">
-      
-      <button onclick="closeModal()" class="absolute top-3.5 right-4 text-gray-400 hover:text-white text-lg font-bold p-1">✕</button>
-
-      <div>
-        <span id="modal-type" class="text-[10px] font-extrabold uppercase tracking-wider bg-cyan-950 text-cyan-400 border border-cyan-800/60 px-2 py-0.5 rounded-md">
-          Event
-        </span>
-        <h3 id="modal-title" class="text-xl font-black text-white mt-1.5">Event Naam</h3>
-        <p id="modal-artist" class="text-cyan-400 font-semibold text-xs mt-0.5">Artiest / Host</p>
-      </div>
-
-      <div class="bg-gray-950/90 p-3.5 rounded-xl border border-gray-800 space-y-1.5 text-xs text-gray-300">
-        <p class="flex items-center gap-2">📅 <span id="modal-date" class="font-medium text-white">Datum</span></p>
-        <p class="flex items-center gap-2">📍 <span id="modal-location" class="font-medium text-white">Locatie, Stad</span></p>
-        <p class="flex items-center gap-2">⏳ <span id="modal-countdown" class="font-semibold text-cyan-400">Aftellen...</span></p>
-      </div>
-
-      <div>
-        <p class="text-[11px] text-gray-400 mb-1.5 font-medium">🎧 Sound Preview:</p>
-        <iframe id="modal-audio-iframe" class="w-full rounded-xl" height="80" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture" loading="lazy"></iframe>
-      </div>
-
-      <div class="grid grid-cols-2 gap-2.5 pt-1">
-        <a id="modal-cal-btn" href="#" target="_blank" class="text-center text-xs bg-gray-800 hover:bg-gray-700 text-gray-200 border border-gray-700 py-2.5 rounded-xl font-bold transition">
-          📅 Google Kalender
-        </a>
-        <a id="modal-ticket-btn" href="#" target="_blank" class="text-center text-xs bg-cyan-500 hover:bg-cyan-400 text-black py-2.5 rounded-xl font-black transition shadow-md">
-          Tickets & Info ↗
-        </a>
-      </div>
-
-    </div>
-  </div>
-
-
-  <script>
-    let HAY_TRANCE_TRACKS = [];
-    let currentFilteredList = [];
-    let displayedCount = 24;
-
-    function extractTrackFromRaw(raw, idx) {
-      if (!raw) return null;
-
-      if (typeof raw === 'object') {
-        let cleanObj = {};
-        for (let key in raw) {
-          if (Object.prototype.hasOwnProperty.call(raw, key)) {
-            const cleanKey = key.replace(/^\uFEFF/, '').trim();
-            cleanObj[cleanKey] = raw[key];
-          }
+        // Bepaal ISO weeknummer voor de Banger van de Week reset
+        function getISOWeekNumber(d) {
+            d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+            d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+            var yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+            return Math.ceil((((d - yearStart) / 86400000) + 1)/7);
         }
 
-        function val(possibleKeys) {
-          for (let pk of possibleKeys) {
-            if (cleanObj[pk] !== undefined && cleanObj[pk] !== null && String(cleanObj[pk]).trim() !== '') {
-              return String(cleanObj[pk]).trim();
+        document.getElementById('week-number').innerText = currentWeekNumber;
+
+        // Laad releases.json in met cache-busting (?t=...)
+        fetch('releases.json?t=' + new Date().getTime())
+            .then(response => {
+                if (!response.ok) throw new Error('Netwerkrespons was niet ok');
+                return response.json();
+            })
+            .then(data => {
+                allWeeklyReleases = data;
+                renderReleases(getFilteredReleases().slice(0, 16));
+            })
+            .catch(error => {
+                console.error('Fout bij laden van releases:', error);
+                document.getElementById('releases-grid').innerHTML = 
+                    '<p style="color: var(--text-muted); grid-column: 1/-1;">Kon de nieuwste releases op dit moment niet inladen.</p>';
+            });
+
+        function getFilteredReleases() {
+            if (activeFilter === 'all') return allWeeklyReleases;
+            return allWeeklyReleases.filter(rel => rel.source === activeFilter);
+        }
+
+        function filterReleases(source, btn) {
+            activeFilter = source;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            let filtered = getFilteredReleases();
+            renderReleases(filtered.slice(0, 16));
+        }
+
+        function shuffleAndRenderReleases() {
+            let filtered = getFilteredReleases();
+            if (filtered.length === 0) return;
+
+            // Hussel de beschikbare releases van de afgelopen 7 dagen
+            let shuffled = [...filtered].sort(() => 0.5 - Math.random());
+            renderReleases(shuffled.slice(0, 16));
+        }
+
+        function renderReleases(releases) {
+            const container = document.getElementById('releases-grid');
+            container.innerHTML = '';
+
+            if (releases.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted); grid-column: 1/-1;">Geen releases gevonden voor dit filter in de afgelopen 7 dagen.</p>';
+                return;
             }
-          }
-          for (let k in cleanObj) {
-            const lowerK = k.toLowerCase().replace(/[^a-z0-9]/g, '');
-            for (let pk of possibleKeys) {
-              const lowerPK = pk.toLowerCase().replace(/[^a-z0-9]/g, '');
-              if (lowerK === lowerPK && cleanObj[k] !== undefined && cleanObj[k] !== null && String(cleanObj[k]).trim() !== '') {
-                return String(cleanObj[k]).trim();
-              }
-            }
-          }
-          return '';
+
+            const votedTrackId = localStorage.getItem('banger_vote_w' + currentWeekNumber);
+
+            releases.forEach(track => {
+                const isVoted = votedTrackId === track.id;
+                
+                const card = document.createElement('div');
+                card.className = 'release-card';
+                card.innerHTML = `
+                    <img src="${track.image}" alt="${track.title}" class="card-img" loading="lazy">
+                    <div class="card-body">
+                        <div class="card-tag">${track.tag || 'Release Friday'}</div>
+                        <div class="card-title" title="${track.title}">${track.title}</div>
+                        <div class="card-artist" title="${track.artist}">${track.artist}</div>
+                        <div class="card-footer">
+                            <button class="btn-vote ${isVoted ? 'voted' : ''}" onclick="voteBanger('${track.id}', '${track.title.replace(/'/g, "\\'")}')">
+                                ${isVoted ? '🏆 Jouw Banger' : '🔥 Stem als Banger'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
         }
 
-        let title = val(['Nummernaam', 'Track Name', 'title', 'name', 'track_name', 'Track', 'Song']);
-        let artists = val(['Naam van artiest', 'Artist Name(s)', 'artists', 'artist', 'artist_name', 'Artist Name', 'Artist']);
-        let label = val(['Naam van album', 'Album Name', 'label', 'album', 'album_name', 'Album']);
-        let rawDate = val(['Toegevoegd op', 'Added At', 'addedAt', 'added_at', 'Release Date', 'added', 'Date']);
-        let uri = val(['Nummer URI', 'Track URI', 'trackUri', 'uri', 'Spotify Track URI', 'Link', 'URL']);
-        let image = val(['Album afbeelding-URL', 'Album Image URL', 'Album Image', 'image', 'cover', 'img', 'image_url', 'album_image', 'picture', 'photo']);
+        function voteBanger(trackId, title) {
+            const key = 'banger_vote_w' + currentWeekNumber;
+            localStorage.setItem(key, trackId);
+            
+            document.getElementById('banger-status-sub').innerHTML = 
+                `Je hebt deze week gestemd op: <strong style="color: var(--accent-cyan);">${title}</strong>!`;
 
-        if (!image || !image.startsWith('http')) {
-          for (let k in cleanObj) {
-            if (typeof cleanObj[k] === 'string' && cleanObj[k].startsWith('http')) {
-              const v = cleanObj[k].trim();
-              if (v.includes('scdn.co') || v.includes('image') || v.match(/\.(jpg|jpeg|png|webp)/i)) {
-                image = v;
-                break;
-              }
-            }
-          }
+            // Ververs de cards om de 'voted' status direct aan te passen
+            let currentDisplayed = getFilteredReleases().slice(0, 16);
+            renderReleases(currentDisplayed);
         }
-
-        if (!title) return null;
-        if (!artists) artists = 'Onbekende artiest';
-
-        if (!image || !image.startsWith('http')) {
-          image = 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400';
-        }
-
-        let addedAt = new Date(0);
-        if (rawDate) {
-          const parsed = new Date(rawDate);
-          if (!isNaN(parsed.getTime())) addedAt = parsed;
-        }
-
-        let spotifyUrl = `https://open.spotify.com/search/${encodeURIComponent(artists + ' ' + title)}`;
-        if (uri && uri.includes('spotify:track:')) {
-          const trackId = uri.split('spotify:track:')[1].split(':')[0];
-          spotifyUrl = `https://open.spotify.com/track/${trackId}`;
-        } else if (uri && uri.startsWith('http')) {
-          spotifyUrl = uri;
-        }
-
-        return { id: String(idx + 1), title, artists, label, image, addedAt, spotifyUrl };
-      }
-
-      return null;
-    }
-
-    async function loadAllTracksFromJson() {
-      const countLabel = document.getElementById('track-count');
-      if (countLabel) countLabel.innerText = 'Laden...';
-
-      try {
-        const res = await fetch('tracks.json?t=' + new Date().getTime());
-        if (!res.ok) {
-          throw new Error(`Bestand 'tracks.json' niet gevonden op GitHub.`);
-        }
-
-        let rawText = await res.text();
-        let data = JSON.parse(rawText);
-
-        let rawList = data;
-        if (!Array.isArray(data) && typeof data === 'object' && data !== null) {
-          const keys = Object.keys(data);
-          for (let k of keys) {
-            if (Array.isArray(data[k])) {
-              rawList = data[k];
-              break;
-            }
-          }
-        }
-
-        if (!Array.isArray(rawList)) rawList = [rawList];
-
-        const seen = new Set();
-        const list = [];
-
-        rawList.forEach((raw, idx) => {
-          const t = extractTrackFromRaw(raw, idx);
-          if (t && t.title) {
-            const key = `${t.title.toLowerCase()}_${t.artists.toLowerCase()}`;
-            if (!seen.has(key)) {
-              seen.add(key);
-              list.push(t);
-            }
-          }
-        });
-
-        HAY_TRANCE_TRACKS = list;
-
-      } catch (err) {
-        console.error('Fout bij laden van tracks.json:', err);
-        if (countLabel) countLabel.innerText = '⚠️ Leesfout!';
-        HAY_TRANCE_TRACKS = [];
-      }
-
-      renderRecent20Tracks();
-      filterAndRenderTracks();
-    }
-
-    // HUIDIG WEEKNUMMER BEREKENEN
-    function getCurrentWeekCode() {
-      const now = new Date();
-      const onejan = new Date(now.getFullYear(), 0, 1);
-      const week = Math.ceil((((now - onejan) / 86400000) + onejan.getDay() + 1) / 7);
-      return `${now.getFullYear()}-W${week}`;
-    }
-
-    // 🚀 RELEASE FRIDAY DISCOVERY DATA
-    let TRANCE_DISCOVERY_DATA = [];
-
-    async function loadReleasesJson() {
-      try {
-        const res = await fetch('releases.json?t=' + new Date().getTime());
-        if (res.ok) {
-          const data = await res.json();
-          if (Array.isArray(data) && data.length > 0) {
-            TRANCE_DISCOVERY_DATA = data;
-          }
-        }
-      } catch (e) {
-        console.error('Fout bij inladen releases.json:', e);
-      }
-
-      const weekCode = getCurrentWeekCode();
-      const weekTag = document.getElementById('current-week-tag');
-      if (weekTag) weekTag.innerText = `Release Friday • ${weekCode}`;
-
-      renderDiscoveryReleases('all');
-      renderVoting();
-    }
-
-    function filterDiscovery(source) {
-      document.querySelectorAll('.discovery-filter-btn').forEach(btn => {
-        if (btn.getAttribute('data-source') === source) {
-          btn.className = 'discovery-filter-btn text-[10px] bg-cyan-500 text-black font-black px-2.5 py-1 rounded-lg transition shadow-md';
-        } else {
-          btn.className = 'discovery-filter-btn text-[10px] bg-gray-800 text-gray-300 hover:bg-gray-700 px-2.5 py-1 rounded-lg transition';
-        }
-      });
-
-      renderDiscoveryReleases(source);
-    }
-
-    function renderDiscoveryReleases(sourceFilter = 'all') {
-      const container = document.getElementById('discovery-releases-grid');
-      if (!container) return;
-      container.innerHTML = '';
-
-      let list = TRANCE_DISCOVERY_DATA.filter(item => {
-        if (sourceFilter === 'all') return true;
-        if (!item.source) return true;
-        return item.source.toLowerCase().includes(sourceFilter.toLowerCase());
-      });
-
-      if (list.length === 0) {
-        list = TRANCE_DISCOVERY_DATA;
-      }
-
-      if (list.length === 0) {
-        container.innerHTML = `<p class="text-gray-500 text-xs py-4 text-center col-span-2">Geen releases geladen.</p>`;
-        return;
-      }
-
-      list.forEach(rel => {
-        const query = encodeURIComponent(`${rel.artist} ${rel.title}`);
-        const spotifySearchUrl = `https://open.spotify.com/search/${query}`;
-
-        const card = document.createElement('div');
-        card.className = 'bg-gray-900 border border-gray-800 rounded-xl p-3 flex gap-3 items-center hover:border-cyan-500/50 transition shadow-md';
-        card.innerHTML = `
-          <img src="${rel.image}" alt="${rel.title}" class="w-16 h-16 rounded-lg object-cover flex-shrink-0">
-          <div class="overflow-hidden flex-1">
-            <span class="text-[8px] font-black uppercase bg-cyan-950 text-cyan-400 px-1.5 py-0.5 rounded border border-cyan-800/50">${rel.tag || 'Release'} • ${rel.label || 'Trance'}</span>
-            <h4 class="text-white font-bold text-xs mt-1 truncate" title="${rel.title}">${rel.title}</h4>
-            <p class="text-gray-400 text-[10px] truncate">${rel.artist}</p>
-
-            <div class="flex gap-2 mt-2">
-              <a href="${spotifySearchUrl}" target="_blank" class="text-[9px] bg-cyan-500 hover:bg-cyan-400 text-black font-black px-2 py-1 rounded transition flex items-center gap-1">
-                ▶ Luister
-              </a>
-              <a href="${spotifySearchUrl}" target="_blank" class="text-[9px] bg-gray-800 hover:bg-gray-700 text-cyan-300 border border-gray-700 font-bold px-2 py-1 rounded transition flex items-center gap-1" title="In Spotify 1-klik toevoegen aan Hay Trance">
-                ➕ In Playlist
-              </a>
-            </div>
-          </div>
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    // 🏆 BANGER VAN DE WEEK
-    function renderVoting() {
-      const container = document.getElementById('voting-container');
-      if (!container) return;
-
-      const weekCode = getCurrentWeekCode();
-      const storageKey = `haytrance_votes_${weekCode}`;
-      const userVotedKey = `haytrance_user_voted_${weekCode}`;
-
-      const nominees = TRANCE_DISCOVERY_DATA.slice(0, 4).map((rel, idx) => ({
-        id: rel.id || `track_${idx}`,
-        title: rel.title,
-        artist: rel.artist,
-        votes: 12 + (idx * 4)
-      }));
-
-      let votesData = JSON.parse(localStorage.getItem(storageKey)) || nominees;
-      const userVoted = localStorage.getItem(userVotedKey);
-      const totalVotes = votesData.reduce((sum, item) => sum + item.votes, 0);
-
-      container.innerHTML = '';
-
-      if (votesData.length === 0) {
-        container.innerHTML = `<p class="text-gray-500 text-xs py-2 text-center">Stemmen laden...</p>`;
-        return;
-      }
-
-      votesData.forEach(item => {
-        const pct = totalVotes > 0 ? Math.round((item.votes / totalVotes) * 100) : 0;
-
-        const btn = document.createElement('div');
-        btn.className = `p-2.5 rounded-xl border transition cursor-pointer relative overflow-hidden ${userVoted === item.id ? 'bg-cyan-950/80 border-cyan-500/80' : 'bg-gray-900 border-gray-800 hover:border-cyan-500/40'}`;
-        btn.onclick = () => castVote(item.id, storageKey, userVotedKey, votesData);
-
-        btn.innerHTML = `
-          <div class="flex justify-between items-center relative z-10">
-            <div>
-              <h4 class="text-white font-bold text-xs line-clamp-1">${item.title}</h4>
-              <p class="text-gray-400 text-[10px] truncate">${item.artist}</p>
-            </div>
-            <span class="text-xs font-black text-cyan-400 ml-2">${pct}%</span>
-          </div>
-          <div class="absolute left-0 top-0 bottom-0 bg-cyan-500/10 transition-all duration-500" style="width: ${pct}%;"></div>
-        `;
-        container.appendChild(btn);
-      });
-
-      const status = document.getElementById('voting-status');
-      if (status) {
-        status.innerText = userVoted ? `Bedankt voor je stem in ${weekCode}!` : 'Klik op jouw favoriet om je stem uit te brengen.';
-      }
-    }
-
-    function castVote(id, storageKey, userVotedKey, votesData) {
-      if (localStorage.getItem(userVotedKey)) {
-        alert('Je hebt deze week al gestemd op de Banger van de Week!');
-        return;
-      }
-
-      const track = votesData.find(t => t.id === id);
-      if (track) {
-        track.votes += 1;
-        localStorage.setItem(storageKey, JSON.stringify(votesData));
-        localStorage.setItem(userVotedKey, id);
-        renderVoting();
-      }
-    }
-
-    let rawEventsList = [];
-
-    // 🇳🇱 COMPLETE GEVERIFIEERDE TRANCE AGENDA (55+ EVENTS)
-    function getPartyflockBaselineEvents() {
-      return [
-        // ADE SPECIALS
-        { artist: 'Armin van Buuren & Benwal', eventName: 'Armin van Buuren & Benwal (ADE Special)', venue: 'Gashouder', city: 'Amsterdam', type: 'ade', genre: 'Uplifting / Tech Trance', date: new Date(2026, 9, 21), url: 'https://partyflock.nl/agenda/genre/trance', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
-        { artist: 'A State of Trance', eventName: 'ASOT ADE Celebration', venue: 'AFAS Live', city: 'Amsterdam', type: 'ade', genre: 'Trance / Progressive', date: new Date(2026, 9, 22), url: 'https://astateoftrance.com', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
-        { artist: 'Luminosity Family', eventName: 'Luminosity ADE Special', venue: 'Panama', city: 'Amsterdam', type: 'ade', genre: 'Uplifting Trance', date: new Date(2026, 9, 23), url: 'https://luminosity-events.nl', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Anjunabeats', eventName: 'Anjunabeats ADE Night', venue: 'Melkweg', city: 'Amsterdam', type: 'ade', genre: 'Progressive & Anjuna Trance', date: new Date(2026, 9, 24), url: 'https://anjunabeats.com', spotifyPreview: 'https://open.spotify.com/embed/track/1yYk839b8x2b1c41A4179e' },
-        { artist: 'Aly & Fila', eventName: 'Future Sound of Egypt ADE', venue: 'Paradiso', city: 'Amsterdam', type: 'ade', genre: 'Uplifting & Pure Trance', date: new Date(2026, 9, 24), url: 'https://futuresoundofegypt.com', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Black Hole Recordings', eventName: 'Black Hole Recordings ADE Rave', venue: 'WesterUnie', city: 'Amsterdam', type: 'ade', genre: 'Trance & Progressive', date: new Date(2026, 9, 25), url: 'https://blackholerecordings.com', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
-        { artist: 'Markus Schulz', eventName: 'Coldharbour ADE Night', venue: 'Q-Factory', city: 'Amsterdam', type: 'ade', genre: 'Dark & Tech Trance', date: new Date(2026, 9, 25), url: 'https://coldharbourrecordings.com', spotifyPreview: 'https://open.spotify.com/embed/track/1yYk839b8x2b1c41A4179e' },
-        { artist: 'Bonzai All Stars', eventName: 'Bonzai Retro ADE Rave', venue: 'Het Sieraad', city: 'Amsterdam', type: 'ade', genre: 'Retro Trance Classics', date: new Date(2026, 9, 25), url: 'https://bonzairecords.com', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-
-        // POPPODIA & CLUBTOURS 2026
-        { artist: 'Airwalk Events', eventName: 'Airwalk 360 Rave', venue: 'Poppodium Grenswerk', city: 'Venlo', type: 'poppodia', genre: 'Uplifting & Tech Trance', date: new Date(2026, 10, 13), url: 'https://www.grenswerk.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Quest4Trance', eventName: 'Quest4Trance Autumn Edition', venue: 'Beachclub Fuel', city: 'Bloemendaal', type: 'poppodia', genre: 'Trance & Progressive', date: new Date(2026, 10, 28), url: 'https://quest4trance.nl', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
-        { artist: 'Bryan Kearney', eventName: 'Bryan Kearney pres. Kearnage', venue: 'Melkweg', city: 'Amsterdam', type: 'poppodia', genre: 'Tech Trance & Psy', date: new Date(2026, 11, 5), url: 'https://melkweg.nl', spotifyPreview: 'https://open.spotify.com/embed/track/1yYk839b8x2b1c41A4179e' },
-        { artist: 'Markus Schulz', eventName: 'Coldharbour Night', venue: 'Effenaar', city: 'Eindhoven', type: 'poppodia', genre: 'Progressive & Tech Trance', date: new Date(2026, 11, 12), url: 'https://effenaar.nl', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Aly & Fila', eventName: 'FSOE Club Night', venue: 'TivoliVredenburg', city: 'Utrecht', type: 'poppodia', genre: 'Uplifting Trance', date: new Date(2026, 11, 19), url: 'https://tivolivredenburg.nl', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
-        { artist: 'Ciaran McAuley', eventName: 'Ciaran McAuley & Friends', venue: 'Doornroosje', city: 'Nijmegen', type: 'poppodia', genre: 'Emotional Uplifting', date: new Date(2026, 11, 26), url: 'https://doornroosje.nl', spotifyPreview: 'https://open.spotify.com/embed/track/1yYk839b8x2b1c41A4179e' },
-        { artist: 'RAM', eventName: 'RAM & Friends Year Ending Rave', venue: 'Poppodium 013', city: 'Tilburg', type: 'poppodia', genre: 'Vocal & Uplifting Trance', date: new Date(2026, 11, 18), url: 'https://013.nl', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Johan Gielen', eventName: 'Johan Gielen Trance Classics', venue: 'Nieuwe Nor', city: 'Heerlen', type: 'poppodia', genre: 'Trance Classics', date: new Date(2026, 11, 26), url: 'https://nieuwenor.nl', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
-        { artist: 'Trance Academy', eventName: 'Trance Academy NYE Special', venue: 'Compass Club', city: 'Utrecht', type: 'poppodia', genre: 'Trance & Euphoric', date: new Date(2026, 11, 31), url: 'https://partyflock.nl', spotifyPreview: 'https://open.spotify.com/embed/track/1yYk839b8x2b1c41A4179e' },
-
-        // FESTIVALS 2026 / 2027
-        { artist: 'Grotesque', eventName: 'Grotesque Indoor Festival', venue: 'Maassilo', city: 'Rotterdam', type: 'festival', genre: 'Multi-stage Trance Festival', date: new Date(2026, 10, 21), url: 'https://ptevents.nl', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Electronic Family', eventName: 'Electronic Family Winter Special', venue: 'Brabanthallen', city: '\'s-Hertogenbosch', type: 'festival', genre: 'Arena Trance Event', date: new Date(2026, 11, 12), url: 'https://electronicfamily.nl', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
-        { artist: 'Bonzai Family', eventName: 'Bonzai Retro Winter Edition', venue: 'Waagnatie', city: 'Antwerpen', type: 'festival', genre: '90s & 00s Trance Classics', date: new Date(2026, 11, 19), url: 'https://bonzairetro.be', spotifyPreview: 'https://open.spotify.com/embed/track/1yYk839b8x2b1c41A4179e' },
-
-        // 2027 CALENDAR
-        { artist: 'Armin van Buuren', eventName: 'A State of Trance Festival 2027 Day 1', venue: 'Ahoy', city: 'Rotterdam', type: 'festival', genre: 'World\'s Biggest Trance Festival', date: new Date(2027, 0, 22), url: 'https://astateoftrance.com', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
-        { artist: 'Armin van Buuren', eventName: 'A State of Trance Festival 2027 Day 2', venue: 'Ahoy', city: 'Rotterdam', type: 'festival', genre: 'World\'s Biggest Trance Festival', date: new Date(2027, 0, 23), url: 'https://astateoftrance.com', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
-        { artist: 'Matrixx Events', eventName: 'Trance Energy Revival', venue: 'Jaarbeurs', city: 'Utrecht', type: 'festival', genre: 'Legendary Trance Festival', date: new Date(2027, 0, 30), url: 'https://partyflock.nl', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Factor B', eventName: 'Factor B pres. Theatre of the Mind', venue: 'Patronaat', city: 'Haarlem', type: 'poppodia', genre: 'Pure Uplifting Trance', date: new Date(2027, 1, 6), url: 'https://patronaat.nl', spotifyPreview: 'https://open.spotify.com/embed/track/1yYk839b8x2b1c41A4179e' },
-        { artist: 'Giuseppe Ottaviani', eventName: 'Giuseppe Ottaviani Live 3.0', venue: 'Melkweg', city: 'Amsterdam', type: 'poppodia', genre: 'Live Hardware Trance', date: new Date(2027, 1, 13), url: 'https://melkweg.nl', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
-        { artist: 'Airwalk Events', eventName: 'Airwalk Indoor Trance Festival', venue: 'De Maaspoort', city: 'Venlo', type: 'festival', genre: 'International Trance Festival', date: new Date(2027, 1, 20), url: 'https://airwalkevents.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/1yYk839b8x2b1c41A4179e' },
-        { artist: 'Solarstone', eventName: 'Pure Trance NL with Solarstone', venue: 'Paradiso Noord', city: 'Amsterdam', type: 'poppodia', genre: 'Pure Trance', date: new Date(2027, 1, 27), url: 'https://puretrance.com', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Quest4Trance', eventName: 'Quest4Trance Winter Edition', venue: 'De Helling', city: 'Utrecht', type: 'poppodia', genre: 'Melodic & Uplifting', date: new Date(2027, 2, 6), url: 'https://dehelling.nl', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
-        { artist: 'Ferry Corsten', eventName: 'Ferry Corsten pres. System F Special', venue: 'Maassilo', city: 'Rotterdam', type: 'poppodia', genre: 'Classics & Modern Trance', date: new Date(2027, 2, 13), url: 'https://ferrycorsten.com', spotifyPreview: 'https://open.spotify.com/embed/track/1yYk839b8x2b1c41A4179e' },
-        { artist: 'Craig Connelly & John O\'Callaghan', eventName: 'Craig Connelly & John O\'Callaghan B2B', venue: 'Effenaar', city: 'Eindhoven', type: 'poppodia', genre: 'Uplifting & Vocal', date: new Date(2027, 2, 20), url: 'https://effenaar.nl', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Menno de Jong', eventName: 'Menno de Jong Memorylane', venue: 'WesterUnie', city: 'Amsterdam', type: 'poppodia', genre: 'Classics Open to Close', date: new Date(2027, 2, 27), url: 'https://mennodejong.com', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
-        { artist: 'Bonzai Retro', eventName: 'Bonzai Retro Carnival Special', venue: 'Versuz', city: 'Hasselt', type: 'poppodia', genre: 'Belgian Trance Heritage', date: new Date(2027, 2, 28), url: 'https://versuz.be', spotifyPreview: 'https://open.spotify.com/embed/track/1yYk839b8x2b1c41A4179e' },
-        { artist: 'Trance Sanctuary', eventName: 'Trance Sanctuary NL Exchange', venue: 'Panama', city: 'Amsterdam', type: 'poppodia', genre: 'Uplifting & Psy Trance', date: new Date(2027, 3, 10), url: 'https://trancesanctuary.com', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Allen Watts', eventName: 'Allen Watts pres. High Voltage', venue: 'Poppodium Lux', city: 'Arnhem', type: 'poppodia', genre: 'High-Energy Trance', date: new Date(2027, 3, 17), url: 'https://allenwattsmusic.com', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
-        { artist: 'King\'s Night Trance', eventName: 'King\'s Night Trance Energy', venue: 'Jaarbeurs', city: 'Utrecht', type: 'festival', genre: 'King\'s Night Festival', date: new Date(2027, 3, 26), url: 'https://partyflock.nl', spotifyPreview: 'https://open.spotify.com/embed/track/1yYk839b8x2b1c41A4179e' },
-        { artist: 'King\'s Day Special', eventName: 'King\'s Day Outdoor Trance', venue: 'Chasséveld', city: 'Breda', type: 'festival', genre: 'Outdoor King\'s Day Festival', date: new Date(2027, 3, 27), url: 'https://partyflock.nl', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Ruben de Ronde', eventName: 'Ruben de Ronde Statement! Night', venue: 'Bitterzoet', city: 'Amsterdam', type: 'poppodia', genre: 'Progressive & Melodic', date: new Date(2027, 4, 8), url: 'https://statementmusic.nl', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
-        { artist: 'Paul van Dyk', eventName: 'Paul van Dyk VANDIT Night', venue: 'Melkweg', city: 'Amsterdam', type: 'poppodia', genre: 'Classic Berlin Sound', date: new Date(2027, 4, 15), url: 'https://paulvandyk.com', spotifyPreview: 'https://open.spotify.com/embed/track/1yYk839b8x2b1c41A4179e' },
-        { artist: 'Coldblue', eventName: 'Coldblue Open-to-Close', venue: 'Poppodium Boerderij', city: 'Zoetermeer', type: 'poppodia', genre: 'Pure Uplifting Journey', date: new Date(2027, 4, 22), url: 'https://poppodiumboerderij.nl', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Electronic Family', eventName: 'Electronic Family Spring Beach', venue: 'Bernie\'s Beach Club', city: 'Zandvoort', type: 'festival', genre: 'Beach & Sunshine Trance', date: new Date(2027, 4, 29), url: 'https://electronicfamily.nl', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
-        { artist: 'Harmony of Hardcore', eventName: 'Harmony of Hardcore - Trance Stage', venue: 'De Roost', city: 'Erp', type: 'festival', genre: 'Hard & Tech Trance Stage', date: new Date(2027, 4, 15), url: 'https://harmonyofhardcore.nl', spotifyPreview: 'https://open.spotify.com/embed/track/1yYk839b8x2b1c41A4179e' },
-        { artist: 'Airwalk Events', eventName: 'Airwalk Open Air Warmup', venue: 'Poppodium Grenswerk Garden', city: 'Venlo', type: 'poppodia', genre: 'Outdoor Warmup Session', date: new Date(2027, 4, 22), url: 'https://airwalkevents.nl', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Luminosity Family', eventName: 'Sneak Peek Luminosity Beach Festival', venue: 'Beachclub Fuel', city: 'Bloemendaal', type: 'poppodia', genre: 'Beach Preview Rave', date: new Date(2027, 4, 30), url: 'https://luminosity-events.nl', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
-
-        // SUMMER FESTIVALS 2027
-        { artist: 'Luminosity Family', eventName: 'Luminosity Beach Festival 2027 Day 1', venue: 'Bernie\'s Beach Club', city: 'Zandvoort', type: 'festival', genre: '4-Day Pure Trance Beach Festival', date: new Date(2027, 5, 24), url: 'https://luminosity-events.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Luminosity Family', eventName: 'Luminosity Beach Festival 2027 Day 2', venue: 'Bernie\'s Beach Club', city: 'Zandvoort', type: 'festival', genre: '4-Day Pure Trance Beach Festival', date: new Date(2027, 5, 25), url: 'https://luminosity-events.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Luminosity Family', eventName: 'Luminosity Beach Festival 2027 Day 3', venue: 'Bernie\'s Beach Club', city: 'Zandvoort', type: 'festival', genre: '4-Day Pure Trance Beach Festival', date: new Date(2027, 5, 26), url: 'https://luminosity-events.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Luminosity Family', eventName: 'Luminosity Beach Festival 2027 Day 4', venue: 'Bernie\'s Beach Club', city: 'Zandvoort', type: 'festival', genre: '4-Day Pure Trance Beach Festival', date: new Date(2027, 5, 27), url: 'https://luminosity-events.nl/', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Airwalk Events', eventName: 'Airwalk Open Air Festival 2027', venue: 'Stadsweide', city: 'Venlo', type: 'festival', genre: 'Outdoor Trance Festival', date: new Date(2027, 5, 12), url: 'https://airwalkevents.nl', spotifyPreview: 'https://open.spotify.com/embed/track/1yYk839b8x2b1c41A4179e' },
-        { artist: 'Tomorrowland', eventName: 'Tomorrowland 2027 - ASOT Stage', venue: 'De Schorre', city: 'Boom', type: 'festival', genre: 'A State of Trance Stage', date: new Date(2027, 6, 23), url: 'https://tomorrowland.com', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
-        { artist: 'Tomorrowland', eventName: 'Tomorrowland 2027 - Anjunabeats Stage', venue: 'De Schorre', city: 'Boom', type: 'festival', genre: 'Anjunabeats Hosting Stage', date: new Date(2027, 6, 30), url: 'https://tomorrowland.com', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Dance Valley', eventName: 'Dance Valley - Trance Stage', venue: 'Spaarnwoude', city: 'Velsen-Zuid', type: 'festival', genre: 'Trance Stage', date: new Date(2027, 7, 14), url: 'https://dancevalley.com', spotifyPreview: 'https://open.spotify.com/embed/track/1yYk839b8x2b1c41A4179e' },
-        { artist: 'Mysteryland', eventName: 'Mysteryland - Trance Hosting', venue: 'Floriande', city: 'Haarlemmermeer', type: 'festival', genre: 'Trance & Progressive Stage', date: new Date(2027, 7, 28), url: 'https://mysteryland.nl', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
-        { artist: 'Ground Zero', eventName: 'Ground Zero - Trance Sanctuary Night Stage', venue: 'Bussloo', city: 'Wilp', type: 'festival', genre: 'Night Festival Trance Stage', date: new Date(2027, 7, 29), url: 'https://groundzerofestival.nl', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Decibel Outdoor', eventName: 'Decibel Outdoor - Trance Classics Stage', venue: 'Beekse Bergen', city: 'Hilvarenbeek', type: 'festival', genre: 'Trance Classics Stage', date: new Date(2027, 7, 21), url: 'https://b2s.nl', spotifyPreview: 'https://open.spotify.com/embed/track/1yYk839b8x2b1c41A4179e' },
-        { artist: 'Grotesque', eventName: 'Grotesque Outdoor Festival 2027', venue: 'Tuin van Flakkee', city: 'Middelharnis', type: 'festival', genre: 'Outdoor Multi-stage Trance', date: new Date(2027, 8, 11), url: 'https://ptevents.nl', spotifyPreview: 'https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3' },
-        { artist: 'Airwalk Events', eventName: 'Airwalk Season Kick-off 2027', venue: 'Poppodium Grenswerk', city: 'Venlo', type: 'poppodia', genre: 'Indoor Season Opener', date: new Date(2027, 8, 18), url: 'https://airwalkevents.nl', spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY' },
-        { artist: 'Quest4Trance', eventName: 'Quest4Trance End of Summer Session', venue: 'Beachclub Fuel', city: 'Bloemendaal', type: 'poppodia', genre: 'Beach Season Closing', date: new Date(2027, 8, 25), url: 'https://quest4trance.nl', spotifyPreview: 'https://open.spotify.com/embed/track/1yYk839b8x2b1c41A4179e' }
-      ];
-    }
-
-    async function loadEventsMultiSource() {
-      const status = document.getElementById('events-status');
-      if (status) status.innerText = 'Laden...';
-
-      let combinedEvents = [...getPartyflockBaselineEvents()];
-
-      try {
-        const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent('https://partyflock.nl/agenda/genre/trance.rss');
-        const res = await fetch(proxyUrl);
-        if (res.ok) {
-          const text = await res.text();
-          const parser = new DOMParser();
-          const xml = parser.parseFromString(text, 'text/xml');
-          const items = xml.querySelectorAll('item');
-
-          items.forEach(item => {
-            const title = item.querySelector('title')?.textContent || '';
-            const link = item.querySelector('link')?.textContent || 'https://partyflock.nl';
-            const pubDateStr = item.querySelector('pubDate')?.textContent || '';
-            const pubDate = new Date(pubDateStr);
-
-            if (title && !isNaN(pubDate.getTime())) {
-              const parts = title.split(' - ');
-              const eventName = parts[0] || title;
-              const loc = parts[1] || 'Nederland';
-              const locParts = loc.split(',');
-
-              combinedEvents.push({
-                artist: eventName,
-                eventName: eventName,
-                venue: locParts[0] ? locParts[0].trim() : 'Locatie',
-                city: locParts[1] ? locParts[1].trim() : '',
-                type: title.toLowerCase().includes('ade') ? 'ade' : title.toLowerCase().includes('festival') ? 'festival' : 'poppodia',
-                genre: 'Trance',
-                date: pubDate,
-                url: link,
-                spotifyPreview: 'https://open.spotify.com/embed/track/3063z34M1fV0fG73R0A7pY'
-              });
-            }
-          });
-        }
-      } catch (e) {
-        // Baseline actief
-      }
-
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-
-      const seen = new Set();
-      rawEventsList = combinedEvents
-        .filter(e => {
-          if (!e.date || isNaN(e.date.getTime()) || e.date < today) return false;
-          const key = `${e.eventName.toLowerCase()}_${e.date.getTime()}`;
-          if (seen.has(key)) return false;
-          seen.add(key);
-          return true;
-        })
-        .sort((a, b) => a.date - b.date);
-
-      if (status) {
-        status.innerText = `${rawEventsList.length} feesten geladen`;
-      }
-
-      renderEvents(rawEventsList);
-    }
-
-    function renderEvents(list) {
-      const grid = document.getElementById('events-grid');
-      if (!grid) return;
-      grid.innerHTML = '';
-
-      if (!list || list.length === 0) {
-        grid.innerHTML = `<div class="p-6 text-center text-xs text-gray-400">Geen aankomende feesten gevonden voor dit filter.</div>`;
-        return;
-      }
-
-      list.forEach((ev) => {
-        const dStr = ev.date.toLocaleDateString('nl-NL', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
-        const parts = dStr.split(' ');
-        const isADE = ev.type === 'ade' || ev.eventName.toLowerCase().includes('ade');
-        const isPoppodium = ev.type === 'poppodia' || ev.venue.toLowerCase().includes('poppodium') || ev.venue.toLowerCase().includes('grenswerk');
-
-        const card = document.createElement('div');
-        card.className = 'bg-gray-950/90 border border-gray-800 hover:border-cyan-500/50 rounded-xl p-2.5 flex justify-between items-center transition cursor-pointer';
-        card.onclick = () => openModal(ev);
-
-        card.innerHTML = `
-          <div class="flex items-center gap-3">
-            <div class="${isADE ? 'bg-fuchsia-950 text-fuchsia-300 border-fuchsia-800/60' : isPoppodium ? 'bg-blue-950 text-blue-300 border-blue-800/60' : 'bg-cyan-950 text-cyan-400 border-cyan-800/60'} border rounded-lg p-1.5 text-center min-w-[55px]">
-              <span class="block text-[9px] font-extrabold uppercase">${parts[0] || ''}</span>
-              <span class="block text-xs font-black">${parts[1] || ''} ${parts[2] || ''}</span>
-              <span class="block text-[8px] opacity-75">${parts[3] || ''}</span>
-            </div>
-            <div>
-              <div class="flex items-center gap-2">
-                <h4 class="text-white font-bold text-xs hover:text-cyan-300 transition line-clamp-1">${ev.eventName}</h4>
-                ${isADE ? '<span class="text-[8px] bg-fuchsia-500 text-black font-extrabold px-1.5 py-0.2 rounded">ADE</span>' : ''}
-                ${isPoppodium ? '<span class="text-[8px] bg-blue-500 text-black font-extrabold px-1.5 py-0.2 rounded">Poppodium</span>' : ''}
-              </div>
-              <p class="text-gray-400 text-[10px] mt-0.5">📍 ${ev.venue}${ev.city ? ', ' + ev.city : ''} • ${ev.genre}</p>
-            </div>
-          </div>
-          <button class="text-[11px] bg-gray-900 border border-gray-700 text-cyan-400 px-2.5 py-1 rounded-lg font-medium whitespace-nowrap">
-            Details 👁️
-          </button>
-        `;
-        grid.appendChild(card);
-      });
-    }
-
-    function filterEvents(type) {
-      document.querySelectorAll('.event-filter-btn').forEach(btn => {
-        if (btn.getAttribute('data-filter') === type) {
-          btn.className = 'event-filter-btn text-[11px] bg-cyan-500 text-black font-extrabold px-2.5 py-1 rounded-lg transition shadow-md';
-        } else {
-          btn.className = 'event-filter-btn text-[11px] bg-gray-800 text-gray-300 hover:bg-gray-700 px-2.5 py-1 rounded-lg transition';
-        }
-      });
-
-      if (type === 'all') renderEvents(rawEventsList);
-      else if (type === 'poppodia') renderEvents(rawEventsList.filter(e => e.type === 'poppodia' || e.venue.toLowerCase().includes('poppodium') || e.venue.toLowerCase().includes('grenswerk')));
-      else if (type === 'ade') renderEvents(rawEventsList.filter(e => e.type === 'ade' || e.eventName.toLowerCase().includes('ade')));
-      else if (type === 'festival') renderEvents(rawEventsList.filter(e => e.type === 'festival'));
-    }
-
-    function renderRecent20Tracks() {
-      const c = document.getElementById('recent-tracks-grid');
-      if (!c) return;
-      c.innerHTML = '';
-
-      if (HAY_TRANCE_TRACKS.length === 0) {
-        c.innerHTML = `<p class="text-gray-500 text-xs text-center col-span-4 py-4">Geen nummers geladen uit tracks.json</p>`;
-        return;
-      }
-
-      const sorted = [...HAY_TRANCE_TRACKS].sort((a, b) => b.addedAt - a.addedAt);
-      const recent = sorted.slice(0, 20);
-
-      recent.forEach((track, idx) => {
-        const dStr = track.addedAt.getTime() > 0 
-          ? track.addedAt.toLocaleDateString('nl-NL', { day: 'numeric', month: 'short', year: 'numeric' })
-          : 'Datum onbekend';
-
-        const card = document.createElement('div');
-        card.className = 'bg-gray-900/90 border border-gray-800 rounded-xl p-2.5 flex items-center justify-between hover:border-cyan-500/50 transition';
-        card.innerHTML = `
-          <div class="flex items-center gap-2.5 overflow-hidden">
-            <span class="text-xs font-bold ${idx === 0 ? 'text-cyan-400 font-extrabold' : 'text-gray-500'} w-5 text-center flex-shrink-0">#${idx + 1}</span>
-            <img src="${track.image}" alt="${track.title}" class="w-10 h-10 rounded-lg object-cover flex-shrink-0">
-            <div class="overflow-hidden">
-              <h4 class="text-white font-bold text-xs truncate" title="${track.title}">${track.title}</h4>
-              <p class="text-cyan-400 text-[10px] truncate">${track.artists}</p>
-              <span class="text-[9px] text-gray-500">Toegevoegd: ${dStr}</span>
-            </div>
-          </div>
-          <a href="${track.spotifyUrl}" target="_blank" class="p-1.5 bg-gray-800 hover:bg-cyan-950 text-cyan-400 rounded-lg transition text-xs font-bold flex-shrink-0 ml-1.5" title="Open op Spotify">
-            ▶
-          </a>
-        `;
-        c.appendChild(card);
-      });
-    }
-
-    function openModal(ev) {
-      const m = document.getElementById('event-modal');
-      if (!m) return;
-      document.getElementById('modal-title').innerText = ev.eventName;
-      document.getElementById('modal-artist').innerText = `Gehost / Met: ${ev.artist}`;
-      document.getElementById('modal-type').innerText = ev.type === 'ade' ? 'ADE Special' : ev.type === 'poppodia' ? 'Poppodium / Clubtour' : 'Trance Event';
-      document.getElementById('modal-location').innerText = `${ev.venue}${ev.city ? ', ' + ev.city : ''}`;
-      document.getElementById('modal-date').innerText = ev.date.toLocaleDateString('nl-NL', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-      
-      const diff = Math.ceil((ev.date - new Date()) / (1000 * 60 * 60 * 24));
-      document.getElementById('modal-countdown').innerText = diff > 0 ? `Nog ${diff} dagen!` : 'Vandaag / Dit weekend!';
-      document.getElementById('modal-audio-iframe').src = ev.spotifyPreview || '';
-      document.getElementById('modal-cal-btn').href = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(ev.eventName)}&location=${encodeURIComponent(ev.venue + (ev.city ? ', ' + ev.city : ''))}`;
-      document.getElementById('modal-ticket-btn').href = ev.url;
-      m.classList.remove('hidden');
-    }
-
-    function closeModal() {
-      const m = document.getElementById('event-modal');
-      if (m) m.classList.add('hidden');
-    }
-
-    function filterAndRenderTracks() {
-      const q = (document.getElementById('search-input')?.value || '').toLowerCase().trim();
-      const sortBy = document.getElementById('sort-select')?.value || 'newest';
-      const countLabel = document.getElementById('track-count');
-      const noResults = document.getElementById('no-results');
-
-      currentFilteredList = HAY_TRANCE_TRACKS.filter(t => {
-        if (!t) return false;
-        return (t.title || '').toLowerCase().includes(q) || 
-               (t.artists || '').toLowerCase().includes(q) || 
-               (t.label || '').toLowerCase().includes(q);
-      });
-
-      if (sortBy === 'newest') currentFilteredList.sort((a, b) => b.addedAt - a.addedAt);
-      else if (sortBy === 'oldest') currentFilteredList.sort((a, b) => a.addedAt - b.addedAt);
-      else if (sortBy === 'title') currentFilteredList.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
-      else if (sortBy === 'artist') currentFilteredList.sort((a, b) => (a.artists || '').localeCompare(b.artists || ''));
-
-      if (countLabel && HAY_TRANCE_TRACKS.length > 0) {
-        countLabel.innerText = `${currentFilteredList.length} platen`;
-        countLabel.className = 'text-xs font-bold bg-cyan-950 text-cyan-400 border border-cyan-800/60 rounded-xl px-3 py-2 whitespace-nowrap';
-      }
-
-      if (currentFilteredList.length === 0) {
-        const grid = document.getElementById('track-grid');
-        if (grid) grid.innerHTML = '';
-        if (noResults) noResults.classList.remove('hidden');
-        document.getElementById('load-more-container')?.classList.add('hidden');
-        return;
-      } else {
-        if (noResults) noResults.classList.add('hidden');
-      }
-
-      displayedCount = 24;
-      renderTrackBatch();
-    }
-
-    function renderTrackBatch() {
-      const grid = document.getElementById('track-grid');
-      const loadMore = document.getElementById('load-more-container');
-      if (!grid) return;
-      grid.innerHTML = '';
-
-      const batch = currentFilteredList.slice(0, displayedCount);
-
-      batch.forEach(track => {
-        const dStr = track.addedAt.getTime() > 0 
-          ? track.addedAt.toLocaleDateString('nl-NL', { year: 'numeric', month: 'short', day: 'numeric' })
-          : 'Onbekend';
-
-        const card = document.createElement('div');
-        card.className = 'bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-lg hover:border-cyan-500/50 hover:scale-[1.02] transition-all duration-300 flex flex-col justify-between';
-        card.innerHTML = `
-          <div>
-            <div class="relative group">
-              <img src="${track.image}" alt="${track.title}" class="w-full aspect-square object-cover">
-              <a href="${track.spotifyUrl}" target="_blank" class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center font-bold text-cyan-300 gap-1 text-xs">
-                Open in Spotify ↗
-              </a>
-            </div>
-            <div class="p-3.5">
-              <h3 class="font-bold text-white text-sm truncate" title="${track.title}">${track.title}</h3>
-              <p class="text-cyan-400 text-xs truncate mt-0.5" title="${track.artists}">${track.artists}</p>
-              ${track.label ? `<span class="inline-block mt-2 text-[9px] bg-gray-800 text-gray-400 px-2 py-0.5 rounded border border-gray-700">${track.label}</span>` : ''}
-            </div>
-          </div>
-          <div class="p-3.5 pt-0 border-t border-gray-800/50 mt-1 flex justify-between items-center text-[11px] text-gray-500">
-            <span>Toegevoegd:</span>
-            <span class="text-gray-300 font-medium">${dStr}</span>
-          </div>
-        `;
-        grid.appendChild(card);
-      });
-
-      if (displayedCount < currentFilteredList.length) {
-        if (loadMore) loadMore.classList.remove('hidden');
-      } else {
-        if (loadMore) loadMore.classList.add('hidden');
-      }
-    }
-
-    function loadMoreTracks() {
-      displayedCount += 24;
-      renderTrackBatch();
-    }
-
-    // EVENT LISTENERS & START
-    document.getElementById('search-input')?.addEventListener('input', filterAndRenderTracks);
-    document.getElementById('sort-select')?.addEventListener('change', filterAndRenderTracks);
-
-    loadReleasesJson();
-    loadEventsMultiSource();
-    loadAllTracksFromJson();
-  </script>
+    </script>
 </body>
 </html>
