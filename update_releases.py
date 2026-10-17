@@ -2,6 +2,7 @@ import os
 import json
 import requests
 import sys
+from datetime import datetime, timedelta
 
 # Sleutels ophalen uit GitHub Secrets
 client_id = os.environ.get('SPOTIFY_CLIENT_ID', '').strip('() ')
@@ -26,7 +27,7 @@ def fetch_pure_trance_releases():
 
     headers = {'Authorization': f'Bearer {token}'}
 
-    # Zoekopdrachten direct per officieel label (omzeilt de 403 afspeellijst-blokkade)
+    # Zoekopdrachten per officieel trance-label
     queries = [
         {"q": 'label:"Coldharbour Recordings"', "source": "beatport", "tag": "Coldharbour"},
         {"q": 'label:"Subculture"', "source": "fsoe", "tag": "Subculture"},
@@ -38,6 +39,9 @@ def fetch_pure_trance_releases():
         {"q": 'label:"Anjunabeats"', "source": "anjuna", "tag": "Anjunabeats"}
     ]
 
+    # Dynamische datumfilter: uitsluitend nummers uit de afgelopen 7 dagen
+    cutoff_date = (datetime.now() - timedelta(days=7)).strftime('%Y-%m-%d')
+
     all_tracks = []
     seen = set()
 
@@ -45,7 +49,7 @@ def fetch_pure_trance_releases():
         params = {
             'q': item_q["q"],
             'type': 'track',
-            'limit': 5
+            'limit': 20  # Ruim opvragen om alle platen van de afgelopen week mee te pakken
         }
         res = requests.get('https://api.spotify.com/v1/search', headers=headers, params=params)
         
@@ -64,13 +68,19 @@ def fetch_pure_trance_releases():
             key = f"{track_name.lower()}_{artists.lower()}"
             if key in seen:
                 continue
-            seen.add(key)
 
             album = track.get('album', {})
+            release_date = album.get('release_date', '')
+
+            # Filter op versheid: streng negeren wat ouder is dan 7 dagen
+            if release_date and release_date < cutoff_date:
+                continue
+
+            seen.add(key)
+
             images = album.get('images', [])
             img_url = images[0]['url'] if images else 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400'
             album_name = album.get('name', 'Trance Release')
-            release_date = album.get('release_date', '')
 
             all_tracks.append({
                 "title": track_name,
@@ -82,14 +92,15 @@ def fetch_pure_trance_releases():
                 "release_date": release_date
             })
 
-    # Sorteer alle nummers op meest recente releasedatum (nieuwste eerst)
+    # Sorteer op meest recente releasedatum (nieuwste eerst)
     all_tracks.sort(key=lambda x: x.get('release_date', ''), reverse=True)
 
-    final_releases = all_tracks[:12]
+    # Bewaar een royale pool (tot 80 nummers van de afgelopen 7 dagen)
+    final_releases = all_tracks[:80]
     for idx, item in enumerate(final_releases):
         item["id"] = f"rel_{idx+1}"
 
-    print(f"✅ Succesvol {len(final_releases)} top trance-tracks verwerkt!")
+    print(f"✅ Succesvol {len(final_releases)} verse trance-tracks (afgelopen 7 dagen) opgeslagen!")
     return final_releases
 
 if __name__ == '__main__':
@@ -97,7 +108,7 @@ if __name__ == '__main__':
     if new_releases:
         with open('releases.json', 'w', encoding='utf-8') as f:
             json.dump(new_releases, f, ensure_ascii=False, indent=2)
-        print("🎉 releases.json is succesvol bijgewerkt!")
+        print("🎉 releases.json is succesvol bijgewerkt met 7-dagen releases!")
     else:
         print("❌ Geen nummers gevonden.")
         sys.exit(1)
