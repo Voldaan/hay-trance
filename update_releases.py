@@ -19,45 +19,44 @@ def get_spotify_token():
     print(f"❌ SPOTIFY AUTH FOUT [{auth_response.status_code}]: {auth_response.text}")
     return None
 
-def fetch_releases_from_curated_playlists():
+def fetch_pure_trance_releases():
     token = get_spotify_token()
     if not token:
         sys.exit(1)
 
     headers = {'Authorization': f'Bearer {token}'}
 
-    # Alle 8 unieke top-playlists van Spotify
-    playlists = [
-        {"id": "4tFwX1cGjtcEEaw553hUiK", "source": "beatport", "tag": "Coldharbour"},
-        {"id": "1y7pBdORcCwCO1yTs6rOM7", "source": "fsoe", "tag": "Subculture"},
-        {"id": "1RX2XgpOYPAHPptQZZq5aF", "source": "armada", "tag": "ASOT 2026"},
-        {"id": "6z1ttXViMg0vODCypY6Snh", "source": "blackhole", "tag": "Black Hole"},
-        {"id": "4xuIYKnKDLb3bzUIM0uNnM", "source": "fsoe", "tag": "FSOE"},
-        {"id": "2iTMQ36cvjhxgIYGv7uld5", "source": "armada", "tag": "Armada Music"},
-        {"id": "2BfXSgtwWVSoHwVhaiv8B1", "source": "blackhole", "tag": "ITWT"},
-        {"id": "4qKRxGCBWBKQjXpB2TXhP2", "source": "anjuna", "tag": "Anjunabeats"}
+    # Zoekopdrachten direct per officieel label (omzeilt de 403 afspeellijst-blokkade)
+    queries = [
+        {"q": 'label:"Coldharbour Recordings"', "source": "beatport", "tag": "Coldharbour"},
+        {"q": 'label:"Subculture"', "source": "fsoe", "tag": "Subculture"},
+        {"q": 'label:"A State Of Trance"', "source": "armada", "tag": "ASOT"},
+        {"q": 'label:"Black Hole Recordings"', "source": "blackhole", "tag": "Black Hole"},
+        {"q": 'label:"Future Sound Of Egypt"', "source": "fsoe", "tag": "FSOE"},
+        {"q": 'label:"Armada Music"', "source": "armada", "tag": "Armada"},
+        {"q": 'label:"In Trance We Trust"', "source": "blackhole", "tag": "ITWT"},
+        {"q": 'label:"Anjunabeats"', "source": "anjuna", "tag": "Anjunabeats"}
     ]
 
     all_tracks = []
     seen = set()
 
-    for pl in playlists:
-        pid = pl["id"]
-        url = f'https://api.spotify.com/v1/playlists/{pid}/tracks?limit=15'
+    for item_q in queries:
+        params = {
+            'q': item_q["q"],
+            'type': 'track',
+            'limit': 5
+        }
+        res = requests.get('https://api.spotify.com/v1/search', headers=headers, params=params)
         
-        res = requests.get(url, headers=headers)
         if res.status_code != 200:
-            print(f"⚠️ Playlist ID {pid} kon niet opgevraagd worden (Status {res.status_code})")
+            print(f"⚠️ Zoekopdracht {item_q['q']} mislukt (Status {res.status_code})")
             continue
 
         data = res.json()
-        items = data.get('items', [])
+        tracks = data.get('tracks', {}).get('items', [])
 
-        for item in items:
-            track = item.get('track')
-            if not track:
-                continue
-
+        for track in tracks:
             track_name = track.get('name', '')
             artists_list = [a['name'] for a in track.get('artists', [])]
             artists = ", ".join(artists_list)
@@ -77,29 +76,28 @@ def fetch_releases_from_curated_playlists():
                 "title": track_name,
                 "artist": artists,
                 "label": album_name,
-                "source": pl["source"],
-                "tag": pl["tag"],
+                "source": item_q["source"],
+                "tag": item_q["tag"],
                 "image": img_url,
                 "release_date": release_date
             })
 
-    # Sorteer op meest recente releasedatum (nieuwste eerst)
+    # Sorteer alle nummers op meest recente releasedatum (nieuwste eerst)
     all_tracks.sort(key=lambda x: x.get('release_date', ''), reverse=True)
 
-    # Pak de top 12 allernieuwste en beste nummers
     final_releases = all_tracks[:12]
     for idx, item in enumerate(final_releases):
         item["id"] = f"rel_{idx+1}"
 
-    print(f"✅ Succesvol {len(final_releases)} geselecteerde trance-tracks verwerkt uit alle 8 afspeellijsten!")
+    print(f"✅ Succesvol {len(final_releases)} top trance-tracks verwerkt!")
     return final_releases
 
 if __name__ == '__main__':
-    new_releases = fetch_releases_from_curated_playlists()
+    new_releases = fetch_pure_trance_releases()
     if new_releases:
         with open('releases.json', 'w', encoding='utf-8') as f:
             json.dump(new_releases, f, ensure_ascii=False, indent=2)
-        print("🎉 releases.json is succesvol bijgewerkt met jouw 8 gekozen afspeellijsten!")
+        print("🎉 releases.json is succesvol bijgewerkt!")
     else:
         print("❌ Geen nummers gevonden.")
         sys.exit(1)
