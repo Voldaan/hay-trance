@@ -95,6 +95,53 @@
     </div>
 
 
+    <!-- 🎙️ WEEKLY LIVESETS & PODCAST RADAR -->
+    <section class="bg-gray-900/80 border border-cyan-500/30 rounded-2xl p-5 shadow-2xl space-y-5">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-gray-800 pb-3 gap-3">
+        <div>
+          <h2 class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-fuchsia-400 to-blue-400 flex items-center gap-2">
+            <span>🎙️</span> WEEKLY LIVESETS & PODCAST RADAR
+          </h2>
+          <p class="text-xs text-gray-400 mt-0.5">Beluister wekelijks de nieuwste episodes van de bekendste trance radiowaves.</p>
+        </div>
+        <span class="text-[11px] bg-cyan-950 text-cyan-400 border border-cyan-800/60 px-3 py-1.5 rounded-full font-bold">
+          Weekly Shows
+        </span>
+      </div>
+
+      <!-- Knoppen om te schakelen tussen de podcasts -->
+      <div class="flex flex-wrap gap-2 bg-gray-950 p-2 rounded-xl border border-gray-800">
+        <button onclick="switchPodcast('asot', this)" class="podcast-tab-btn text-xs bg-cyan-500 text-black font-black px-3 py-1.5 rounded-lg transition shadow-md">
+          📻 A State Of Trance (ASOT)
+        </button>
+        <button onclick="switchPodcast('fsoe', this)" class="podcast-tab-btn text-xs bg-gray-800 text-gray-300 hover:bg-gray-700 px-3 py-1.5 rounded-lg transition">
+          🐫 Future Sound Of Egypt (FSOE)
+        </button>
+        <button onclick="switchPodcast('abgt', this)" class="podcast-tab-btn text-xs bg-gray-800 text-gray-300 hover:bg-gray-700 px-3 py-1.5 rounded-lg transition">
+          🎹 Group Therapy (ABGT)
+        </button>
+        <button onclick="switchPodcast('puretrance', this)" class="podcast-tab-btn text-xs bg-gray-800 text-gray-300 hover:bg-gray-700 px-3 py-1.5 rounded-lg transition">
+          ☀️ Pure Trance Radio
+        </button>
+      </div>
+
+      <!-- Player Frame -->
+      <div class="rounded-xl overflow-hidden border border-gray-800 shadow-inner bg-black">
+        <iframe 
+          id="podcast-iframe"
+          src="https://open.spotify.com/embed/show/01O3A83a3mG23c3bS8n0R3?utm_source=generator&theme=0" 
+          width="100%" 
+          height="180" 
+          frameborder="0" 
+          allowfullscreen="" 
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+          loading="lazy"
+          class="w-full">
+        </iframe>
+      </div>
+    </section>
+
+
     <!-- 🚀 TRANCE DISCOVERY HUB (RELEASE FRIDAY + BANGER VAN DE WEEK) -->
     <section class="bg-gray-900/80 border border-cyan-500/30 rounded-2xl p-5 shadow-2xl space-y-5">
       
@@ -289,6 +336,26 @@
     let HAY_TRANCE_TRACKS = [];
     let currentFilteredList = [];
     let displayedCount = 24;
+
+    // PODCAST TAB SCHAKELING
+    const PODCAST_URLS = {
+      asot: 'https://open.spotify.com/embed/show/01O3A83a3mG23c3bS8n0R3?utm_source=generator&theme=0',
+      fsoe: 'https://open.spotify.com/embed/show/3X9v9M2W2E50J2lQ9K1I8h?utm_source=generator&theme=0',
+      abgt: 'https://open.spotify.com/embed/show/1e3sS983e2N99l33qY2P9A?utm_source=generator&theme=0',
+      puretrance: 'https://open.spotify.com/embed/show/2A855I3Yx3A2W3k90X3p8Q?utm_source=generator&theme=0'
+    };
+
+    function switchPodcast(key, btn) {
+      document.querySelectorAll('.podcast-tab-btn').forEach(b => {
+        b.className = 'podcast-tab-btn text-xs bg-gray-800 text-gray-300 hover:bg-gray-700 px-3 py-1.5 rounded-lg transition';
+      });
+      btn.className = 'podcast-tab-btn text-xs bg-cyan-500 text-black font-black px-3 py-1.5 rounded-lg transition shadow-md';
+      
+      const iframe = document.getElementById('podcast-iframe');
+      if (iframe && PODCAST_URLS[key]) {
+        iframe.src = PODCAST_URLS[key];
+      }
+    }
 
     function extractTrackFromRaw(raw, idx) {
       if (!raw) return null;
