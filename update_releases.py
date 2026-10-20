@@ -6,7 +6,7 @@ import requests
 CLIENT_ID = os.environ.get("SPOTIFY_CLIENT_ID")
 CLIENT_SECRET = os.environ.get("SPOTIFY_CLIENT_SECRET")
 
-# De 8 Spotify afspeellijsten met duidelijke labels en bronnen
+# De 8 Spotify afspeellijsten
 PLAYLISTS = [
     {"id": "4tFwX1cGjtcEEaw553hUiK", "label": "Coldharbour", "source": "coldharbour"},
     {"id": "1y7pBdORcCwCO1yTs6rOM7", "label": "Subculture", "source": "fsoe"},
@@ -38,17 +38,15 @@ def get_spotify_token():
         if res.status_code == 200:
             return res.json().get('access_token')
     except Exception as e:
-        print(f"⚠️ Token ophalen mislukt: {e}")
+        print(f"⚠️ Token error: {e}")
     return None
 
 def fetch_via_api(token, playlist_id, source, label):
-    # market=NL voorkomt de 403-fout bij Spotify Client Credentials
     url = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks?market=NL&limit=15"
     headers = {**HEADERS, "Authorization": f"Bearer {token}"}
     try:
         res = requests.get(url, headers=headers, timeout=10)
         if res.status_code != 200:
-            print(f"⚠️ API status {res.status_code} voor {label}")
             return None
 
         tracks_data = []
@@ -72,10 +70,10 @@ def fetch_via_api(token, playlist_id, source, label):
                 })
         return tracks_data
     except Exception as e:
-        print(f"⚠️ API fout bij {label}: {e}")
+        print(f"⚠️ API fout: {e}")
         return None
 
-def fetch_via_embed_scrape(playlist_id, source, label):
+def fetch_via_embed(playlist_id, source, label):
     embed_url = f"https://open.spotify.com/embed/playlist/{playlist_id}"
     try:
         res = requests.get(embed_url, headers=HEADERS, timeout=10)
@@ -84,7 +82,7 @@ def fetch_via_embed_scrape(playlist_id, source, label):
 
         html = res.text
         tracks_data = []
-        all_imgs = re.findall(r'https://i\.scdn\.co/image/[a-f0-9]{32,40}', html)
+        imgs = re.findall(r'https://i\.scdn\.co/image/[a-f0-9]{32,40}', html)
 
         match = re.search(r'<script id="(?:__NEXT_DATA__|session|initial-state)" type="application/json">(.*?)</script>', html)
         if match:
@@ -97,11 +95,11 @@ def fetch_via_embed_scrape(playlist_id, source, label):
                 artist = item.get('subtitle', '').strip()
                 
                 item_str = json.dumps(item)
-                img_matches = re.findall(r'https://i\.scdn\.co/image/[a-f0-9]{32,40}', item_str)
-                if img_matches:
-                    img_url = img_matches[0]
-                elif all_imgs:
-                    img_url = all_imgs[idx % len(all_imgs)]
+                item_imgs = re.findall(r'https://i\.scdn\.co/image/[a-f0-9]{32,40}', item_str)
+                if item_imgs:
+                    img_url = item_imgs[0]
+                elif imgs:
+                    img_url = imgs[idx % len(imgs)]
                 else:
                     img_url = "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400"
 
@@ -117,7 +115,7 @@ def fetch_via_embed_scrape(playlist_id, source, label):
                     })
         return tracks_data
     except Exception as e:
-        print(f"⚠️ Embed scrape fout bij {label}: {e}")
+        print(f"⚠️ Embed error: {e}")
         return []
 
 def main():
@@ -126,22 +124,17 @@ def main():
     seen_keys = set()
 
     for pl in PLAYLISTS:
-        tracks = None
-        if token:
-            tracks = fetch_via_api(token, pl['id'], pl['source'], pl['label'])
-        
+        tracks = fetch_via_api(token, pl['id'], pl['source'], pl['label']) if token else None
         if not tracks:
-            tracks = fetch_via_embed_scrape(pl['id'], pl['source'], pl['label'])
+            tracks = fetch_via_embed(pl['id'], pl['source'], pl['label'])
 
         if tracks:
-            print(f"✅ {len(tracks)} nummers opgehaald voor {pl['label']}")
+            print(f"✅ {len(tracks)} nummers geladen voor {pl['label']}")
             for t in tracks:
                 key = f"{t['title'].lower()}_{t['artist'].lower()}"
                 if key not in seen_keys:
                     seen_keys.add(key)
                     all_releases.append(t)
-        else:
-            print(f"⚠️ Geen nummers gevonden voor {pl['label']}")
 
     if not all_releases:
         print("❌ Geen nummers opgehaald.")
