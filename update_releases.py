@@ -1,114 +1,94 @@
 import os
 import json
 import requests
-import sys
-from datetime import datetime, timedelta
 
-# Sleutels ophalen uit GitHub Secrets
-client_id = os.environ.get('SPOTIFY_CLIENT_ID', '').strip('() ')
-client_secret = os.environ.get('SPOTIFY_CLIENT_SECRET', '').strip('() ')
+CLIENT_ID = os.environ.get("SPOTIFY_CLIENT_ID")
+CLIENT_SECRET = os.environ.get("SPOTIFY_CLIENT_SECRET")
+
+PLAYLISTS = [
+    {"id": "4tFwX1cGjtcEEaw553hUiK", "label": "Coldharbour", "source": "beatport"},
+    {"id": "1y7pBdORcCwCO1yTs6rOM7", "label": "Subculture", "source": "fsoe"},
+    {"id": "1RX2XgpOYPAHPptQZZq5aF", "label": "ASOT / Armada", "source": "armada"},
+    {"id": "6z1ttXViMg0vODCypY6Snh", "label": "Black Hole", "source": "blackhole"},
+    {"id": "4xuIYKnKDLb3bzUIM0uNnM", "label": "FSOE", "source": "fsoe"},
+    {"id": "2iTMQ36cvjhxgIYGv7uld5", "label": "Armada Music", "source": "armada"},
+    {"id": "2BfXSgtwWVSoHwVhaiv8B1", "label": "In Trance We Trust", "source": "blackhole"},
+    {"id": "4qKRxGCBWBKQjXpB2TXhP2", "label": "Anjunabeats", "source": "anjuna"}
+]
 
 def get_spotify_token():
-    auth_response = requests.post('https://accounts.spotify.com/api/token', data={
-        'grant_type': 'client_credentials',
-        'client_id': client_id,
-        'client_secret': client_secret,
-    })
-    if auth_response.status_code == 200:
-        return auth_response.json().get('access_token')
-    
-    print(f"❌ SPOTIFY AUTH FOUT [{auth_response.status_code}]: {auth_response.text}")
-    return None
+    if not CLIENT_ID or not CLIENT_SECRET:
+        print("❌ FOUT: SPOTIFY_CLIENT_ID of SPOTIFY_CLIENT_SECRET is niet ingesteld in GitHub Secrets!")
+        return None
 
-def fetch_pure_trance_releases():
+    auth_url = "https://accounts.spotify.com/api/token"
+    response = requests.post(
+        auth_url,
+        data={'grant_type': 'client_credentials'},
+        auth=(CLIENT_ID, CLIENT_SECRET)
+    )
+    
+    if response.status_code != 200:
+        print(f"❌ FOUT bij ophalen Spotify token (Status {response.status_code}): {response.text}")
+        return None
+
+    return response.json().get('access_token')
+
+def fetch_playlist_tracks(token, playlist_id, source, label):
+    url = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks?limit=12"
+    headers = {"Authorization": f"Bearer {token}"}
+    res = requests.get(url, headers=headers)
+    
+    if res.status_code != 200:
+        print(f"⚠️ Playlist ID {playlist_id} kon niet opgevraagd worden (Status {res.status_code})")
+        return []
+
+    tracks_data = []
+    items = res.json().get('items', [])
+    for idx, item in enumerate(items):
+        track = item.get('track')
+        if track and track.get('name'):
+            title = track['name']
+            artists = ", ".join([a['name'] for a in track['artists']])
+            images = track.get('album', {}).get('images', [])
+            img_url = images[0]['url'] if images else "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400"
+            
+            tracks_data.append({
+                "id": f"{playlist_id}_{idx}",
+                "title": title,
+                "artist": artists,
+                "label": label,
+                "image": img_url,
+                "source": source,
+                "tag": "Release"
+            })
+    return tracks_data
+
+def main():
     token = get_spotify_token()
     if not token:
-        sys.exit(1)
+        print("❌ Kan de workflow niet voortzetten zonder een geldig Spotify Token.")
+        exit(1)
 
-    headers = {'Authorization': f'Bearer {token}'}
+    all_releases = []
+    seen_keys = set()
 
-    # Zoekopdrachten per officieel trance-label
-    queries = [
-        {"q": 'label:"Coldharbour Recordings"', "source": "beatport", "tag": "Coldharbour"},
-        {"q": 'label:"Subculture"', "source": "fsoe", "tag": "Subculture"},
-        {"q": 'label:"A State Of Trance"', "source": "armada", "tag": "ASOT"},
-        {"q": 'label:"Black Hole Recordings"', "source": "blackhole", "tag": "Black Hole"},
-        {"q": 'label:"Future Sound Of Egypt"', "source": "fsoe", "tag": "FSOE"},
-        {"q": 'label:"Armada Music"', "source": "armada", "tag": "Armada"},
-        {"q": 'label:"In Trance We Trust"', "source": "blackhole", "tag": "ITWT"},
-        {"q": 'label:"Anjunabeats"', "source": "anjuna", "tag": "Anjunabeats"}
-    ]
+    for pl in PLAYLISTS:
+        tracks = fetch_playlist_tracks(token, pl['id'], pl['source'], pl['label'])
+        for t in tracks:
+            key = f"{t['title'].lower()}_{t['artist'].lower()}"
+            if key not in seen_keys:
+                seen_keys.add(key)
+                all_releases.append(t)
 
-    # Dynamische datumfilter: uitsluitend nummers uit de afgelopen 7 dagen
-    cutoff_date = (datetime.now() - timedelta(days=7)).strftime('%Y-%m-%d')
-
-    all_tracks = []
-    seen = set()
-
-    for item_q in queries:
-        params = {
-            'q': item_q["q"],
-            'type': 'track',
-            'limit': 20  # Ruim opvragen om alle platen van de afgelopen week mee te pakken
-        }
-        res = requests.get('https://api.spotify.com/v1/search', headers=headers, params=params)
-        
-        if res.status_code != 200:
-            print(f"⚠️ Zoekopdracht {item_q['q']} mislukt (Status {res.status_code})")
-            continue
-
-        data = res.json()
-        tracks = data.get('tracks', {}).get('items', [])
-
-        for track in tracks:
-            track_name = track.get('name', '')
-            artists_list = [a['name'] for a in track.get('artists', [])]
-            artists = ", ".join(artists_list)
-            
-            key = f"{track_name.lower()}_{artists.lower()}"
-            if key in seen:
-                continue
-
-            album = track.get('album', {})
-            release_date = album.get('release_date', '')
-
-            # Filter op versheid: streng negeren wat ouder is dan 7 dagen
-            if release_date and release_date < cutoff_date:
-                continue
-
-            seen.add(key)
-
-            images = album.get('images', [])
-            img_url = images[0]['url'] if images else 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400'
-            album_name = album.get('name', 'Trance Release')
-
-            all_tracks.append({
-                "title": track_name,
-                "artist": artists,
-                "label": album_name,
-                "source": item_q["source"],
-                "tag": item_q["tag"],
-                "image": img_url,
-                "release_date": release_date
-            })
-
-    # Sorteer op meest recente releasedatum (nieuwste eerst)
-    all_tracks.sort(key=lambda x: x.get('release_date', ''), reverse=True)
-
-    # Bewaar een royale pool (tot 80 nummers van de afgelopen 7 dagen)
-    final_releases = all_tracks[:80]
-    for idx, item in enumerate(final_releases):
-        item["id"] = f"rel_{idx+1}"
-
-    print(f"✅ Succesvol {len(final_releases)} verse trance-tracks (afgelopen 7 dagen) opgeslagen!")
-    return final_releases
-
-if __name__ == '__main__':
-    new_releases = fetch_pure_trance_releases()
-    if new_releases:
-        with open('releases.json', 'w', encoding='utf-8') as f:
-            json.dump(new_releases, f, ensure_ascii=False, indent=2)
-        print("🎉 releases.json is succesvol bijgewerkt met 7-dagen releases!")
-    else:
+    if not all_releases:
         print("❌ Geen nummers gevonden.")
-        sys.exit(1)
+        exit(1)
+
+    with open("releases.json", "w", encoding="utf-8") as f:
+        json.dump(all_releases, f, ensure_ascii=False, indent=2)
+
+    print(f"✅ Succesvol {len(all_releases)} geselecteerde trance-tracks verwerkt uit alle 8 afspeellijsten!")
+
+if __name__ == "__main__":
+    main()
