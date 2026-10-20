@@ -554,7 +554,8 @@
         return;
       }
 
-      if (doShuffle) {
+      // HUSSEL ALTIJD BIJ 'ALL' OF ALS OP DE VERVERSKNOP IS GEKLIKT!
+      if (sourceFilter === 'all' || doShuffle) {
         list = [...list].sort(() => 0.5 - Math.random());
       }
 
