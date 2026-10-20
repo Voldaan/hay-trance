@@ -125,7 +125,7 @@
         </button>
       </div>
 
-      <!-- Player Frame (Met geverifieerde Spotify Playlist Embeds) -->
+      <!-- Player Frame -->
       <div class="rounded-xl overflow-hidden border border-gray-800 shadow-inner bg-black">
         <iframe 
           id="podcast-iframe"
@@ -559,7 +559,9 @@
         list = [...list].sort(() => 0.5 - Math.random());
       }
 
-      list.forEach(rel => {
+      const displayBatch = list.slice(0, 10);
+
+      displayBatch.forEach(rel => {
         const query = encodeURIComponent(`${rel.artist} ${rel.title}`);
         const spotifySearchUrl = `https://open.spotify.com/search/${query}`;
 
