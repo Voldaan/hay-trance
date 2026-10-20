@@ -23,6 +23,19 @@ HEADERS = {
     'Accept-Language': 'nl-NL,nl;q=0.9,en-US;q=0.8,en;q=0.7'
 }
 
+# Zoekpatroon dat álle Spotify afbeeldingsdomeinen ondersteunt
+IMAGE_REGEX = r'https://(?:i\.scdn\.co|image-cdn-[a-zA-Z0-9]+\.spotifycdn\.com|mosaic\.scdn\.co)/[a-zA-Z0-9/_-]+'
+
+def extract_spotify_image(data_obj, fallback=""):
+    """Zoekt naar een Spotify afbeeldings-URL binnen een nummer-object."""
+    if not data_obj:
+        return fallback
+    text = json.dumps(data_obj) if isinstance(data_obj, (dict, list)) else str(data_obj)
+    matches = re.findall(IMAGE_REGEX, text)
+    if matches:
+        return matches[0]
+    return fallback
+
 def get_spotify_token():
     if not CLIENT_ID or not CLIENT_SECRET:
         return None
@@ -70,7 +83,7 @@ def fetch_via_api(token, playlist_id, source, label):
                 })
         return tracks_data
     except Exception as e:
-        print(f"⚠️ API fout: {e}")
+        print(f"⚠️ API error: {e}")
         return None
 
 def fetch_via_embed(playlist_id, source, label):
@@ -82,7 +95,8 @@ def fetch_via_embed(playlist_id, source, label):
 
         html = res.text
         tracks_data = []
-        imgs = re.findall(r'https://i\.scdn\.co/image/[a-f0-9]{32,40}', html)
+        all_imgs = re.findall(IMAGE_REGEX, html)
+        fallback_img = all_imgs[0] if all_imgs else "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400"
 
         match = re.search(r'<script id="(?:__NEXT_DATA__|session|initial-state)" type="application/json">(.*?)</script>', html)
         if match:
@@ -94,14 +108,7 @@ def fetch_via_embed(playlist_id, source, label):
                 title = item.get('title', '').strip()
                 artist = item.get('subtitle', '').strip()
                 
-                item_str = json.dumps(item)
-                item_imgs = re.findall(r'https://i\.scdn\.co/image/[a-f0-9]{32,40}', item_str)
-                if item_imgs:
-                    img_url = item_imgs[0]
-                elif imgs:
-                    img_url = imgs[idx % len(imgs)]
-                else:
-                    img_url = "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400"
+                img_url = extract_spotify_image(item, fallback_img)
 
                 if title:
                     tracks_data.append({
