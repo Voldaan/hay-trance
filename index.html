@@ -6,47 +6,9 @@
   <title>Hay Trance - High in Trance</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* THEMA VARIABELEN */
-    :root {
-      --primary: #06b6d4;
-      --primary-hover: #22d3ee;
-      --primary-dark: #083344;
-      --glow: rgba(6, 182, 212, 0.4);
-    }
-
-    [data-theme="anjuna"] {
-      --primary: #3b82f6;
-      --primary-hover: #60a5fa;
-      --primary-dark: #172554;
-      --glow: rgba(59, 130, 246, 0.4);
-    }
-
-    [data-theme="gold"] {
-      --primary: #f59e0b;
-      --primary-hover: #fbbf24;
-      --primary-dark: #451a03;
-      --glow: rgba(245, 158, 11, 0.4);
-    }
-
-    [data-theme="matrix"] {
-      --primary: #10b981;
-      --primary-hover: #34d399;
-      --primary-dark: #022c22;
-      --glow: rgba(16, 185, 129, 0.4);
-    }
-
     .neon-border {
-      box-shadow: 0 0 14px var(--glow);
-      border-color: var(--primary) !important;
-    }
-    .theme-text {
-      color: var(--primary-hover) !important;
-    }
-    .theme-bg-dark {
-      background-color: var(--primary-dark) !important;
-    }
-    .theme-border {
-      border-color: var(--primary) !important;
+      box-shadow: 0 0 14px rgba(6, 182, 212, 0.4);
+      border-color: #06b6d4 !important;
     }
   </style>
 </head>
@@ -66,27 +28,11 @@
       </div>
     </div>
 
-    <!-- RECHTER BEDIENING -->
-    <div class="flex flex-wrap items-center gap-2.5">
-      <button onclick="openRouletteModal()" class="text-xs font-black px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-500 text-white transition hover:scale-105 shadow-lg flex items-center gap-1.5 animate-pulse">
-        🎰 Catalogus Roulette
+    <!-- 🎰 TRANCE ROULETTE KNOP -->
+    <div>
+      <button onclick="openRouletteModal()" class="text-xs font-black px-4 py-2 rounded-xl bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-500 text-white transition hover:scale-105 shadow-lg flex items-center gap-2 animate-pulse">
+        🎰 Trance Roulette
       </button>
-
-      <div class="flex items-center gap-1 bg-gray-950/80 p-1.5 rounded-xl border border-gray-800">
-        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider px-1.5 hidden sm:inline">Theme:</span>
-        <button onclick="setTheme('cyberpunk')" data-theme-id="cyberpunk" class="theme-btn text-[10px] font-black px-2 py-1 rounded-lg bg-gradient-to-r from-cyan-500 to-fuchsia-500 text-black transition hover:opacity-90">
-          🌌 Cyber
-        </button>
-        <button onclick="setTheme('anjuna')" data-theme-id="anjuna" class="theme-btn text-[10px] font-black px-2 py-1 rounded-lg bg-gradient-to-r from-blue-500 to-sky-400 text-black transition hover:opacity-90">
-          🌊 Anjuna
-        </button>
-        <button onclick="setTheme('gold')" data-theme-id="gold" class="theme-btn text-[10px] font-black px-2 py-1 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 text-black transition hover:opacity-90">
-          👑 Gold
-        </button>
-        <button onclick="setTheme('matrix')" data-theme-id="matrix" class="theme-btn text-[10px] font-black px-2 py-1 rounded-lg bg-gradient-to-r from-emerald-500 to-lime-500 text-black transition hover:opacity-90">
-          🟢 Matrix
-        </button>
-      </div>
     </div>
   </header>
 
@@ -127,7 +73,7 @@
               </h2>
               <p class="text-gray-400 text-xs mt-0.5">Aankomende Trance feesten, Poppodia & Festivals</p>
             </div>
-            <span id="events-status" class="text-[10px] theme-bg-dark theme-text border theme-border rounded-full px-2.5 py-0.5 font-semibold whitespace-nowrap self-start sm:self-auto">
+            <span id="events-status" class="text-[10px] bg-cyan-950 text-cyan-300 border border-cyan-800 rounded-full px-2.5 py-0.5 font-semibold whitespace-nowrap self-start sm:self-auto">
               Laden...
             </span>
           </div>
@@ -159,7 +105,7 @@
           </h2>
           <p class="text-xs text-gray-400 mt-0.5">Beluister wekelijks de nieuwste episodes van de bekendste trance radiowaves.</p>
         </div>
-        <span class="text-[11px] theme-bg-dark theme-text border theme-border px-3 py-1.5 rounded-full font-bold">
+        <span class="text-[11px] bg-cyan-950 text-cyan-300 border border-cyan-800 px-3 py-1.5 rounded-full font-bold">
           Weekly Shows
         </span>
       </div>
@@ -209,13 +155,13 @@
         </div>
 
         <div class="flex flex-wrap items-center gap-2">
-          <button onclick="openRouletteModal()" class="text-xs font-bold bg-gray-800 hover:bg-gray-700 theme-text border border-gray-700 px-3.5 py-1.5 rounded-full transition shadow-md flex items-center gap-1.5">
-            🎰 Catalogus Roulette
+          <button onclick="openRouletteModal()" class="text-xs font-bold bg-gray-800 hover:bg-gray-700 text-cyan-300 border border-gray-700 px-3.5 py-1.5 rounded-full transition shadow-md flex items-center gap-1.5">
+            🎰 Trance Roulette
           </button>
           <button onclick="shuffleDiscoveryReleases()" class="text-xs font-bold bg-gradient-to-r from-cyan-500 to-fuchsia-500 text-black px-3.5 py-1.5 rounded-full transition shadow-md flex items-center gap-1.5 active:scale-95">
             🔄 Ontdek andere nummers van deze week
           </button>
-          <span id="current-week-tag" class="text-[11px] theme-bg-dark theme-text border theme-border px-3 py-1.5 rounded-full font-bold">
+          <span id="current-week-tag" class="text-[11px] bg-cyan-950 text-cyan-300 border border-cyan-800 px-3 py-1.5 rounded-full font-bold">
             Release Friday • Week
           </span>
         </div>
@@ -248,10 +194,10 @@
         <div class="bg-gray-950 border border-gray-800 rounded-xl p-4 flex flex-col justify-between space-y-3 shadow-inner">
           <div>
             <div class="flex justify-between items-center mb-1">
-              <h3 class="text-sm font-black theme-text uppercase tracking-wider flex items-center gap-1.5">
+              <h3 class="text-sm font-black text-cyan-300 uppercase tracking-wider flex items-center gap-1.5">
                 <span>🏆</span> BANGER VAN DE WEEK
               </h3>
-              <span class="text-[9px] theme-bg-dark theme-text border theme-border px-2 py-0.5 rounded-full font-extrabold">Stem Deze Week</span>
+              <span class="text-[9px] bg-cyan-950 text-cyan-300 border border-cyan-800 px-2 py-0.5 rounded-full font-extrabold">Stem Deze Week</span>
             </div>
             <p class="text-[11px] text-gray-400">Stem op jouw favoriete nieuwe release van deze week!</p>
           </div>
@@ -275,7 +221,7 @@
           </h2>
           <p class="text-xs text-gray-400 mt-0.5">De meest recente toevoegingen uit de hoofdcatalogus</p>
         </div>
-        <span class="text-[11px] theme-bg-dark theme-text border theme-border px-3 py-1 rounded-full font-bold">
+        <span class="text-[11px] bg-cyan-950 text-cyan-300 border border-cyan-800 px-3 py-1 rounded-full font-bold">
           Top 20 Recent
         </span>
       </div>
@@ -320,7 +266,7 @@
             <option value="artist">Artiest (A-Z)</option>
           </select>
 
-          <span id="track-count" class="text-xs font-bold theme-bg-dark theme-text border theme-border rounded-xl px-3 py-2 whitespace-nowrap">
+          <span id="track-count" class="text-xs font-bold bg-cyan-950 text-cyan-300 border border-cyan-800 rounded-xl px-3 py-2 whitespace-nowrap">
             0 platen
           </span>
         </div>
@@ -331,7 +277,7 @@
 
       <!-- Knop: Laad Meer -->
       <div id="load-more-container" class="text-center pt-3 hidden">
-        <button onclick="loadMoreTracks()" class="bg-gray-900 hover:bg-gray-800 theme-text border theme-border font-extrabold px-5 py-2.5 rounded-xl transition shadow-lg text-xs">
+        <button onclick="loadMoreTracks()" class="bg-gray-900 hover:bg-gray-800 text-cyan-300 border border-cyan-800 font-extrabold px-5 py-2.5 rounded-xl transition shadow-lg text-xs">
           Laad meer platen ⤵
         </button>
       </div>
@@ -353,8 +299,8 @@
       <button onclick="closeRouletteModal()" class="absolute top-3.5 right-4 text-gray-400 hover:text-white text-lg font-bold p-1">✕</button>
 
       <div>
-        <span id="roulette-label" class="text-[10px] font-extrabold uppercase tracking-widest theme-bg-dark theme-text border theme-border px-3 py-1 rounded-full">
-          🎰 HAY TRANCE CATALOGUS ROULETTE
+        <span id="roulette-label" class="text-[10px] font-extrabold uppercase tracking-widest bg-cyan-950 text-cyan-300 border border-cyan-800 px-3 py-1 rounded-full">
+          🎰 TRANCE ROULETTE
         </span>
         <h3 class="text-xl font-black text-white mt-2">Surprise Track!</h3>
         <p class="text-xs text-gray-400">Een willekeurige parel gekozen uit onze eigen Hay Trance catalogus.</p>
@@ -367,10 +313,10 @@
 
         <div>
           <h4 id="roulette-title" class="text-base font-black text-white truncate px-2">Track Titel</h4>
-          <p id="roulette-artist" class="theme-text text-xs font-bold truncate">Artiest Naam</p>
+          <p id="roulette-artist" class="text-cyan-300 text-xs font-bold truncate">Artiest Naam</p>
         </div>
 
-        <!-- 🎧 INGEBOUWDE SPOTIFY EMBED SPELER (DIRECT OP DE PAGINA) -->
+        <!-- 🎧 INGEBOUWDE SPOTIFY SPELER (DIRECT OP DE PAGINA) -->
         <div id="roulette-player-container" class="hidden rounded-xl overflow-hidden border border-gray-800 shadow-lg mt-2">
           <iframe id="roulette-iframe" width="100%" height="80" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
         </div>
@@ -380,7 +326,7 @@
         </p>
       </div>
 
-      <button id="roulette-spin-btn" onclick="spinRoulette()" class="w-full text-xs bg-gray-800 hover:bg-gray-700 theme-text border border-gray-700 py-2.5 rounded-xl font-bold transition">
+      <button id="roulette-spin-btn" onclick="spinRoulette()" class="w-full text-xs bg-gray-800 hover:bg-gray-700 text-cyan-300 border border-gray-700 py-2.5 rounded-xl font-bold transition">
         🎰 Nog Een Keer Draaien!
       </button>
 
@@ -394,17 +340,17 @@
       <button onclick="closeModal()" class="absolute top-3.5 right-4 text-gray-400 hover:text-white text-lg font-bold p-1">✕</button>
 
       <div>
-        <span id="modal-type" class="text-[10px] font-extrabold uppercase tracking-wider theme-bg-dark theme-text border theme-border px-2 py-0.5 rounded-md">
+        <span id="modal-type" class="text-[10px] font-extrabold uppercase tracking-wider bg-cyan-950 text-cyan-300 border border-cyan-800 px-2 py-0.5 rounded-md">
           Event
         </span>
         <h3 id="modal-title" class="text-xl font-black text-white mt-1.5">Event Naam</h3>
-        <p id="modal-artist" class="theme-text font-semibold text-xs mt-0.5">Artiest / Host</p>
+        <p id="modal-artist" class="text-cyan-300 font-semibold text-xs mt-0.5">Artiest / Host</p>
       </div>
 
       <div class="bg-gray-950/90 p-3.5 rounded-xl border border-gray-800 space-y-1.5 text-xs text-gray-300">
         <p class="flex items-center gap-2">📅 <span id="modal-date" class="font-medium text-white">Datum</span></p>
         <p class="flex items-center gap-2">📍 <span id="modal-location" class="font-medium text-white">Locatie, Stad</span></p>
-        <p class="flex items-center gap-2">⏳ <span id="modal-countdown" class="font-semibold theme-text">Aftellen...</span></p>
+        <p class="flex items-center gap-2">⏳ <span id="modal-countdown" class="font-semibold text-cyan-300">Aftellen...</span></p>
       </div>
 
       <div>
@@ -425,24 +371,6 @@
 
 
   <script>
-    // THEMA SWITCHER LOGICA
-    function setTheme(themeName) {
-      document.documentElement.setAttribute('data-theme', themeName);
-      localStorage.setItem('haytrance_theme', themeName);
-
-      document.querySelectorAll('.theme-btn').forEach(btn => {
-        if (btn.getAttribute('data-theme-id') === themeName) {
-          btn.classList.add('ring-2', 'ring-white', 'scale-105');
-        } else {
-          btn.classList.remove('ring-2', 'ring-white', 'scale-105');
-        }
-      });
-    }
-
-    const savedTheme = localStorage.getItem('haytrance_theme') || 'cyberpunk';
-    setTheme(savedTheme);
-
-
     // TRANCE ROULETTE LOGICA (UITSLUITEND HAY TRANCE CATALOGUS + IN-PAGE PLAYER)
     const TRANCE_FACTS = [
       "Wist je dat Trance begin jaren '90 ontstond uit een combinatie van Techno, House en Synthpop?",
@@ -469,7 +397,6 @@
       if (modal) modal.classList.add('hidden');
       if (rouletteInterval) clearInterval(rouletteInterval);
       
-      // Stop muziek bij sluiten van modal
       const iframe = document.getElementById('roulette-iframe');
       if (iframe) iframe.src = '';
     }
@@ -477,7 +404,6 @@
     function spinRoulette() {
       if (rouletteInterval) clearInterval(rouletteInterval);
 
-      // GEBRUIK UITSLUITEND DE EIGEN CATALOGUS (tracks.json)
       const pool = HAY_TRANCE_TRACKS;
       
       const spinnerImg = document.getElementById('roulette-img');
@@ -526,12 +452,11 @@
           spinnerImg.src = img;
           spinnerTitle.innerText = title;
           spinnerArtist.innerText = artist;
-          spinnerLabel.innerText = `✨ GEKOZEN UIT CATALOGUS • ${label}`;
+          spinnerLabel.innerText = `✨ GEKOZEN PAREL • ${label}`;
 
           const randomFact = TRANCE_FACTS[Math.floor(Math.random() * TRANCE_FACTS.length)];
           factText.innerText = `💡 ${randomFact}`;
 
-          // INGEBOUWDE AFSPELER LADEN IN DE MODAL (IN-PAGE PLAYBACK)
           if (iframe && playerContainer) {
             let embedUrl = "";
             
@@ -541,7 +466,6 @@
               const trackId = winner.spotifyUrl.split('/track/')[1].split('?')[0];
               embedUrl = `https://open.spotify.com/embed/track/${trackId}?utm_source=generator&theme=0`;
             } else {
-              const query = encodeURIComponent(`${artist} ${title}`);
               embedUrl = `https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3`;
             }
 
@@ -791,7 +715,7 @@
         card.innerHTML = `
           <img src="${imgSrc}" alt="${rel.title}" class="w-16 h-16 rounded-lg object-cover flex-shrink-0" onerror="this.src='https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400'">
           <div class="overflow-hidden flex-1">
-            <span class="text-[8px] font-black uppercase theme-bg-dark theme-text px-1.5 py-0.5 rounded border theme-border">${rel.tag || rel.label || 'Release'} • ${rel.label || 'Trance'}</span>
+            <span class="text-[8px] font-black uppercase bg-cyan-950 text-cyan-300 border border-cyan-800 px-1.5 py-0.5 rounded">${rel.tag || rel.label || 'Release'} • ${rel.label || 'Trance'}</span>
             <h4 class="text-white font-bold text-xs mt-1 truncate" title="${rel.title}">${rel.title}</h4>
             <p class="text-gray-400 text-[10px] truncate">${rel.artist}</p>
 
@@ -799,7 +723,7 @@
               <a href="${spotifySearchUrl}" target="_blank" class="text-[9px] bg-cyan-500 hover:bg-cyan-400 text-black font-black px-2 py-1 rounded transition flex items-center gap-1">
                 ▶ Luister
               </a>
-              <a href="${spotifySearchUrl}" target="_blank" class="text-[9px] bg-gray-800 hover:bg-gray-700 theme-text border border-gray-700 font-bold px-2 py-1 rounded transition flex items-center gap-1">
+              <a href="${spotifySearchUrl}" target="_blank" class="text-[9px] bg-gray-800 hover:bg-gray-700 text-cyan-300 border border-gray-700 font-bold px-2 py-1 rounded transition flex items-center gap-1">
                 ➕ In Playlist
               </a>
             </div>
@@ -839,7 +763,7 @@
         const pct = totalVotes > 0 ? Math.round((item.votes / totalVotes) * 100) : 0;
 
         const btn = document.createElement('div');
-        btn.className = `p-2.5 rounded-xl border transition cursor-pointer relative overflow-hidden ${userVoted === item.id ? 'theme-bg-dark theme-border' : 'bg-gray-900 border-gray-800 hover:border-cyan-500/40'}`;
+        btn.className = `p-2.5 rounded-xl border transition cursor-pointer relative overflow-hidden ${userVoted === item.id ? 'bg-cyan-950 border-cyan-800' : 'bg-gray-900 border-gray-800 hover:border-cyan-500/40'}`;
         btn.onclick = () => castVote(item.id, storageKey, userVotedKey, votesData);
 
         btn.innerHTML = `
@@ -848,7 +772,7 @@
               <h4 class="text-white font-bold text-xs line-clamp-1">${item.title}</h4>
               <p class="text-gray-400 text-[10px] truncate">${item.artist}</p>
             </div>
-            <span class="text-xs font-black theme-text ml-2">${pct}%</span>
+            <span class="text-xs font-black text-cyan-300 ml-2">${pct}%</span>
           </div>
           <div class="absolute left-0 top-0 bottom-0 bg-white/5 transition-all duration-500" style="width: ${pct}%;"></div>
         `;
@@ -982,7 +906,7 @@
 
         card.innerHTML = `
           <div class="flex items-center gap-3">
-            <div class="${isADE ? 'bg-fuchsia-950 text-fuchsia-300 border-fuchsia-800/60' : isPoppodium ? 'bg-blue-950 text-blue-300 border-blue-800/60' : 'theme-bg-dark theme-text border theme-border'} rounded-lg p-1.5 text-center min-w-[55px]">
+            <div class="${isADE ? 'bg-fuchsia-950 text-fuchsia-300 border-fuchsia-800/60' : isPoppodium ? 'bg-blue-950 text-blue-300 border-blue-800/60' : 'bg-cyan-950 text-cyan-300 border border-cyan-800'} rounded-lg p-1.5 text-center min-w-[55px]">
               <span class="block text-[9px] font-extrabold uppercase">${parts[0] || ''}</span>
               <span class="block text-xs font-black">${parts[1] || ''} ${parts[2] || ''}</span>
               <span class="block text-[8px] opacity-75">${parts[3] || ''}</span>
@@ -996,7 +920,7 @@
               <p class="text-gray-400 text-[10px] mt-0.5">📍 ${ev.venue}${ev.city ? ', ' + ev.city : ''} • ${ev.genre}</p>
             </div>
           </div>
-          <button class="text-[11px] bg-gray-900 border border-gray-700 theme-text px-2.5 py-1 rounded-lg font-medium whitespace-nowrap">
+          <button class="text-[11px] bg-gray-900 border border-gray-700 text-cyan-300 px-2.5 py-1 rounded-lg font-medium whitespace-nowrap">
             Details 👁️
           </button>
         `;
@@ -1041,15 +965,15 @@
         card.className = 'bg-gray-900/90 border border-gray-800 rounded-xl p-2.5 flex items-center justify-between hover:border-cyan-500/50 transition';
         card.innerHTML = `
           <div class="flex items-center gap-2.5 overflow-hidden">
-            <span class="text-xs font-bold ${idx === 0 ? 'theme-text font-extrabold' : 'text-gray-500'} w-5 text-center flex-shrink-0">#${idx + 1}</span>
+            <span class="text-xs font-bold ${idx === 0 ? 'text-cyan-400 font-extrabold' : 'text-gray-500'} w-5 text-center flex-shrink-0">#${idx + 1}</span>
             <img src="${track.image}" alt="${track.title}" class="w-10 h-10 rounded-lg object-cover flex-shrink-0">
             <div class="overflow-hidden">
               <h4 class="text-white font-bold text-xs truncate" title="${track.title}">${track.title}</h4>
-              <p class="theme-text text-[10px] truncate">${track.artists}</p>
+              <p class="text-cyan-300 text-[10px] truncate">${track.artists}</p>
               <span class="text-[9px] text-gray-500">Toegevoegd: ${dStr}</span>
             </div>
           </div>
-          <a href="${track.spotifyUrl}" target="_blank" class="p-1.5 bg-gray-800 hover:bg-gray-700 theme-text rounded-lg transition text-xs font-bold flex-shrink-0 ml-1.5">
+          <a href="${track.spotifyUrl}" target="_blank" class="p-1.5 bg-gray-800 hover:bg-gray-700 text-cyan-300 rounded-lg transition text-xs font-bold flex-shrink-0 ml-1.5">
             ▶
           </a>
         `;
@@ -1140,7 +1064,7 @@
             </div>
             <div class="p-3.5">
               <h3 class="font-bold text-white text-sm truncate" title="${track.title}">${track.title}</h3>
-              <p class="theme-text text-xs truncate mt-0.5" title="${track.artists}">${track.artists}</p>
+              <p class="text-cyan-300 text-xs truncate mt-0.5" title="${track.artists}">${track.artists}</p>
               ${track.label ? `<span class="inline-block mt-2 text-[9px] bg-gray-800 text-gray-400 px-2 py-0.5 rounded border border-gray-700">${track.label}</span>` : ''}
             </div>
           </div>
