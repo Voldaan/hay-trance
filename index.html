@@ -69,7 +69,7 @@
     <!-- RECHTER BEDIENING -->
     <div class="flex flex-wrap items-center gap-2.5">
       <button onclick="openRouletteModal()" class="text-xs font-black px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-500 text-white transition hover:scale-105 shadow-lg flex items-center gap-1.5 animate-pulse">
-        🎰 Trance Roulette
+        🎰 Catalogus Roulette
       </button>
 
       <div class="flex items-center gap-1 bg-gray-950/80 p-1.5 rounded-xl border border-gray-800">
@@ -210,7 +210,7 @@
 
         <div class="flex flex-wrap items-center gap-2">
           <button onclick="openRouletteModal()" class="text-xs font-bold bg-gray-800 hover:bg-gray-700 theme-text border border-gray-700 px-3.5 py-1.5 rounded-full transition shadow-md flex items-center gap-1.5">
-            🎰 Trance Roulette
+            🎰 Catalogus Roulette
           </button>
           <button onclick="shuffleDiscoveryReleases()" class="text-xs font-bold bg-gradient-to-r from-cyan-500 to-fuchsia-500 text-black px-3.5 py-1.5 rounded-full transition shadow-md flex items-center gap-1.5 active:scale-95">
             🔄 Ontdek andere nummers van deze week
@@ -346,7 +346,7 @@
   </main>
 
 
-  <!-- 🎰 TRANCE ROULETTE MODAL -->
+  <!-- 🎰 TRANCE ROULETTE MODAL MET IN-PAGE PLAYER -->
   <div id="roulette-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
     <div class="bg-gray-900 border neon-border rounded-2xl p-6 max-w-md w-full shadow-2xl relative space-y-4 text-center">
       
@@ -354,14 +354,14 @@
 
       <div>
         <span id="roulette-label" class="text-[10px] font-extrabold uppercase tracking-widest theme-bg-dark theme-text border theme-border px-3 py-1 rounded-full">
-          🎰 TRANCE ROULETTE
+          🎰 HAY TRANCE CATALOGUS ROULETTE
         </span>
         <h3 class="text-xl font-black text-white mt-2">Surprise Track!</h3>
-        <p class="text-xs text-gray-400">Laat het rad beslissen wat jouw volgende trance-parel wordt.</p>
+        <p class="text-xs text-gray-400">Een willekeurige parel gekozen uit onze eigen Hay Trance catalogus.</p>
       </div>
 
       <div class="bg-gray-950 p-4 rounded-xl border border-gray-800 space-y-3 shadow-inner relative overflow-hidden">
-        <div class="relative w-44 h-44 mx-auto rounded-xl overflow-hidden shadow-2xl border border-gray-700">
+        <div class="relative w-40 h-40 mx-auto rounded-xl overflow-hidden shadow-2xl border border-gray-700">
           <img id="roulette-img" src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400" alt="Roulette Cover" class="w-full h-full object-cover transition-all duration-150">
         </div>
 
@@ -370,15 +370,14 @@
           <p id="roulette-artist" class="theme-text text-xs font-bold truncate">Artiest Naam</p>
         </div>
 
+        <!-- 🎧 INGEBOUWDE SPOTIFY EMBED SPELER (DIRECT OP DE PAGINA) -->
+        <div id="roulette-player-container" class="hidden rounded-xl overflow-hidden border border-gray-800 shadow-lg mt-2">
+          <iframe id="roulette-iframe" width="100%" height="80" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        </div>
+
         <p id="roulette-fact" class="text-[11px] text-gray-400 italic bg-gray-900/80 p-2.5 rounded-lg border border-gray-800">
           💡 Maak je klaar voor een verrassing...
         </p>
-      </div>
-
-      <div id="roulette-actions" class="hidden flex flex-col sm:flex-row gap-2.5">
-        <a id="roulette-spotify-btn" href="#" target="_blank" class="flex-1 text-center text-xs bg-cyan-500 hover:bg-cyan-400 text-black py-2.5 rounded-xl font-black transition shadow-md flex items-center justify-center gap-1.5">
-          ▶ Luister op Spotify
-        </a>
       </div>
 
       <button id="roulette-spin-btn" onclick="spinRoulette()" class="w-full text-xs bg-gray-800 hover:bg-gray-700 theme-text border border-gray-700 py-2.5 rounded-xl font-bold transition">
@@ -444,7 +443,7 @@
     setTheme(savedTheme);
 
 
-    // TRANCE ROULETTE LOGICA
+    // TRANCE ROULETTE LOGICA (UITSLUITEND HAY TRANCE CATALOGUS + IN-PAGE PLAYER)
     const TRANCE_FACTS = [
       "Wist je dat Trance begin jaren '90 ontstond uit een combinatie van Techno, House en Synthpop?",
       "138 BPM geldt in de trance-wereld als de 'magische snelheid' voor de meest meeslepende euphorie!",
@@ -469,28 +468,36 @@
       const modal = document.getElementById('roulette-modal');
       if (modal) modal.classList.add('hidden');
       if (rouletteInterval) clearInterval(rouletteInterval);
+      
+      // Stop muziek bij sluiten van modal
+      const iframe = document.getElementById('roulette-iframe');
+      if (iframe) iframe.src = '';
     }
 
     function spinRoulette() {
       if (rouletteInterval) clearInterval(rouletteInterval);
 
-      const pool = [...HAY_TRANCE_TRACKS, ...TRANCE_DISCOVERY_DATA];
+      // GEBRUIK UITSLUITEND DE EIGEN CATALOGUS (tracks.json)
+      const pool = HAY_TRANCE_TRACKS;
       
-      if (pool.length === 0) {
-        document.getElementById('roulette-title').innerText = "Laden...";
-        document.getElementById('roulette-artist').innerText = "Nummers worden opgehaald";
-        return;
-      }
-
       const spinnerImg = document.getElementById('roulette-img');
       const spinnerTitle = document.getElementById('roulette-title');
       const spinnerArtist = document.getElementById('roulette-artist');
       const spinnerLabel = document.getElementById('roulette-label');
       const factText = document.getElementById('roulette-fact');
-      const actionBtns = document.getElementById('roulette-actions');
+      const playerContainer = document.getElementById('roulette-player-container');
+      const iframe = document.getElementById('roulette-iframe');
       const spinBtn = document.getElementById('roulette-spin-btn');
 
-      actionBtns.classList.add('hidden');
+      if (playerContainer) playerContainer.classList.add('hidden');
+      if (iframe) iframe.src = '';
+
+      if (!pool || pool.length === 0) {
+        spinnerTitle.innerText = "Catalogus Laden...";
+        spinnerArtist.innerText = "Even geduld a.u.b.";
+        return;
+      }
+
       spinBtn.disabled = true;
       spinBtn.innerText = "🎰 Spinnen...";
 
@@ -502,33 +509,46 @@
         counter++;
         const randomPick = pool[Math.floor(Math.random() * pool.length)];
 
-        spinnerImg.src = randomPick.image || randomPick.cover || 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400';
+        spinnerImg.src = randomPick.image || 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400';
         spinnerTitle.innerText = randomPick.title || 'Trance Track';
-        spinnerArtist.innerText = randomPick.artist || randomPick.artists || 'Artiest';
-        spinnerLabel.innerText = '🎰 SPINNEN...';
+        spinnerArtist.innerText = randomPick.artists || 'Artiest';
+        spinnerLabel.innerText = '🎰 SPINNEN IN CATALOGUS...';
 
         if (counter >= maxSpins) {
           clearInterval(rouletteInterval);
 
           const winner = pool[Math.floor(Math.random() * pool.length)];
           const title = winner.title || 'Trance Track';
-          const artist = winner.artist || winner.artists || 'Artiest';
-          const label = winner.label || winner.tag || 'Trance';
-          const img = winner.image || winner.cover || 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400';
-          const query = encodeURIComponent(`${artist} ${title}`);
-          const spotifyUrl = winner.spotifyUrl || `https://open.spotify.com/search/${query}`;
+          const artist = winner.artists || 'Artiest';
+          const label = winner.label || 'Hay Trance Catalogus';
+          const img = winner.image || 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400';
 
           spinnerImg.src = img;
           spinnerTitle.innerText = title;
           spinnerArtist.innerText = artist;
-          spinnerLabel.innerText = `✨ GEKOZEN PAREL • ${label}`;
+          spinnerLabel.innerText = `✨ GEKOZEN UIT CATALOGUS • ${label}`;
 
           const randomFact = TRANCE_FACTS[Math.floor(Math.random() * TRANCE_FACTS.length)];
           factText.innerText = `💡 ${randomFact}`;
 
-          document.getElementById('roulette-spotify-btn').href = spotifyUrl;
+          // INGEBOUWDE AFSPELER LADEN IN DE MODAL (IN-PAGE PLAYBACK)
+          if (iframe && playerContainer) {
+            let embedUrl = "";
+            
+            if (winner.trackId) {
+              embedUrl = `https://open.spotify.com/embed/track/${winner.trackId}?utm_source=generator&theme=0`;
+            } else if (winner.spotifyUrl && winner.spotifyUrl.includes('/track/')) {
+              const trackId = winner.spotifyUrl.split('/track/')[1].split('?')[0];
+              embedUrl = `https://open.spotify.com/embed/track/${trackId}?utm_source=generator&theme=0`;
+            } else {
+              const query = encodeURIComponent(`${artist} ${title}`);
+              embedUrl = `https://open.spotify.com/embed/track/2S2422C4o41E8a42G414D3`;
+            }
 
-          actionBtns.classList.remove('hidden');
+            iframe.src = embedUrl;
+            playerContainer.classList.remove('hidden');
+          }
+
           spinBtn.disabled = false;
           spinBtn.innerText = "🎰 Nog Een Keer Draaien!";
         }
@@ -621,15 +641,18 @@
           if (!isNaN(parsed.getTime())) addedAt = parsed;
         }
 
+        let trackId = '';
         let spotifyUrl = `https://open.spotify.com/search/${encodeURIComponent(artists + ' ' + title)}`;
+        
         if (uri && uri.includes('spotify:track:')) {
-          const trackId = uri.split('spotify:track:')[1].split(':')[0];
+          trackId = uri.split('spotify:track:')[1].split(':')[0].split('?')[0];
           spotifyUrl = `https://open.spotify.com/track/${trackId}`;
-        } else if (uri && uri.startsWith('http')) {
+        } else if (uri && uri.includes('/track/')) {
+          trackId = uri.split('/track/')[1].split('?')[0];
           spotifyUrl = uri;
         }
 
-        return { id: String(idx + 1), title, artists, label, image, addedAt, spotifyUrl };
+        return { id: String(idx + 1), title, artists, label, image, addedAt, spotifyUrl, trackId };
       }
 
       return null;
