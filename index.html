@@ -80,7 +80,7 @@
 </head>
 <body class="bg-gray-950 text-white min-h-screen p-3 sm:p-5 font-sans antialiased selection:bg-cyan-500 selection:text-black transition-colors duration-300">
 
-  <!-- COMPACTE NEON HEADER + THEME SWITCHER -->
+  <!-- COMPACTE NEON HEADER + THEME SWITCHER + ROULETTE BUTTON -->
   <header class="max-w-7xl mx-auto mb-6 px-5 py-3.5 rounded-2xl bg-gray-900/90 border neon-border flex flex-col md:flex-row items-center justify-between gap-4 backdrop-blur-md">
     <div class="flex items-center gap-3">
       <div class="w-10 h-10 rounded-xl theme-gradient-bg flex items-center justify-center font-black text-black text-xl shadow-md">
@@ -94,21 +94,31 @@
       </div>
     </div>
 
-    <!-- THEME SWITCHER BAR -->
-    <div class="flex items-center gap-1.5 bg-gray-950/80 p-1.5 rounded-xl border border-gray-800">
-      <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider px-2 hidden sm:inline">Theme:</span>
-      <button onclick="setTheme('cyberpunk')" data-theme-id="cyberpunk" class="theme-btn text-[11px] font-black px-2.5 py-1 rounded-lg bg-gradient-to-r from-cyan-500 to-fuchsia-500 text-black transition hover:opacity-90">
-        🌌 Cyberpunk
+    <!-- RECHTER BEDIENING: ROULETTE + THEME SWITCHER -->
+    <div class="flex flex-wrap items-center gap-2.5">
+      
+      <!-- 🎰 TRANCE ROULETTE QUICK BUTTON -->
+      <button onclick="openRouletteModal()" class="text-xs font-black px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-500 text-white transition hover:scale-105 shadow-lg flex items-center gap-1.5 animate-pulse">
+        🎰 Trance Roulette
       </button>
-      <button onclick="setTheme('anjuna')" data-theme-id="anjuna" class="theme-btn text-[11px] font-black px-2.5 py-1 rounded-lg bg-gradient-to-r from-blue-500 to-sky-400 text-black transition hover:opacity-90">
-        🌊 Anjuna
-      </button>
-      <button onclick="setTheme('gold')" data-theme-id="gold" class="theme-btn text-[11px] font-black px-2.5 py-1 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 text-black transition hover:opacity-90">
-        👑 Gold
-      </button>
-      <button onclick="setTheme('matrix')" data-theme-id="matrix" class="theme-btn text-[11px] font-black px-2.5 py-1 rounded-lg bg-gradient-to-r from-emerald-500 to-lime-500 text-black transition hover:opacity-90">
-        🟢 Matrix
-      </button>
+
+      <!-- THEME SWITCHER BAR -->
+      <div class="flex items-center gap-1 bg-gray-950/80 p-1.5 rounded-xl border border-gray-800">
+        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider px-1.5 hidden sm:inline">Theme:</span>
+        <button onclick="setTheme('cyberpunk')" data-theme-id="cyberpunk" class="theme-btn text-[10px] font-black px-2 py-1 rounded-lg bg-gradient-to-r from-cyan-500 to-fuchsia-500 text-black transition hover:opacity-90">
+          🌌 Cyber
+        </button>
+        <button onclick="setTheme('anjuna')" data-theme-id="anjuna" class="theme-btn text-[10px] font-black px-2 py-1 rounded-lg bg-gradient-to-r from-blue-500 to-sky-400 text-black transition hover:opacity-90">
+          🌊 Anjuna
+        </button>
+        <button onclick="setTheme('gold')" data-theme-id="gold" class="theme-btn text-[10px] font-black px-2 py-1 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 text-black transition hover:opacity-90">
+          👑 Gold
+        </button>
+        <button onclick="setTheme('matrix')" data-theme-id="matrix" class="theme-btn text-[10px] font-black px-2 py-1 rounded-lg bg-gradient-to-r from-emerald-500 to-lime-500 text-black transition hover:opacity-90">
+          🟢 Matrix
+        </button>
+      </div>
+
     </div>
   </header>
 
@@ -231,6 +241,9 @@
         </div>
 
         <div class="flex flex-wrap items-center gap-2">
+          <button onclick="openRouletteModal()" class="text-xs font-bold bg-gray-800 hover:bg-gray-700 theme-text-primary border border-gray-700 px-3.5 py-1.5 rounded-full transition shadow-md flex items-center gap-1.5">
+            🎰 Trance Roulette
+          </button>
           <button onclick="shuffleDiscoveryReleases()" class="text-xs font-bold theme-gradient-bg text-black px-3.5 py-1.5 rounded-full transition shadow-md flex items-center gap-1.5 active:scale-95">
             🔄 Ontdek andere nummers van deze week
           </button>
@@ -365,6 +378,51 @@
   </main>
 
 
+  <!-- 🎰 TRANCE ROULETTE MODAL -->
+  <div id="roulette-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-gray-900 border neon-border rounded-2xl p-6 max-w-md w-full shadow-2xl relative space-y-4 text-center">
+      
+      <button onclick="closeRouletteModal()" class="absolute top-3.5 right-4 text-gray-400 hover:text-white text-lg font-bold p-1">✕</button>
+
+      <div>
+        <span id="roulette-label" class="text-[10px] font-extrabold uppercase tracking-widest theme-bg-primary-dark theme-text-primary border theme-border-primary px-3 py-1 rounded-full">
+          🎰 TRANCE ROULETTE
+        </span>
+        <h3 class="text-xl font-black text-white mt-2">Surprise Track!</h3>
+        <p class="text-xs text-gray-400">Laat het rad beslissen wat jouw volgende trance-parel wordt.</p>
+      </div>
+
+      <!-- ALBUM HOES & DETAILS MET SPIN-ANIMATIE -->
+      <div class="bg-gray-950 p-4 rounded-xl border border-gray-800 space-y-3 shadow-inner relative overflow-hidden">
+        <div class="relative w-44 h-44 mx-auto rounded-xl overflow-hidden shadow-2xl border border-gray-700">
+          <img id="roulette-img" src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400" alt="Roulette Cover" class="w-full h-full object-cover transition-all duration-150">
+        </div>
+
+        <div>
+          <h4 id="roulette-title" class="text-base font-black text-white truncate px-2">Track Titel</h4>
+          <p id="roulette-artist" class="theme-text-primary text-xs font-bold truncate">Artiest Naam</p>
+        </div>
+
+        <p id="roulette-fact" class="text-[11px] text-gray-400 italic bg-gray-900/80 p-2.5 rounded-lg border border-gray-800">
+          💡 Maak je klaar voor een verrassing...
+        </p>
+      </div>
+
+      <!-- KNOPPEN -->
+      <div id="roulette-actions" class="hidden flex flex-col sm:flex-row gap-2.5">
+        <a id="roulette-spotify-btn" href="#" target="_blank" class="flex-1 text-center text-xs theme-gradient-bg text-black py-2.5 rounded-xl font-black transition shadow-md hover:opacity-90 flex items-center justify-center gap-1.5">
+          ▶ Luister op Spotify
+        </a>
+      </div>
+
+      <button id="roulette-spin-btn" onclick="spinRoulette()" class="w-full text-xs bg-gray-800 hover:bg-gray-700 theme-text-primary border border-gray-700 py-2.5 rounded-xl font-bold transition">
+        🎰 Nog Een Keer Draaien!
+      </button>
+
+    </div>
+  </div>
+
+
   <!-- EVENT MODAL -->
   <div id="event-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
     <div class="bg-gray-900 border neon-border rounded-2xl p-5 max-w-lg w-full shadow-2xl relative space-y-4">
@@ -416,9 +474,100 @@
       });
     }
 
-    // Laad opgeslagen thema bij het openen van de pagina
     const savedTheme = localStorage.getItem('haytrance_theme') || 'cyberpunk';
     setTheme(savedTheme);
+
+
+    // 🎰 TRANCE ROULETTE LOGICA
+    const TRANCE_FACTS = [
+      "Wist je dat Trance begin jaren '90 ontstond uit een combinatie van Techno, House en Synthpop?",
+      "138 BPM geldt in de trance-wereld als de 'magische snelheid' voor de meest meeslepende euphorie!",
+      "A State of Trance van Armin van Buuren is met meer dan 1100 afleveringen een van de langstlopende radioshows ter wereld.",
+      "Coldharbour Recordings is in 2005 opgericht door Markus Schulz en vernoemd naar Coldharbour Lane in Londen.",
+      "Anjunabeats werd in 2000 opgericht door Above & Beyond en is vernoemd naar het beroemde strand Anjuna in Goa, India.",
+      "Future Sound of Egypt (FSOE) van Aly & Fila brengt al jaren de legendarische Egyptische trance-sound over de hele wereld.",
+      "Black Hole Recordings werd in 1997 mede-opgericht door Tiësto en bracht de beroemde 'In Search of Sunrise' compilaties uit.",
+      "Luminosity Beach Festival in Zandvoort staat wereldwijd bekend als het mekka voor pure uplifting trance-liefhebbers!"
+    ];
+
+    let rouletteInterval = null;
+
+    function openRouletteModal() {
+      const modal = document.getElementById('roulette-modal');
+      if (!modal) return;
+      modal.classList.remove('hidden');
+      spinRoulette();
+    }
+
+    function closeRouletteModal() {
+      const modal = document.getElementById('roulette-modal');
+      if (modal) modal.classList.add('hidden');
+      if (rouletteInterval) clearInterval(rouletteInterval);
+    }
+
+    function spinRoulette() {
+      if (rouletteInterval) clearInterval(rouletteInterval);
+
+      const pool = [...HAY_TRANCE_TRACKS, ...TRANCE_DISCOVERY_DATA];
+      
+      if (pool.length === 0) {
+        document.getElementById('roulette-title').innerText = "Laden...";
+        document.getElementById('roulette-artist').innerText = "Nummers worden opgehaald";
+        return;
+      }
+
+      const spinnerImg = document.getElementById('roulette-img');
+      const spinnerTitle = document.getElementById('roulette-title');
+      const spinnerArtist = document.getElementById('roulette-artist');
+      const spinnerLabel = document.getElementById('roulette-label');
+      const factText = document.getElementById('roulette-fact');
+      const actionBtns = document.getElementById('roulette-actions');
+      const spinBtn = document.getElementById('roulette-spin-btn');
+
+      actionBtns.classList.add('hidden');
+      spinBtn.disabled = true;
+      spinBtn.innerText = "🎰 Spinnen...";
+
+      let counter = 0;
+      const maxSpins = 20;
+      const speed = 70;
+
+      rouletteInterval = setInterval(() => {
+        counter++;
+        const randomPick = pool[Math.floor(Math.random() * pool.length)];
+
+        spinnerImg.src = randomPick.image || randomPick.cover || 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400';
+        spinnerTitle.innerText = randomPick.title || 'Trance Track';
+        spinnerArtist.innerText = randomPick.artist || randomPick.artists || 'Artiest';
+        spinnerLabel.innerText = '🎰 SPINNEN...';
+
+        if (counter >= maxSpins) {
+          clearInterval(rouletteInterval);
+
+          const winner = pool[Math.floor(Math.random() * pool.length)];
+          const title = winner.title || 'Trance Track';
+          const artist = winner.artist || winner.artists || 'Artiest';
+          const label = winner.label || winner.tag || 'Trance';
+          const img = winner.image || winner.cover || 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400';
+          const query = encodeURIComponent(`${artist} ${title}`);
+          const spotifyUrl = winner.spotifyUrl || `https://open.spotify.com/search/${query}`;
+
+          spinnerImg.src = img;
+          spinnerTitle.innerText = title;
+          spinnerArtist.innerText = artist;
+          spinnerLabel.innerText = `✨ GEKOZEN PAREL • ${label}`;
+
+          const randomFact = TRANCE_FACTS[Math.floor(Math.random() * TRANCE_FACTS.length)];
+          factText.innerText = `💡 ${randomFact}`;
+
+          document.getElementById('roulette-spotify-btn').href = spotifyUrl;
+
+          actionBtns.classList.remove('hidden');
+          spinBtn.disabled = false;
+          spinBtn.innerText = "🎰 Nog Een Keer Draaien!";
+        }
+      }, speed);
+    }
 
 
     let HAY_TRANCE_TRACKS = [];
@@ -959,79 +1108,4 @@
       else if (sortBy === 'title') currentFilteredList.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
       else if (sortBy === 'artist') currentFilteredList.sort((a, b) => (a.artists || '').localeCompare(b.artists || ''));
 
-      if (countLabel && HAY_TRANCE_TRACKS.length > 0) {
-        countLabel.innerText = `${currentFilteredList.length} platen`;
-      }
-
-      if (currentFilteredList.length === 0) {
-        const grid = document.getElementById('track-grid');
-        if (grid) grid.innerHTML = '';
-        if (noResults) noResults.classList.remove('hidden');
-        document.getElementById('load-more-container')?.classList.add('hidden');
-        return;
-      } else {
-        if (noResults) noResults.classList.add('hidden');
-      }
-
-      displayedCount = 24;
-      renderTrackBatch();
-    }
-
-    function renderTrackBatch() {
-      const grid = document.getElementById('track-grid');
-      const loadMore = document.getElementById('load-more-container');
-      if (!grid) return;
-      grid.innerHTML = '';
-
-      const batch = currentFilteredList.slice(0, displayedCount);
-
-      batch.forEach(track => {
-        const dStr = track.addedAt.getTime() > 0 
-          ? track.addedAt.toLocaleDateString('nl-NL', { year: 'numeric', month: 'short', day: 'numeric' })
-          : 'Onbekend';
-
-        const card = document.createElement('div');
-        card.className = 'bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-lg hover:border-cyan-500/50 hover:scale-[1.02] transition-all duration-300 flex flex-col justify-between';
-        card.innerHTML = `
-          <div>
-            <div class="relative group">
-              <img src="${track.image}" alt="${track.title}" class="w-full aspect-square object-cover">
-              <a href="${track.spotifyUrl}" target="_blank" class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center font-bold theme-text-primary gap-1 text-xs">
-                Open in Spotify ↗
-              </a>
-            </div>
-            <div class="p-3.5">
-              <h3 class="font-bold text-white text-sm truncate" title="${track.title}">${track.title}</h3>
-              <p class="theme-text-primary text-xs truncate mt-0.5" title="${track.artists}">${track.artists}</p>
-              ${track.label ? `<span class="inline-block mt-2 text-[9px] bg-gray-800 text-gray-400 px-2 py-0.5 rounded border border-gray-700">${track.label}</span>` : ''}
-            </div>
-          </div>
-          <div class="p-3.5 pt-0 border-t border-gray-800/50 mt-1 flex justify-between items-center text-[11px] text-gray-500">
-            <span>Toegevoegd:</span>
-            <span class="text-gray-300 font-medium">${dStr}</span>
-          </div>
-        `;
-        grid.appendChild(card);
-      });
-
-      if (displayedCount < currentFilteredList.length) {
-        if (loadMore) loadMore.classList.remove('hidden');
-      } else {
-        if (loadMore) loadMore.classList.add('hidden');
-      }
-    }
-
-    function loadMoreTracks() {
-      displayedCount += 24;
-      renderTrackBatch();
-    }
-
-    document.getElementById('search-input')?.addEventListener('input', filterAndRenderTracks);
-    document.getElementById('sort-select')?.addEventListener('change', filterAndRenderTracks);
-
-    loadReleasesJson();
-    loadEventsMultiSource();
-    loadAllTracksFromJson();
-  </script>
-</body>
-</html>
+      if (countLabel && HAY_TRANCE_TRACK
