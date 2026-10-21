@@ -6,103 +6,72 @@
   <title>Hay Trance - High in Trance</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* CSS VARIABELEN VOOR HET THEME SYSTEM */
+    /* THEMA VARIABELEN */
     :root {
-      --primary: #06b6d4;         /* cyaan */
+      --primary: #06b6d4;
       --primary-hover: #22d3ee;
       --primary-dark: #083344;
-      --secondary: #d946ef;       /* fuchsia */
-      --secondary-dark: #4c0519;
       --glow: rgba(6, 182, 212, 0.4);
-      --grad-from: #06b6d4;
-      --grad-to: #d946ef;
     }
 
     [data-theme="anjuna"] {
-      --primary: #3b82f6;         /* blauw */
+      --primary: #3b82f6;
       --primary-hover: #60a5fa;
       --primary-dark: #172554;
-      --secondary: #38bdf8;       /* azuur */
-      --secondary-dark: #0c4a6e;
       --glow: rgba(59, 130, 246, 0.4);
-      --grad-from: #3b82f6;
-      --grad-to: #38bdf8;
     }
 
     [data-theme="gold"] {
-      --primary: #f59e0b;         /* goud */
+      --primary: #f59e0b;
       --primary-hover: #fbbf24;
       --primary-dark: #451a03;
-      --secondary: #f97316;       /* oranje */
-      --secondary-dark: #431407;
       --glow: rgba(245, 158, 11, 0.4);
-      --grad-from: #f59e0b;
-      --grad-to: #f97316;
     }
 
     [data-theme="matrix"] {
-      --primary: #10b981;         /* emerald groen */
+      --primary: #10b981;
       --primary-hover: #34d399;
       --primary-dark: #022c22;
-      --secondary: #84cc16;       /* lime groen */
-      --secondary-dark: #1a2e05;
       --glow: rgba(16, 185, 129, 0.4);
-      --grad-from: #10b981;
-      --grad-to: #84cc16;
     }
 
-    /* DYNAMISCHE STYLES MET THEME VARIABELEN */
     .neon-border {
-      box-shadow: 0 0 14px var(--glow), inset 0 0 10px rgba(255, 255, 255, 0.05);
+      box-shadow: 0 0 14px var(--glow);
       border-color: var(--primary) !important;
     }
-    .neon-text {
-      text-shadow: 0 0 10px var(--glow);
+    .theme-text {
+      color: var(--primary-hover) !important;
     }
-    .theme-gradient-text {
-      background: linear-gradient(to right, var(--grad-from), var(--grad-to));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+    .theme-bg-dark {
+      background-color: var(--primary-dark) !important;
     }
-    .theme-gradient-bg {
-      background: linear-gradient(to right, var(--grad-from), var(--grad-to));
-    }
-    .theme-text-primary {
-      color: var(--primary-hover);
-    }
-    .theme-bg-primary-dark {
-      background-color: var(--primary-dark);
-    }
-    .theme-border-primary {
-      border-color: var(--primary);
+    .theme-border {
+      border-color: var(--primary) !important;
     }
   </style>
 </head>
-<body class="bg-gray-950 text-white min-h-screen p-3 sm:p-5 font-sans antialiased selection:bg-cyan-500 selection:text-black transition-colors duration-300">
+<body class="bg-gray-950 text-white min-h-screen p-3 sm:p-5 font-sans antialiased selection:bg-cyan-500 selection:text-black">
 
-  <!-- COMPACTE NEON HEADER + THEME SWITCHER + ROULETTE BUTTON -->
+  <!-- HEADER -->
   <header class="max-w-7xl mx-auto mb-6 px-5 py-3.5 rounded-2xl bg-gray-900/90 border neon-border flex flex-col md:flex-row items-center justify-between gap-4 backdrop-blur-md">
     <div class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-xl theme-gradient-bg flex items-center justify-center font-black text-black text-xl shadow-md">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-fuchsia-500 flex items-center justify-center font-black text-black text-xl shadow-md">
         HT
       </div>
       <div>
-        <h1 class="text-2xl sm:text-3xl font-black tracking-wider uppercase theme-gradient-text neon-text">
+        <h1 class="text-2xl sm:text-3xl font-black tracking-wider uppercase text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-fuchsia-400 to-blue-500">
           HAY TRANCE
         </h1>
-        <p class="theme-text-primary text-xs italic font-medium">"We give you the best high in trance!"</p>
+        <p class="text-cyan-300 text-xs italic font-medium">"We give you the best high in trance!"</p>
       </div>
     </div>
 
-    <!-- RECHTER BEDIENING: ROULETTE + THEME SWITCHER -->
+    <!-- RECHTER BEDIENING -->
     <div class="flex flex-wrap items-center gap-2.5">
-      
-      <!-- 🎰 TRANCE ROULETTE QUICK BUTTON -->
       <button onclick="openRouletteModal()" class="text-xs font-black px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-500 text-white transition hover:scale-105 shadow-lg flex items-center gap-1.5 animate-pulse">
         🎰 Trance Roulette
       </button>
 
-      <!-- THEME SWITCHER BAR -->
       <div class="flex items-center gap-1 bg-gray-950/80 p-1.5 rounded-xl border border-gray-800">
         <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider px-1.5 hidden sm:inline">Theme:</span>
         <button onclick="setTheme('cyberpunk')" data-theme-id="cyberpunk" class="theme-btn text-[10px] font-black px-2 py-1 rounded-lg bg-gradient-to-r from-cyan-500 to-fuchsia-500 text-black transition hover:opacity-90">
@@ -118,7 +87,6 @@
           🟢 Matrix
         </button>
       </div>
-
     </div>
   </header>
 
@@ -130,7 +98,7 @@
       <!-- SPOTIFY EMBED PLAYER -->
       <section class="bg-gray-900/90 border border-gray-800 rounded-2xl p-5 shadow-xl flex flex-col justify-between hover:border-cyan-500/40 transition">
         <div class="mb-3">
-          <h2 class="text-xl font-black theme-gradient-text flex items-center gap-2">
+          <h2 class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-fuchsia-400 flex items-center gap-2">
             <span>⚡</span> DE HAY TRANCE PLAYLIST
           </h2>
           <p class="text-gray-400 text-xs mt-0.5">Beluister de complete afspeellijst direct op Spotify.</p>
@@ -154,19 +122,19 @@
         <div>
           <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-3 border-b border-gray-800/80 pb-2.5 gap-2">
             <div>
-              <h2 class="text-xl font-black theme-gradient-text flex items-center gap-2">
+              <h2 class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 via-cyan-300 to-blue-400 flex items-center gap-2">
                 <span>🇳🇱</span> TRANCE EVENT RADAR NL & BE
               </h2>
               <p class="text-gray-400 text-xs mt-0.5">Aankomende Trance feesten, Poppodia & Festivals</p>
             </div>
-            <span id="events-status" class="text-[10px] theme-bg-primary-dark theme-text-primary border theme-border-primary rounded-full px-2.5 py-0.5 font-semibold whitespace-nowrap self-start sm:self-auto">
+            <span id="events-status" class="text-[10px] theme-bg-dark theme-text border theme-border rounded-full px-2.5 py-0.5 font-semibold whitespace-nowrap self-start sm:self-auto">
               Laden...
             </span>
           </div>
 
           <!-- Filter Knoppen -->
           <div class="flex flex-wrap gap-1.5 mb-3">
-            <button onclick="filterEvents('all')" class="event-filter-btn text-[11px] theme-gradient-bg text-black font-extrabold px-2.5 py-1 rounded-lg transition shadow-md" data-filter="all">Alles</button>
+            <button onclick="filterEvents('all')" class="event-filter-btn text-[11px] bg-cyan-500 text-black font-extrabold px-2.5 py-1 rounded-lg transition shadow-md" data-filter="all">Alles</button>
             <button onclick="filterEvents('poppodia')" class="event-filter-btn text-[11px] bg-gray-800 text-gray-300 hover:bg-gray-700 px-2.5 py-1 rounded-lg transition" data-filter="poppodia">🏛️ Poppodia & Clubtours</button>
             <button onclick="filterEvents('ade')" class="event-filter-btn text-[11px] bg-gray-800 text-gray-300 hover:bg-gray-700 px-2.5 py-1 rounded-lg transition" data-filter="ade">🇳🇱 ADE Specials</button>
             <button onclick="filterEvents('festival')" class="event-filter-btn text-[11px] bg-gray-800 text-gray-300 hover:bg-gray-700 px-2.5 py-1 rounded-lg transition" data-filter="festival">Festivals</button>
@@ -186,19 +154,19 @@
     <section class="bg-gray-900/80 border neon-border rounded-2xl p-5 shadow-2xl space-y-5">
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-gray-800 pb-3 gap-3">
         <div>
-          <h2 class="text-xl font-black theme-gradient-text flex items-center gap-2">
+          <h2 class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-fuchsia-400 to-blue-400 flex items-center gap-2">
             <span>🎙️</span> WEEKLY LIVESETS & PODCAST RADAR
           </h2>
           <p class="text-xs text-gray-400 mt-0.5">Beluister wekelijks de nieuwste episodes van de bekendste trance radiowaves.</p>
         </div>
-        <span class="text-[11px] theme-bg-primary-dark theme-text-primary border theme-border-primary px-3 py-1.5 rounded-full font-bold">
+        <span class="text-[11px] theme-bg-dark theme-text border theme-border px-3 py-1.5 rounded-full font-bold">
           Weekly Shows
         </span>
       </div>
 
       <!-- Knoppen om te schakelen tussen de podcasts -->
       <div class="flex flex-wrap gap-2 bg-gray-950 p-2 rounded-xl border border-gray-800">
-        <button onclick="switchPodcast('asot', this)" class="podcast-tab-btn text-xs theme-gradient-bg text-black font-black px-3 py-1.5 rounded-lg transition shadow-md">
+        <button onclick="switchPodcast('asot', this)" class="podcast-tab-btn text-xs bg-cyan-500 text-black font-black px-3 py-1.5 rounded-lg transition shadow-md">
           📻 A State Of Trance (ASOT)
         </button>
         <button onclick="switchPodcast('fsoe', this)" class="podcast-tab-btn text-xs bg-gray-800 text-gray-300 hover:bg-gray-700 px-3 py-1.5 rounded-lg transition">
@@ -234,20 +202,20 @@
       
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-gray-800 pb-3 gap-3">
         <div>
-          <h2 class="text-xl font-black theme-gradient-text flex items-center gap-2">
+          <h2 class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-fuchsia-400 to-blue-400 flex items-center gap-2">
             <span>🔥</span> RELEASE FRIDAY DISCOVERY HUB
           </h2>
           <p class="text-xs text-gray-400 mt-0.5">Verse trance-platen van de grootste labels. Luister direct en voeg toe aan de lijst!</p>
         </div>
 
         <div class="flex flex-wrap items-center gap-2">
-          <button onclick="openRouletteModal()" class="text-xs font-bold bg-gray-800 hover:bg-gray-700 theme-text-primary border border-gray-700 px-3.5 py-1.5 rounded-full transition shadow-md flex items-center gap-1.5">
+          <button onclick="openRouletteModal()" class="text-xs font-bold bg-gray-800 hover:bg-gray-700 theme-text border border-gray-700 px-3.5 py-1.5 rounded-full transition shadow-md flex items-center gap-1.5">
             🎰 Trance Roulette
           </button>
-          <button onclick="shuffleDiscoveryReleases()" class="text-xs font-bold theme-gradient-bg text-black px-3.5 py-1.5 rounded-full transition shadow-md flex items-center gap-1.5 active:scale-95">
+          <button onclick="shuffleDiscoveryReleases()" class="text-xs font-bold bg-gradient-to-r from-cyan-500 to-fuchsia-500 text-black px-3.5 py-1.5 rounded-full transition shadow-md flex items-center gap-1.5 active:scale-95">
             🔄 Ontdek andere nummers van deze week
           </button>
-          <span id="current-week-tag" class="text-[11px] theme-bg-primary-dark theme-text-primary border theme-border-primary px-3 py-1.5 rounded-full font-bold">
+          <span id="current-week-tag" class="text-[11px] theme-bg-dark theme-text border theme-border px-3 py-1.5 rounded-full font-bold">
             Release Friday • Week
           </span>
         </div>
@@ -261,7 +229,7 @@
           <div class="flex flex-wrap items-center justify-between gap-2 bg-gray-950 p-2 rounded-xl border border-gray-800">
             <span class="text-xs font-bold text-gray-300 pl-1">Label Filter:</span>
             <div class="flex flex-wrap gap-1">
-              <button onclick="filterDiscovery('all')" class="discovery-filter-btn text-[10px] theme-gradient-bg text-black font-black px-2.5 py-1 rounded-lg transition shadow-md" data-source="all">Alles</button>
+              <button onclick="filterDiscovery('all')" class="discovery-filter-btn text-[10px] bg-cyan-500 text-black font-black px-2.5 py-1 rounded-lg transition shadow-md" data-source="all">Alles</button>
               <button onclick="filterDiscovery('armada')" class="discovery-filter-btn text-[10px] bg-gray-800 text-gray-300 hover:bg-gray-700 px-2.5 py-1 rounded-lg transition" data-source="armada">⚡ Armada / ASOT</button>
               <button onclick="filterDiscovery('anjuna')" class="discovery-filter-btn text-[10px] bg-gray-800 text-gray-300 hover:bg-gray-700 px-2.5 py-1 rounded-lg transition" data-source="anjuna">🎹 Anjunabeats</button>
               <button onclick="filterDiscovery('blackhole')" class="discovery-filter-btn text-[10px] bg-gray-800 text-gray-300 hover:bg-gray-700 px-2.5 py-1 rounded-lg transition" data-source="blackhole">🕳️ Black Hole</button>
@@ -280,10 +248,10 @@
         <div class="bg-gray-950 border border-gray-800 rounded-xl p-4 flex flex-col justify-between space-y-3 shadow-inner">
           <div>
             <div class="flex justify-between items-center mb-1">
-              <h3 class="text-sm font-black theme-text-primary uppercase tracking-wider flex items-center gap-1.5">
+              <h3 class="text-sm font-black theme-text uppercase tracking-wider flex items-center gap-1.5">
                 <span>🏆</span> BANGER VAN DE WEEK
               </h3>
-              <span class="text-[9px] theme-bg-primary-dark theme-text-primary border theme-border-primary px-2 py-0.5 rounded-full font-extrabold">Stem Deze Week</span>
+              <span class="text-[9px] theme-bg-dark theme-text border theme-border px-2 py-0.5 rounded-full font-extrabold">Stem Deze Week</span>
             </div>
             <p class="text-[11px] text-gray-400">Stem op jouw favoriete nieuwe release van deze week!</p>
           </div>
@@ -302,12 +270,12 @@
     <section class="space-y-3">
       <div class="flex justify-between items-center border-b border-gray-800/80 pb-2.5">
         <div>
-          <h2 class="text-xl font-black theme-gradient-text flex items-center gap-2">
+          <h2 class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-fuchsia-400 flex items-center gap-2">
             <span>✨</span> 20 LAATST TOEGEVOEGDE NUMMERS
           </h2>
           <p class="text-xs text-gray-400 mt-0.5">De meest recente toevoegingen uit de hoofdcatalogus</p>
         </div>
-        <span class="text-[11px] theme-bg-primary-dark theme-text-primary border theme-border-primary px-3 py-1 rounded-full font-bold">
+        <span class="text-[11px] theme-bg-dark theme-text border theme-border px-3 py-1 rounded-full font-bold">
           Top 20 Recent
         </span>
       </div>
@@ -322,7 +290,7 @@
     <section class="space-y-5">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
         <div>
-          <h2 class="text-xl font-black theme-gradient-text flex items-center gap-2">
+          <h2 class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-fuchsia-400 flex items-center gap-2">
             <span>🎧</span> VOLLEDIGE HAY TRANCE CATALOGUS
           </h2>
           <p class="text-xs text-gray-400 mt-0.5">Doorzoek de complete verzameling van al onze trance-platen</p>
@@ -352,7 +320,7 @@
             <option value="artist">Artiest (A-Z)</option>
           </select>
 
-          <span id="track-count" class="text-xs font-bold theme-bg-primary-dark theme-text-primary border theme-border-primary rounded-xl px-3 py-2 whitespace-nowrap">
+          <span id="track-count" class="text-xs font-bold theme-bg-dark theme-text border theme-border rounded-xl px-3 py-2 whitespace-nowrap">
             0 platen
           </span>
         </div>
@@ -363,7 +331,7 @@
 
       <!-- Knop: Laad Meer -->
       <div id="load-more-container" class="text-center pt-3 hidden">
-        <button onclick="loadMoreTracks()" class="bg-gray-900 hover:bg-gray-800 theme-text-primary border theme-border-primary font-extrabold px-5 py-2.5 rounded-xl transition shadow-lg text-xs">
+        <button onclick="loadMoreTracks()" class="bg-gray-900 hover:bg-gray-800 theme-text border theme-border font-extrabold px-5 py-2.5 rounded-xl transition shadow-lg text-xs">
           Laad meer platen ⤵
         </button>
       </div>
@@ -385,14 +353,13 @@
       <button onclick="closeRouletteModal()" class="absolute top-3.5 right-4 text-gray-400 hover:text-white text-lg font-bold p-1">✕</button>
 
       <div>
-        <span id="roulette-label" class="text-[10px] font-extrabold uppercase tracking-widest theme-bg-primary-dark theme-text-primary border theme-border-primary px-3 py-1 rounded-full">
+        <span id="roulette-label" class="text-[10px] font-extrabold uppercase tracking-widest theme-bg-dark theme-text border theme-border px-3 py-1 rounded-full">
           🎰 TRANCE ROULETTE
         </span>
         <h3 class="text-xl font-black text-white mt-2">Surprise Track!</h3>
         <p class="text-xs text-gray-400">Laat het rad beslissen wat jouw volgende trance-parel wordt.</p>
       </div>
 
-      <!-- ALBUM HOES & DETAILS MET SPIN-ANIMATIE -->
       <div class="bg-gray-950 p-4 rounded-xl border border-gray-800 space-y-3 shadow-inner relative overflow-hidden">
         <div class="relative w-44 h-44 mx-auto rounded-xl overflow-hidden shadow-2xl border border-gray-700">
           <img id="roulette-img" src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400" alt="Roulette Cover" class="w-full h-full object-cover transition-all duration-150">
@@ -400,7 +367,7 @@
 
         <div>
           <h4 id="roulette-title" class="text-base font-black text-white truncate px-2">Track Titel</h4>
-          <p id="roulette-artist" class="theme-text-primary text-xs font-bold truncate">Artiest Naam</p>
+          <p id="roulette-artist" class="theme-text text-xs font-bold truncate">Artiest Naam</p>
         </div>
 
         <p id="roulette-fact" class="text-[11px] text-gray-400 italic bg-gray-900/80 p-2.5 rounded-lg border border-gray-800">
@@ -408,14 +375,13 @@
         </p>
       </div>
 
-      <!-- KNOPPEN -->
       <div id="roulette-actions" class="hidden flex flex-col sm:flex-row gap-2.5">
-        <a id="roulette-spotify-btn" href="#" target="_blank" class="flex-1 text-center text-xs theme-gradient-bg text-black py-2.5 rounded-xl font-black transition shadow-md hover:opacity-90 flex items-center justify-center gap-1.5">
+        <a id="roulette-spotify-btn" href="#" target="_blank" class="flex-1 text-center text-xs bg-cyan-500 hover:bg-cyan-400 text-black py-2.5 rounded-xl font-black transition shadow-md flex items-center justify-center gap-1.5">
           ▶ Luister op Spotify
         </a>
       </div>
 
-      <button id="roulette-spin-btn" onclick="spinRoulette()" class="w-full text-xs bg-gray-800 hover:bg-gray-700 theme-text-primary border border-gray-700 py-2.5 rounded-xl font-bold transition">
+      <button id="roulette-spin-btn" onclick="spinRoulette()" class="w-full text-xs bg-gray-800 hover:bg-gray-700 theme-text border border-gray-700 py-2.5 rounded-xl font-bold transition">
         🎰 Nog Een Keer Draaien!
       </button>
 
@@ -429,17 +395,17 @@
       <button onclick="closeModal()" class="absolute top-3.5 right-4 text-gray-400 hover:text-white text-lg font-bold p-1">✕</button>
 
       <div>
-        <span id="modal-type" class="text-[10px] font-extrabold uppercase tracking-wider theme-bg-primary-dark theme-text-primary border theme-border-primary px-2 py-0.5 rounded-md">
+        <span id="modal-type" class="text-[10px] font-extrabold uppercase tracking-wider theme-bg-dark theme-text border theme-border px-2 py-0.5 rounded-md">
           Event
         </span>
         <h3 id="modal-title" class="text-xl font-black text-white mt-1.5">Event Naam</h3>
-        <p id="modal-artist" class="theme-text-primary font-semibold text-xs mt-0.5">Artiest / Host</p>
+        <p id="modal-artist" class="theme-text font-semibold text-xs mt-0.5">Artiest / Host</p>
       </div>
 
       <div class="bg-gray-950/90 p-3.5 rounded-xl border border-gray-800 space-y-1.5 text-xs text-gray-300">
         <p class="flex items-center gap-2">📅 <span id="modal-date" class="font-medium text-white">Datum</span></p>
         <p class="flex items-center gap-2">📍 <span id="modal-location" class="font-medium text-white">Locatie, Stad</span></p>
-        <p class="flex items-center gap-2">⏳ <span id="modal-countdown" class="font-semibold theme-text-primary">Aftellen...</span></p>
+        <p class="flex items-center gap-2">⏳ <span id="modal-countdown" class="font-semibold theme-text">Aftellen...</span></p>
       </div>
 
       <div>
@@ -451,7 +417,7 @@
         <a id="modal-cal-btn" href="#" target="_blank" class="text-center text-xs bg-gray-800 hover:bg-gray-700 text-gray-200 border border-gray-700 py-2.5 rounded-xl font-bold transition">
           📅 Google Kalender
         </a>
-        <a id="modal-ticket-btn" href="#" target="_blank" class="text-center text-xs theme-gradient-bg text-black py-2.5 rounded-xl font-black transition shadow-md">
+        <a id="modal-ticket-btn" href="#" target="_blank" class="text-center text-xs bg-cyan-500 hover:bg-cyan-400 text-black py-2.5 rounded-xl font-black transition shadow-md">
           Tickets & Info ↗
         </a>
       </div>
@@ -460,7 +426,7 @@
 
 
   <script>
-    // 🎨 THEME SWITCHER LOGICA
+    // THEMA SWITCHER LOGICA
     function setTheme(themeName) {
       document.documentElement.setAttribute('data-theme', themeName);
       localStorage.setItem('haytrance_theme', themeName);
@@ -478,7 +444,7 @@
     setTheme(savedTheme);
 
 
-    // 🎰 TRANCE ROULETTE LOGICA
+    // TRANCE ROULETTE LOGICA
     const TRANCE_FACTS = [
       "Wist je dat Trance begin jaren '90 ontstond uit een combinatie van Techno, House en Synthpop?",
       "138 BPM geldt in de trance-wereld als de 'magische snelheid' voor de meest meeslepende euphorie!",
@@ -529,7 +495,7 @@
       spinBtn.innerText = "🎰 Spinnen...";
 
       let counter = 0;
-      const maxSpins = 20;
+      const maxSpins = 18;
       const speed = 70;
 
       rouletteInterval = setInterval(() => {
@@ -585,7 +551,7 @@
       document.querySelectorAll('.podcast-tab-btn').forEach(b => {
         b.className = 'podcast-tab-btn text-xs bg-gray-800 text-gray-300 hover:bg-gray-700 px-3 py-1.5 rounded-lg transition';
       });
-      btn.className = 'podcast-tab-btn text-xs theme-gradient-bg text-black font-black px-3 py-1.5 rounded-lg transition shadow-md';
+      btn.className = 'podcast-tab-btn text-xs bg-cyan-500 text-black font-black px-3 py-1.5 rounded-lg transition shadow-md';
       
       const iframe = document.getElementById('podcast-iframe');
       if (iframe && PODCAST_URLS[key]) {
@@ -753,7 +719,7 @@
       currentDiscoveryFilter = source;
       document.querySelectorAll('.discovery-filter-btn').forEach(btn => {
         if (btn.getAttribute('data-source') === source) {
-          btn.className = 'discovery-filter-btn text-[10px] theme-gradient-bg text-black font-black px-2.5 py-1 rounded-lg transition shadow-md';
+          btn.className = 'discovery-filter-btn text-[10px] bg-cyan-500 text-black font-black px-2.5 py-1 rounded-lg transition shadow-md';
         } else {
           btn.className = 'discovery-filter-btn text-[10px] bg-gray-800 text-gray-300 hover:bg-gray-700 px-2.5 py-1 rounded-lg transition';
         }
@@ -802,15 +768,15 @@
         card.innerHTML = `
           <img src="${imgSrc}" alt="${rel.title}" class="w-16 h-16 rounded-lg object-cover flex-shrink-0" onerror="this.src='https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400'">
           <div class="overflow-hidden flex-1">
-            <span class="text-[8px] font-black uppercase theme-bg-primary-dark theme-text-primary px-1.5 py-0.5 rounded border theme-border-primary">${rel.tag || rel.label || 'Release'} • ${rel.label || 'Trance'}</span>
+            <span class="text-[8px] font-black uppercase theme-bg-dark theme-text px-1.5 py-0.5 rounded border theme-border">${rel.tag || rel.label || 'Release'} • ${rel.label || 'Trance'}</span>
             <h4 class="text-white font-bold text-xs mt-1 truncate" title="${rel.title}">${rel.title}</h4>
             <p class="text-gray-400 text-[10px] truncate">${rel.artist}</p>
 
             <div class="flex gap-2 mt-2">
-              <a href="${spotifySearchUrl}" target="_blank" class="text-[9px] theme-gradient-bg text-black font-black px-2 py-1 rounded transition flex items-center gap-1">
+              <a href="${spotifySearchUrl}" target="_blank" class="text-[9px] bg-cyan-500 hover:bg-cyan-400 text-black font-black px-2 py-1 rounded transition flex items-center gap-1">
                 ▶ Luister
               </a>
-              <a href="${spotifySearchUrl}" target="_blank" class="text-[9px] bg-gray-800 hover:bg-gray-700 theme-text-primary border border-gray-700 font-bold px-2 py-1 rounded transition flex items-center gap-1">
+              <a href="${spotifySearchUrl}" target="_blank" class="text-[9px] bg-gray-800 hover:bg-gray-700 theme-text border border-gray-700 font-bold px-2 py-1 rounded transition flex items-center gap-1">
                 ➕ In Playlist
               </a>
             </div>
@@ -850,7 +816,7 @@
         const pct = totalVotes > 0 ? Math.round((item.votes / totalVotes) * 100) : 0;
 
         const btn = document.createElement('div');
-        btn.className = `p-2.5 rounded-xl border transition cursor-pointer relative overflow-hidden ${userVoted === item.id ? 'theme-bg-primary-dark theme-border-primary' : 'bg-gray-900 border-gray-800 hover:border-cyan-500/40'}`;
+        btn.className = `p-2.5 rounded-xl border transition cursor-pointer relative overflow-hidden ${userVoted === item.id ? 'theme-bg-dark theme-border' : 'bg-gray-900 border-gray-800 hover:border-cyan-500/40'}`;
         btn.onclick = () => castVote(item.id, storageKey, userVotedKey, votesData);
 
         btn.innerHTML = `
@@ -859,7 +825,7 @@
               <h4 class="text-white font-bold text-xs line-clamp-1">${item.title}</h4>
               <p class="text-gray-400 text-[10px] truncate">${item.artist}</p>
             </div>
-            <span class="text-xs font-black theme-text-primary ml-2">${pct}%</span>
+            <span class="text-xs font-black theme-text ml-2">${pct}%</span>
           </div>
           <div class="absolute left-0 top-0 bottom-0 bg-white/5 transition-all duration-500" style="width: ${pct}%;"></div>
         `;
@@ -993,7 +959,7 @@
 
         card.innerHTML = `
           <div class="flex items-center gap-3">
-            <div class="${isADE ? 'bg-fuchsia-950 text-fuchsia-300 border-fuchsia-800/60' : isPoppodium ? 'bg-blue-950 text-blue-300 border-blue-800/60' : 'theme-bg-primary-dark theme-text-primary border theme-border-primary'} border rounded-lg p-1.5 text-center min-w-[55px]">
+            <div class="${isADE ? 'bg-fuchsia-950 text-fuchsia-300 border-fuchsia-800/60' : isPoppodium ? 'bg-blue-950 text-blue-300 border-blue-800/60' : 'theme-bg-dark theme-text border theme-border'} rounded-lg p-1.5 text-center min-w-[55px]">
               <span class="block text-[9px] font-extrabold uppercase">${parts[0] || ''}</span>
               <span class="block text-xs font-black">${parts[1] || ''} ${parts[2] || ''}</span>
               <span class="block text-[8px] opacity-75">${parts[3] || ''}</span>
@@ -1007,7 +973,7 @@
               <p class="text-gray-400 text-[10px] mt-0.5">📍 ${ev.venue}${ev.city ? ', ' + ev.city : ''} • ${ev.genre}</p>
             </div>
           </div>
-          <button class="text-[11px] bg-gray-900 border border-gray-700 theme-text-primary px-2.5 py-1 rounded-lg font-medium whitespace-nowrap">
+          <button class="text-[11px] bg-gray-900 border border-gray-700 theme-text px-2.5 py-1 rounded-lg font-medium whitespace-nowrap">
             Details 👁️
           </button>
         `;
@@ -1018,7 +984,7 @@
     function filterEvents(type) {
       document.querySelectorAll('.event-filter-btn').forEach(btn => {
         if (btn.getAttribute('data-filter') === type) {
-          btn.className = 'event-filter-btn text-[11px] theme-gradient-bg text-black font-extrabold px-2.5 py-1 rounded-lg transition shadow-md';
+          btn.className = 'event-filter-btn text-[11px] bg-cyan-500 text-black font-extrabold px-2.5 py-1 rounded-lg transition shadow-md';
         } else {
           btn.className = 'event-filter-btn text-[11px] bg-gray-800 text-gray-300 hover:bg-gray-700 px-2.5 py-1 rounded-lg transition';
         }
@@ -1052,15 +1018,15 @@
         card.className = 'bg-gray-900/90 border border-gray-800 rounded-xl p-2.5 flex items-center justify-between hover:border-cyan-500/50 transition';
         card.innerHTML = `
           <div class="flex items-center gap-2.5 overflow-hidden">
-            <span class="text-xs font-bold ${idx === 0 ? 'theme-text-primary font-extrabold' : 'text-gray-500'} w-5 text-center flex-shrink-0">#${idx + 1}</span>
+            <span class="text-xs font-bold ${idx === 0 ? 'theme-text font-extrabold' : 'text-gray-500'} w-5 text-center flex-shrink-0">#${idx + 1}</span>
             <img src="${track.image}" alt="${track.title}" class="w-10 h-10 rounded-lg object-cover flex-shrink-0">
             <div class="overflow-hidden">
               <h4 class="text-white font-bold text-xs truncate" title="${track.title}">${track.title}</h4>
-              <p class="theme-text-primary text-[10px] truncate">${track.artists}</p>
+              <p class="theme-text text-[10px] truncate">${track.artists}</p>
               <span class="text-[9px] text-gray-500">Toegevoegd: ${dStr}</span>
             </div>
           </div>
-          <a href="${track.spotifyUrl}" target="_blank" class="p-1.5 bg-gray-800 hover:bg-gray-700 theme-text-primary rounded-lg transition text-xs font-bold flex-shrink-0 ml-1.5">
+          <a href="${track.spotifyUrl}" target="_blank" class="p-1.5 bg-gray-800 hover:bg-gray-700 theme-text rounded-lg transition text-xs font-bold flex-shrink-0 ml-1.5">
             ▶
           </a>
         `;
@@ -1108,4 +1074,79 @@
       else if (sortBy === 'title') currentFilteredList.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
       else if (sortBy === 'artist') currentFilteredList.sort((a, b) => (a.artists || '').localeCompare(b.artists || ''));
 
-      if (countLabel && HAY_TRANCE_TRACK
+      if (countLabel && HAY_TRANCE_TRACKS.length > 0) {
+        countLabel.innerText = `${currentFilteredList.length} platen`;
+      }
+
+      if (currentFilteredList.length === 0) {
+        const grid = document.getElementById('track-grid');
+        if (grid) grid.innerHTML = '';
+        if (noResults) noResults.classList.remove('hidden');
+        document.getElementById('load-more-container')?.classList.add('hidden');
+        return;
+      } else {
+        if (noResults) noResults.classList.add('hidden');
+      }
+
+      displayedCount = 24;
+      renderTrackBatch();
+    }
+
+    function renderTrackBatch() {
+      const grid = document.getElementById('track-grid');
+      const loadMore = document.getElementById('load-more-container');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      const batch = currentFilteredList.slice(0, displayedCount);
+
+      batch.forEach(track => {
+        const dStr = track.addedAt.getTime() > 0 
+          ? track.addedAt.toLocaleDateString('nl-NL', { year: 'numeric', month: 'short', day: 'numeric' })
+          : 'Onbekend';
+
+        const card = document.createElement('div');
+        card.className = 'bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-lg hover:border-cyan-500/50 hover:scale-[1.02] transition-all duration-300 flex flex-col justify-between';
+        card.innerHTML = `
+          <div>
+            <div class="relative group">
+              <img src="${track.image}" alt="${track.title}" class="w-full aspect-square object-cover">
+              <a href="${track.spotifyUrl}" target="_blank" class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center font-bold text-cyan-300 gap-1 text-xs">
+                Open in Spotify ↗
+              </a>
+            </div>
+            <div class="p-3.5">
+              <h3 class="font-bold text-white text-sm truncate" title="${track.title}">${track.title}</h3>
+              <p class="theme-text text-xs truncate mt-0.5" title="${track.artists}">${track.artists}</p>
+              ${track.label ? `<span class="inline-block mt-2 text-[9px] bg-gray-800 text-gray-400 px-2 py-0.5 rounded border border-gray-700">${track.label}</span>` : ''}
+            </div>
+          </div>
+          <div class="p-3.5 pt-0 border-t border-gray-800/50 mt-1 flex justify-between items-center text-[11px] text-gray-500">
+            <span>Toegevoegd:</span>
+            <span class="text-gray-300 font-medium">${dStr}</span>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+
+      if (displayedCount < currentFilteredList.length) {
+        if (loadMore) loadMore.classList.remove('hidden');
+      } else {
+        if (loadMore) loadMore.classList.add('hidden');
+      }
+    }
+
+    function loadMoreTracks() {
+      displayedCount += 24;
+      renderTrackBatch();
+    }
+
+    document.getElementById('search-input')?.addEventListener('input', filterAndRenderTracks);
+    document.getElementById('sort-select')?.addEventListener('change', filterAndRenderTracks);
+
+    loadReleasesJson();
+    loadEventsMultiSource();
+    loadAllTracksFromJson();
+  </script>
+</body>
+</html>
